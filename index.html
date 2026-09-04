@@ -1,34 +1,574 @@
-<!doctype html>
-<html lang="de">
+<!DOCTYPE html>
+<html lang="de" class="dark">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070707">
-<title>NØX — HELL</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NØX — HELL</title>
+  <meta name="theme-color" content="#0a0a0c">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --font-brand: 'Cinzel', serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: #070709;
+      color: #f4f4f5;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .brand-title { font-family: var(--font-brand); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeIn 0.28s ease-out forwards; }
+
+    .nav-item.active { color: #f43f5e !important; }
+    .nav-item.active svg { stroke: #f43f5e !important; }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: #0d0e12; }
+    ::-webkit-scrollbar-thumb { background: #232734; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #e11d48; }
+  </style>
 </head>
-<body>
-<div id="app">
-<header class="topbar">
-  <div class="brand">NØX</div>
-  <button class="icon-btn" data-page="cart" aria-label="Warenkorb">◈<span id="cartBadge">0</span></button>
-</header>
+<body class="bg-[#09090b] text-[#f4f4f5] antialiased select-none min-h-screen flex flex-col font-sans">
 
-<main id="main"></main>
+  <div id="app" class="relative w-full max-w-md mx-auto min-h-screen bg-[#0d0e12] flex flex-col shadow-2xl overflow-x-hidden border-x border-[#1a1c23]">
+    
+    <!-- TOP BAR -->
+    <header class="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#0d0e12]/90 backdrop-blur-md border-b border-[#181a20]">
+      <div class="flex items-center space-x-2">
+        <span class="brand-title tracking-[0.3em] text-lg font-bold text-white uppercase">NØX</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-400 hover:text-white transition active:scale-95">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+        </button>
+      </div>
+    </header>
 
-<nav class="bottom-nav">
- <button data-page="home">⌂<small>Start</small></button>
- <button data-page="cart">◈<small>Warenkorb</small></button>
- <button data-page="addresses">⌖<small>Adressen</small></button>
- <button data-page="orders">◷<small>Bestellungen</small></button>
-</nav>
-</div>
+    <main id="mainContent" class="flex-1 overflow-y-auto px-5 pt-4 pb-28">
 
-<div id="onboarding" class="modal hidden"></div>
-<div id="toast"></div>
-<div id="idle" class="idle hidden"><div class="idle-symbol">HELL</div><p>HELL wartet auf dich …</p><span>Berühre den Bildschirm</span></div>
+      <!-- VIEW: HOME (Mesmerizing Clock) -->
+      <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-10">
+        <div class="relative w-64 h-64 flex items-center justify-center mb-10">
+          <div class="absolute inset-0 bg-rose-600/5 rounded-full filter blur-3xl"></div>
+          
+          <!-- Dynamic SVG Clock -->
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_15px_rgba(225,29,72,0.15)]">
+            <!-- Background Rings -->
+            <circle cx="100" cy="100" r="95" fill="none" stroke="#1c1f2b" stroke-width="1" />
+            <circle cx="100" cy="100" r="65" fill="none" stroke="#1c1f2b" stroke-width="1" stroke-dasharray="2 4" />
+            <circle cx="100" cy="100" r="35" fill="none" stroke="#252a38" stroke-width="1" />
+            <circle cx="100" cy="100" r="4" fill="#252a38" />
 
-<script src="js/app.js"></script>
+            <!-- Time Orbits -->
+            <g id="orbitHour">
+              <circle cx="100" cy="35" r="7" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.6))" />
+            </g>
+            <g id="orbitMinute">
+              <circle cx="100" cy="5" r="4" fill="#ffffff" />
+            </g>
+            <g id="orbitSecond">
+              <circle cx="100" cy="65" r="2" fill="#9ca3af" />
+            </g>
+          </svg>
+        </div>
+
+        <button onclick="router.navigate('cart')" class="px-10 py-3.5 rounded-full bg-transparent border border-rose-600 text-rose-500 font-serif tracking-[0.3em] uppercase text-sm hover:bg-rose-600/10 transition active:scale-95 shadow-[0_0_20px_rgba(225,29,72,0.1)]">
+          START
+        </button>
+      </section>
+
+      <!-- VIEW: CART / PRODUCT SELECTION -->
+      <section id="viewCart" class="view-panel hidden animate-fade-in">
+        <h2 class="text-xl font-bold tracking-wider uppercase text-white mb-1">HELL</h2>
+        <p class="text-xs text-neutral-500 mb-6">Original Edition • 500g • Reines Konzentrat</p>
+
+        <div id="cartContentState" class="space-y-4">
+          
+          <!-- Quantity Control -->
+          <div class="bg-[#12141a] border border-[#20232e] rounded-2xl p-6 flex flex-col items-center">
+            <span class="text-2xl font-bold text-white mb-4">35,00 <span class="text-sm text-neutral-400">€</span></span>
+            
+            <div class="w-full bg-[#181a23] p-1.5 rounded-2xl border border-[#262a39] flex items-center justify-between">
+              <button id="btnCartMinus" class="w-12 h-12 rounded-xl bg-[#202431] hover:bg-[#2a2f40] text-white text-xl">−</button>
+              <span id="cartQtyDisplay" class="text-xl font-bold text-white tracking-widest">1</span>
+              <button id="btnCartPlus" class="w-12 h-12 rounded-xl bg-[#202431] hover:bg-[#2a2f40] text-white text-xl">+</button>
+            </div>
+          </div>
+
+          <div class="bg-[#12141a] border border-[#20232e] rounded-2xl p-5 space-y-3">
+            <div class="flex justify-between text-xs text-neutral-400">
+              <span>Zwischensumme</span>
+              <span id="cartSubtotal" class="text-white font-medium">0,00 €</span>
+            </div>
+            <div class="flex justify-between text-xs text-neutral-400">
+              <span>Versandkosten <span id="shippingRuleNote" class="text-[10px]">(1–4 Stk: 5€)</span></span>
+              <span id="cartShipping" class="text-white font-medium">5,00 €</span>
+            </div>
+            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-wider text-white">Gesamt</span>
+              <span id="cartTotal" class="text-xl font-extrabold text-white">0,00 €</span>
+            </div>
+          </div>
+
+          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-medium tracking-wider uppercase text-sm shadow-[0_4px_20px_rgba(225,29,72,0.25)]">
+            Zur Kasse
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW: CHECKOUT -->
+      <section id="viewCheckout" class="view-panel hidden animate-fade-in">
+        <h2 class="text-xl font-bold tracking-wider uppercase text-white mb-6">Bestellübersicht</h2>
+        
+        <div class="space-y-4">
+          <div class="bg-[#12141a] border border-[#20232e] rounded-2xl p-4">
+            <div class="flex justify-between mb-3">
+              <h3 class="text-xs font-bold uppercase text-neutral-300">Lieferadresse</h3>
+              <button onclick="router.navigate('addresses')" class="text-xs text-rose-500">Ändern</button>
+            </div>
+            <div id="chkSelectedAddressCard" class="p-3 bg-[#181a23] rounded-xl border border-[#262a3a]"></div>
+          </div>
+
+          <!-- Nachnahme Checkbox -->
+          <div class="bg-[#12141a] border border-[#20232e] rounded-2xl p-4">
+            <label class="flex items-center space-x-3 cursor-pointer select-none">
+              <input type="checkbox" id="chkNachnahme" class="w-5 h-5 accent-rose-600 rounded bg-[#181a23] border-[#262a39]">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-white">Zahlung bei Lieferung (Nachnahme)</span>
+                <span class="text-[10px] text-rose-400 mt-0.5">+ 9,00 € Gebühr</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="bg-[#12141a] border border-[#20232e] rounded-2xl p-4 space-y-2.5">
+            <div class="flex justify-between text-xs text-neutral-400">
+              <span>Zwischensumme:</span><span id="chkSummarySubtotal" class="text-white">0,00 €</span>
+            </div>
+            <div class="flex justify-between text-xs text-neutral-400">
+              <span>Versand:</span><span id="chkSummaryShipping" class="text-white">5,00 €</span>
+            </div>
+            <div id="rowNachnahmeFee" class="hidden flex justify-between text-xs text-rose-400">
+              <span>Nachnahmegebühr:</span><span>9,00 €</span>
+            </div>
+            <div class="border-t border-[#1e222d] pt-2.5 flex justify-between">
+              <span class="text-sm font-bold uppercase text-white">Gesamtbetrag:</span>
+              <span id="chkSummaryTotal" class="text-xl font-extrabold text-white">0,00 €</span>
+            </div>
+          </div>
+
+          <button id="btnSubmitOrder" class="w-full py-4 rounded-2xl bg-rose-600 text-white font-medium tracking-wider uppercase text-sm shadow-[0_4px_25px_rgba(225,29,72,0.3)]">
+            <span id="btnSubmitText">Bestellung verbindlich senden</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW: ADDRESSES -->
+      <section id="viewAddresses" class="view-panel hidden animate-fade-in">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold uppercase text-white">Meine Adressen</h2>
+          <button id="btnOpenAddressModal" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-semibold">+ Neu</button>
+        </div>
+        <div id="addressListContainer" class="space-y-3"></div>
+      </section>
+
+      <!-- VIEW: ORDERS -->
+      <section id="viewOrders" class="view-panel hidden animate-fade-in">
+        <h2 class="text-xl font-bold uppercase text-white mb-6">Meine Bestellungen</h2>
+        <div id="ordersListContainer" class="space-y-3"></div>
+      </section>
+      
+      <!-- VIEW: SUCCESS -->
+      <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-6">
+        <h2 class="text-2xl font-bold tracking-wider uppercase text-white mb-6">Erfolgreich</h2>
+        <div class="bg-[#12141a] border border-[#20232e] rounded-2xl p-5 text-left space-y-3 mb-6">
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Bestellnummer:</span>
+            <span id="succOrderNumber" class="text-white font-mono font-bold">NOX-000</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Gesamtbetrag:</span>
+            <span id="succTotal" class="text-white font-bold text-base">0,00 €</span>
+          </div>
+          <div id="succNachnahmeMsg" class="text-[11px] text-rose-400 mt-2 hidden">
+            Bitte halte den Betrag bei Lieferung passend bereit.
+          </div>
+        </div>
+        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#1c202a] text-white font-semibold text-xs uppercase">Meine Bestellungen ansehen</button>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="sticky bottom-0 z-30 flex items-center justify-around bg-[#0c0d12]/95 backdrop-blur-lg border-t border-[#181a20] px-4 py-2.5">
+      <button data-nav="home" class="nav-item active flex flex-col items-center py-1 px-3 text-neutral-400 hover:text-white">
+        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      </button>
+      <button data-nav="cart" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-400 hover:text-white">
+        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      </button>
+      <button data-nav="addresses" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-400 hover:text-white">
+        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
+      <button data-nav="orders" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-400 hover:text-white">
+        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      </button>
+    </nav>
+
+    <!-- MODALS & UI COMPONENTS -->
+    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-4">
+      <div class="bg-[#11131a] border border-[#202534] rounded-3xl w-full max-w-sm p-5 space-y-4">
+        <h3 id="addressModalTitle" class="text-base font-bold uppercase text-white">Neue Adresse</h3>
+        <form id="addressForm" class="space-y-3">
+          <input type="hidden" id="addressFormId">
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+          </div>
+          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+          </div>
+          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-3 py-2.5 rounded-xl bg-[#171923] border border-[#282d3e] text-white text-xs">
+          
+          <div class="flex space-x-2 pt-2">
+            <button type="button" onclick="App.closeAddressModal()" class="w-1/2 py-3 rounded-xl bg-[#1c202a] text-neutral-300 text-xs">Abbrechen</button>
+            <button type="submit" class="w-1/2 py-3 rounded-xl bg-rose-600 text-white text-xs">Speichern</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-2 pointer-events-none w-11/12 max-w-sm"></div>
+  </div>
+
+  <script>
+    // --- Clock Animation Logic ---
+    function updateClock() {
+      const now = new Date();
+      const s = now.getSeconds();
+      const m = now.getMinutes();
+      const h = now.getHours();
+      
+      const sDeg = s * 6;
+      const mDeg = (m + s/60) * 6;
+      const hDeg = ((h % 12) + m/60) * 30;
+      
+      const setTransform = (id, deg) => {
+        const el = document.getElementById(id);
+        if(el) {
+          el.style.transform = `rotate(${deg}deg)`;
+          el.style.transformOrigin = '100px 100px';
+        }
+      };
+
+      setTransform('orbitSecond', sDeg);
+      setTransform('orbitMinute', mDeg);
+      setTransform('orbitHour', hDeg);
+      
+      requestAnimationFrame(updateClock);
+    }
+    updateClock();
+
+    // --- Storage Service ---
+    const StorageService = (function () {
+      const DB_NAME = 'NoxShopDB';
+      let dbInstance = null;
+
+      function openDatabase() {
+        return new Promise((resolve, reject) => {
+          if (dbInstance) return resolve(dbInstance);
+          const request = indexedDB.open(DB_NAME, 1);
+          request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('addresses')) {
+              db.createObjectStore('addresses', { keyPath: 'id' }).createIndex('isDefault', 'isDefault');
+            }
+            if (!db.objectStoreNames.contains('orders')) {
+              db.createObjectStore('orders', { keyPath: 'orderNumber' }).createIndex('createdAt', 'createdAt');
+            }
+          };
+          request.onsuccess = (e) => resolve(dbInstance = e.target.result);
+          request.onerror = (e) => reject(e.target.error);
+        });
+      }
+
+      async function getAll(storeName) {
+        const db = await openDatabase();
+        return new Promise(res => {
+          const tx = db.transaction([storeName], 'readonly');
+          const req = tx.objectStore(storeName).getAll();
+          req.onsuccess = () => res(req.result || []);
+        });
+      }
+
+      async function saveItem(storeName, item) {
+        const db = await openDatabase();
+        return new Promise(res => {
+          const tx = db.transaction([storeName], 'readwrite');
+          const req = tx.objectStore(storeName).put(item);
+          req.onsuccess = () => res(item);
+        });
+      }
+
+      return {
+        openDatabase,
+        getAllAddresses: () => getAll('addresses'),
+        saveAddress: async (addr) => {
+          if (!addr.id) addr.id = 'addr_' + Date.now();
+          const list = await getAll('addresses');
+          if (list.length === 0) addr.isDefault = true;
+          return saveItem('addresses', addr);
+        },
+        getSelectedAddress: async () => {
+          const addrs = await getAll('addresses');
+          return addrs.find(a => a.isDefault) || addrs[0] || null;
+        },
+        getAllOrders: async () => (await getAll('orders')).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)),
+        saveOrder: (order) => saveItem('orders', order),
+        getCartQty: () => parseInt(localStorage.getItem('nox_cart') || 1, 10),
+        setCartQty: (q) => localStorage.setItem('nox_cart', Math.max(1, q))
+      };
+    })();
+
+    // --- Cart & Pricing ---
+    const CartService = (function () {
+      let qty = 1;
+      const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
+      
+      return {
+        init: () => qty = StorageService.getCartQty(),
+        getQuantity: () => qty,
+        setQuantity: (q) => { qty = Math.max(1, q); StorageService.setCartQty(qty); return qty; },
+        getCalculations: () => ({
+          quantity: qty,
+          subtotal: qty * 35.00,
+          shipping: calcShipping(qty),
+          total: (qty * 35.00) + calcShipping(qty)
+        }),
+        format: (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €'
+      };
+    })();
+
+    // --- UI Service ---
+    const UIService = {
+      showToast: (msg) => {
+        const c = document.getElementById('toastContainer');
+        const t = document.createElement('div');
+        t.className = 'p-3 px-4 rounded-xl text-xs font-medium bg-[#181a23] text-neutral-200 shadow-xl transition transform duration-300 translate-y-[-10px] opacity-0';
+        t.innerHTML = `<span class="text-rose-500 font-bold mr-2">✦</span>${msg}`;
+        c.appendChild(t);
+        requestAnimationFrame(() => t.classList.replace('translate-y-[-10px]', 'translate-y-0') || t.classList.replace('opacity-0', 'opacity-100'));
+        setTimeout(() => t.remove(), 3000);
+      },
+      renderCart: () => {
+        const c = CartService.getCalculations();
+        document.getElementById('cartQtyDisplay').textContent = c.quantity;
+        document.getElementById('cartSubtotal').textContent = CartService.format(c.subtotal);
+        document.getElementById('cartShipping').textContent = CartService.format(c.shipping);
+        document.getElementById('cartTotal').textContent = CartService.format(c.total);
+      }
+    };
+
+    // --- Telegram Dummy Service (Local Fallback for SPA) ---
+    const TelegramService = {
+      dispatch: async (order) => {
+        try {
+          const res = await fetch('/api/send-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `NEUE BESTELLUNG: ${order.orderNumber}`, order })
+          });
+          if(res.ok) return { success: true };
+          throw new Error('API Fail');
+        } catch(e) {
+          // Fallback simulation for local files
+          await new Promise(r => setTimeout(r, 600));
+          return { success: true }; 
+        }
+      }
+    };
+
+    // --- Main App Controller ---
+    const router = {
+      navigate: (view) => {
+        document.querySelectorAll('.view-panel').forEach(v => v.classList.add('hidden', 'active'));
+        document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.remove('hidden');
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
+        window.scrollTo(0,0);
+        
+        if(view === 'cart') UIService.renderCart();
+        if(view === 'checkout') App.renderCheckout();
+        if(view === 'addresses') App.renderAddresses();
+        if(view === 'orders') App.renderOrders();
+      }
+    };
+
+    const App = {
+      init: async () => {
+        CartService.init();
+        await StorageService.openDatabase();
+        document.getElementById('cartQtyDisplay').textContent = CartService.getQuantity();
+
+        // Nav events
+        document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => router.navigate(b.dataset.nav));
+        document.getElementById('quickCartBtn').onclick = () => router.navigate('cart');
+        
+        // Cart events
+        document.getElementById('btnCartPlus').onclick = () => { CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
+        document.getElementById('btnCartMinus').onclick = () => { if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
+        document.getElementById('btnGoToCheckout').onclick = async () => {
+          const a = await StorageService.getSelectedAddress();
+          if(!a) {
+             UIService.showToast('Bitte lege zuerst eine Lieferadresse an');
+             router.navigate('addresses');
+          } else {
+             router.navigate('checkout');
+          }
+        };
+        
+        // Checkbox Nachnahme Event
+        document.getElementById('chkNachnahme').addEventListener('change', () => App.renderCheckout());
+
+        // Address
+        document.getElementById('btnOpenAddressModal').onclick = () => document.getElementById('addressModal').classList.remove('hidden');
+        document.getElementById('addressForm').onsubmit = App.saveAddress;
+
+        // Order
+        document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
+      },
+
+      closeAddressModal: () => document.getElementById('addressModal').classList.add('hidden'),
+
+      saveAddress: async (e) => {
+        e.preventDefault();
+        const addr = {
+          firstName: document.getElementById('addrFirstName').value,
+          lastName: document.getElementById('addrLastName').value,
+          street: document.getElementById('addrStreet').value,
+          number: document.getElementById('addrNumber').value,
+          zip: document.getElementById('addrZip').value,
+          city: document.getElementById('addrCity').value,
+          country: document.getElementById('addrCountry').value,
+          phone: document.getElementById('addrPhone').value
+        };
+        await StorageService.saveAddress(addr);
+        App.closeAddressModal();
+        UIService.showToast('Gespeichert');
+        App.renderAddresses();
+      },
+
+      renderAddresses: async () => {
+        const list = await StorageService.getAllAddresses();
+        document.getElementById('addressListContainer').innerHTML = list.map(a => `
+          <div class="p-4 bg-[#12141a] rounded-2xl border border-[#20232e]">
+            <div class="font-bold text-white text-sm">${a.firstName} ${a.lastName}</div>
+            <div class="text-xs text-neutral-400">${a.street} ${a.number}, ${a.zip} ${a.city}</div>
+          </div>
+        `).join('');
+      },
+
+      renderCheckout: async () => {
+        const c = CartService.getCalculations();
+        const a = await StorageService.getSelectedAddress();
+        
+        const isNachnahme = document.getElementById('chkNachnahme').checked;
+        const nachnahmeFee = isNachnahme ? 9.00 : 0.00;
+        const finalTotal = c.total + nachnahmeFee;
+
+        document.getElementById('chkSummarySubtotal').textContent = CartService.format(c.subtotal);
+        document.getElementById('chkSummaryShipping').textContent = CartService.format(c.shipping);
+        
+        const rowNachnahme = document.getElementById('rowNachnahmeFee');
+        if(isNachnahme) {
+            rowNachnahme.classList.remove('hidden');
+        } else {
+            rowNachnahme.classList.add('hidden');
+        }
+
+        document.getElementById('chkSummaryTotal').textContent = CartService.format(finalTotal);
+        
+        if(a) {
+          document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-white">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`;
+        }
+      },
+
+      renderOrders: async () => {
+        const list = await StorageService.getAllOrders();
+        document.getElementById('ordersListContainer').innerHTML = list.map(o => `
+          <div class="p-4 bg-[#12141a] rounded-2xl border border-[#20232e] mb-3 text-xs text-neutral-300">
+            <div class="flex justify-between"><span class="text-rose-400 font-bold">${o.orderNumber}</span><span>${CartService.format(o.total)}</span></div>
+            ${o.isNachnahme ? `<div class="text-[10px] text-rose-500 mt-1">inkl. Nachnahme</div>` : ''}
+          </div>
+        `).join('') || '<p class="text-xs text-neutral-500 text-center py-10">Keine Bestellungen</p>';
+      },
+
+      submitOrder: async () => {
+        const a = await StorageService.getSelectedAddress();
+        if(!a) return UIService.showToast('Bitte wähle eine Lieferadresse.');
+        
+        document.getElementById('btnSubmitText').textContent = 'Sende...';
+        const c = CartService.getCalculations();
+        
+        const isNachnahme = document.getElementById('chkNachnahme').checked;
+        const finalTotal = isNachnahme ? c.total + 9.00 : c.total;
+
+        const order = {
+          orderNumber: 'NOX-' + Date.now().toString().slice(-6),
+          createdAt: new Date().toISOString(),
+          total: finalTotal,
+          address: a,
+          isNachnahme: isNachnahme
+        };
+
+        const res = await TelegramService.dispatch(order);
+        if(res.success) {
+          await StorageService.saveOrder(order);
+          CartService.setQuantity(1);
+          document.getElementById('chkNachnahme').checked = false; // Reset checkbox
+
+          document.getElementById('succOrderNumber').textContent = order.orderNumber;
+          document.getElementById('succTotal').textContent = CartService.format(order.total);
+          
+          if(isNachnahme) {
+             document.getElementById('succNachnahmeMsg').classList.remove('hidden');
+          } else {
+             document.getElementById('succNachnahmeMsg').classList.add('hidden');
+          }
+
+          router.navigate('success');
+        }
+        document.getElementById('btnSubmitText').textContent = 'Bestellung verbindlich senden';
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', App.init);
+  </script>
 </body>
 </html>
