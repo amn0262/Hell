@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>NØX — HELL</title>
-  <meta name="theme-color" content="#0a0a0c">
+  <title>VØID — HELL</title>
+  <meta name="theme-color" content="#030305">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
 
     html, body {
       font-family: var(--font-sans);
-      background-color: #050507;
+      background-color: #030305;
       color: #f4f4f5;
       margin: 0;
       padding: 0;
@@ -37,17 +37,58 @@
 
     .brand-title { font-family: var(--font-brand); }
 
+    /* تأثيرات الدخول */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
+    /* توهج النبض للساعة */
     @keyframes pulseGlow {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.05); }
+      0%, 100% { opacity: 0.3; transform: scale(0.95); }
+      50% { opacity: 0.7; transform: scale(1.1); }
     }
-    .animate-glow { animation: pulseGlow 4s ease-in-out infinite; }
+    .animate-glow { animation: pulseGlow 5s ease-in-out infinite; }
+
+    /* حلقات دوارة حول الساعة */
+    @keyframes spinOrbit { 100% { transform: rotate(360deg); } }
+    .animate-spin-slow { animation: spinOrbit 25s linear infinite; transform-origin: 100px 100px; }
+    .animate-reverse-spin { animation: spinOrbit 15s linear infinite reverse; transform-origin: 100px 100px; }
+
+    /* تأثير التشويش (Glitch) على الاسم */
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); opacity: 1; }
+      20% { transform: translate(-2px, 1px); }
+      40% { transform: translate(2px, -1px); opacity: 0.8; }
+      60% { transform: translate(-1px, 2px); }
+      80% { transform: translate(1px, -2px); opacity: 0.9; }
+    }
+    .glitch-effect {
+      display: inline-block;
+      animation: glitch 3s cubic-bezier(.25, .46, .45, .94) infinite;
+      text-shadow: 2px 0 rgba(225,29,72,0.5), -2px 0 rgba(0,255,255,0.2);
+    }
+
+    /* الجسيمات المتطايرة (Particles) */
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      20% { opacity: 0.6; }
+      80% { opacity: 0.4; }
+      100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+    }
+    .particle {
+      position: absolute;
+      bottom: -10px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floatUp infinite linear;
+    }
+    .particle:nth-child(1) { left: 15%; width: 2px; height: 2px; background: #f43f5e; animation-duration: 7s; animation-delay: 1s; box-shadow: 0 0 5px #f43f5e; }
+    .particle:nth-child(2) { left: 45%; width: 3px; height: 3px; background: #ffffff; animation-duration: 9s; animation-delay: 3s; box-shadow: 0 0 8px #ffffff; }
+    .particle:nth-child(3) { left: 75%; width: 2px; height: 2px; background: #9ca3af; animation-duration: 6s; animation-delay: 0s; box-shadow: 0 0 4px #9ca3af; }
+    .particle:nth-child(4) { left: 30%; width: 4px; height: 4px; background: #be123c; animation-duration: 12s; animation-delay: 2s; box-shadow: 0 0 10px #be123c; }
+    .particle:nth-child(5) { left: 85%; width: 1.5px; height: 1.5px; background: #f43f5e; animation-duration: 8s; animation-delay: 5s; box-shadow: 0 0 3px #f43f5e; }
 
     .nav-item.active { color: #f43f5e !important; }
     .nav-item.active svg { stroke: #f43f5e !important; }
@@ -57,16 +98,16 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col font-sans">
 
-  <div id="app" class="relative w-full max-w-md mx-auto min-h-screen bg-[#0a0b0e] flex flex-col shadow-2xl overflow-x-hidden border-x border-[#15171d]">
+  <div id="app" class="relative w-full max-w-md mx-auto min-h-screen bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
     <!-- TOP BAR -->
-    <header class="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#0a0b0e]/80 backdrop-blur-xl border-b border-[#181a20]">
-      <div class="flex items-center space-x-2">
-        <span class="brand-title tracking-[0.3em] text-lg font-bold text-white uppercase">NØX</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+    <header class="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#07080a]/70 backdrop-blur-xl border-b border-[#181a20]">
+      <div class="flex items-center space-x-3">
+        <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse shadow-[0_0_8px_#f43f5e]"></span>
       </div>
       <div class="flex items-center space-x-4">
-        <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-400 hover:text-white transition active:scale-90">
+        <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-500 hover:text-rose-400 transition active:scale-90">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
@@ -74,215 +115,234 @@
       </div>
     </header>
 
-    <main id="mainContent" class="flex-1 overflow-y-auto px-5 pt-4 pb-28">
+    <main id="mainContent" class="flex-1 overflow-y-auto px-5 pt-4 pb-28 relative">
 
-      <!-- VIEW: HOME (Mesmerizing Analog Clock) -->
+      <!-- VIEW: HOME (Mesmerizing Analog Clock + Particles) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
-        <div class="relative w-72 h-72 flex items-center justify-center mb-14">
+        
+        <!-- خلفية الجسيمات المتطايرة -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+        </div>
+
+        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10">
           <!-- خلفية مضيئة متوهجة -->
-          <div class="absolute inset-0 bg-rose-600/10 rounded-full filter blur-[40px] animate-glow"></div>
+          <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[45px] animate-glow pointer-events-none"></div>
           
           <!-- تصميم الساعة الاحترافي SVG -->
-          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_20px_rgba(225,29,72,0.15)] z-10">
-            <circle cx="100" cy="100" r="96" fill="#07080a" stroke="#1c1f2b" stroke-width="2" />
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_25px_rgba(225,29,72,0.2)]">
+            <!-- حلقات دوارة سحرية -->
+            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.5" stroke-dasharray="2 8" class="animate-reverse-spin opacity-40" />
+            <circle cx="100" cy="100" r="98" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 12" class="animate-spin-slow opacity-30" />
+
+            <!-- الإطار الخارجي والخلفية -->
+            <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="2" />
             
             <!-- علامات الساعات -->
-            <line x1="100" y1="12" x2="100" y2="20" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
-            <line x1="100" y1="188" x2="100" y2="180" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
-            <line x1="12" y1="100" x2="20" y2="100" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
-            <line x1="188" y1="100" x2="180" y2="100" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
+            <line x1="100" y1="18" x2="100" y2="26" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
+            <line x1="100" y1="182" x2="100" y2="174" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
+            <line x1="18" y1="100" x2="26" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
+            <line x1="182" y1="100" x2="174" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
             
-            <circle cx="100" cy="100" r="86" fill="none" stroke="#1f2433" stroke-width="1.5" stroke-dasharray="1 7.9" />
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1d26" stroke-width="1.5" stroke-dasharray="1 7.37" />
 
             <!-- عقرب الساعات -->
             <g id="handHour">
-              <line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))" />
+              <line x1="100" y1="100" x2="100" y2="52" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 6px rgba(244,63,94,0.7))" />
             </g>
             
             <!-- عقرب الدقائق -->
             <g id="handMinute">
-              <line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="100" y1="100" x2="100" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 3px rgba(255,255,255,0.3))" />
             </g>
             
             <!-- عقرب الثواني -->
             <g id="handSecond">
-              <line x1="100" y1="115" x2="100" y2="18" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" />
-              <circle cx="100" cy="18" r="3.5" fill="#f43f5e" />
+              <line x1="100" y1="112" x2="100" y2="22" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="100" cy="22" r="3.5" fill="#f43f5e" filter="drop-shadow(0 0 4px rgba(244,63,94,0.8))" />
             </g>
             
-            <circle cx="100" cy="100" r="5" fill="#07080a" stroke="#ffffff" stroke-width="2" />
+            <!-- المركز -->
+            <circle cx="100" cy="100" r="4.5" fill="#040406" stroke="#ffffff" stroke-width="2" />
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart')" class="px-12 py-4 rounded-full bg-gradient-to-r from-[#12141a] to-[#1a1d26] border border-rose-900/50 text-white font-serif tracking-[0.35em] uppercase text-sm hover:border-rose-600 transition-all duration-300 active:scale-95 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-          START
+        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-neutral-300 font-serif tracking-[0.4em] uppercase text-sm hover:border-rose-500 hover:text-white transition-all duration-500 active:scale-95 shadow-[0_10px_40px_rgba(225,29,72,0.1)]">
+          EINTRETEN
         </button>
       </section>
 
-      <!-- VIEW: CART -->
-      <section id="viewCart" class="view-panel hidden animate-fade-in">
-        <h2 class="text-xl font-bold tracking-wider uppercase text-white mb-1">HELL</h2>
-        <p class="text-xs text-neutral-500 mb-6">Original Edition • 500g • Reines Konzentrat</p>
+      <!-- VIEW: CART / PRODUCT SELECTION -->
+      <section id="viewCart" class="view-panel hidden animate-fade-in relative z-10">
+        <h2 class="text-xl font-bold tracking-widest uppercase text-white mb-1">HELL</h2>
+        <p class="text-[11px] text-neutral-500 mb-6 uppercase tracking-wider">Original Edition • 500g</p>
 
         <div id="cartContentState" class="space-y-4">
-          <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-6 flex flex-col items-center shadow-lg">
+          <div class="bg-[#0b0c10] border border-[#181a23] rounded-2xl p-6 flex flex-col items-center shadow-2xl">
             <span class="text-3xl font-bold text-white mb-5">35,00 <span class="text-base text-neutral-500 font-normal">€</span></span>
             
-            <div class="w-full bg-[#15171e] p-2 rounded-2xl border border-[#232734] flex items-center justify-between">
-              <button id="btnCartMinus" class="w-14 h-14 rounded-xl bg-[#1c1f2b] hover:bg-[#252a38] text-white text-2xl active:scale-90 transition">−</button>
+            <div class="w-full bg-[#12141a] p-2 rounded-2xl border border-[#1e222d] flex items-center justify-between">
+              <button id="btnCartMinus" class="w-14 h-14 rounded-xl bg-[#181b24] hover:bg-[#202430] text-neutral-400 hover:text-white text-2xl active:scale-90 transition">−</button>
               <span id="cartQtyDisplay" class="text-2xl font-bold text-white tracking-widest">1</span>
-              <button id="btnCartPlus" class="w-14 h-14 rounded-xl bg-[#1c1f2b] hover:bg-[#252a38] text-white text-2xl active:scale-90 transition">+</button>
+              <button id="btnCartPlus" class="w-14 h-14 rounded-xl bg-[#181b24] hover:bg-[#202430] text-neutral-400 hover:text-white text-2xl active:scale-90 transition">+</button>
             </div>
           </div>
 
-          <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-5 space-y-3">
+          <div class="bg-[#0b0c10] border border-[#181a23] rounded-2xl p-5 space-y-3">
             <div class="flex justify-between text-xs text-neutral-400">
               <span>Zwischensumme</span>
               <span id="cartSubtotal" class="text-white font-medium">0,00 €</span>
             </div>
             <div class="flex justify-between text-xs text-neutral-400">
-              <span>Versandkosten <span id="shippingRuleNote" class="text-[10px]">(1–4 Stk: 5€)</span></span>
+              <span>Versandkosten <span id="shippingRuleNote" class="text-[10px] text-neutral-600">(1–4 Stk: 5€)</span></span>
               <span id="cartShipping" class="text-white font-medium">5,00 €</span>
             </div>
-            <div class="border-t border-[#1d202b] pt-3 flex justify-between items-baseline">
-              <span class="text-sm font-bold uppercase tracking-wider text-white">Gesamt</span>
-              <span id="cartTotal" class="text-xl font-extrabold text-white">0,00 €</span>
+            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
+              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamt</span>
+              <span id="cartTotal" class="text-xl font-bold text-rose-400">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-rose-600 text-white font-bold tracking-wider uppercase text-sm shadow-[0_4px_25px_rgba(225,29,72,0.25)] active:scale-95 transition">
+          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-800 to-rose-600 text-white font-bold tracking-widest uppercase text-xs shadow-[0_4px_25px_rgba(225,29,72,0.2)] active:scale-95 transition">
             Zur Kasse
           </button>
         </div>
       </section>
 
       <!-- VIEW: CHECKOUT -->
-      <section id="viewCheckout" class="view-panel hidden animate-fade-in">
-        <h2 class="text-xl font-bold tracking-wider uppercase text-white mb-6">Bestellübersicht</h2>
+      <section id="viewCheckout" class="view-panel hidden animate-fade-in relative z-10">
+        <h2 class="text-xl font-bold tracking-widest uppercase text-white mb-6">Bestellübersicht</h2>
         
         <div class="space-y-4">
-          <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-4">
+          <div class="bg-[#0b0c10] border border-[#181a23] rounded-2xl p-4">
             <div class="flex justify-between mb-3">
-              <h3 class="text-xs font-bold uppercase text-neutral-300">Lieferadresse</h3>
-              <button onclick="router.navigate('addresses')" class="text-xs text-rose-500 font-medium">Ändern</button>
+              <h3 class="text-[11px] font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
+              <button onclick="router.navigate('addresses')" class="text-[11px] text-rose-500 uppercase font-bold tracking-wider">Ändern</button>
             </div>
-            <div id="chkSelectedAddressCard" class="p-3 bg-[#15171e] rounded-xl border border-[#232734]"></div>
+            <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d]"></div>
           </div>
 
           <!-- خيار الدفع عند التسليم (Nachnahme) -->
-          <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/50">
-            <label class="flex items-center space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="chkNachnahme" class="w-5 h-5 accent-rose-600 rounded bg-[#181a23] border-[#262a39]">
+          <div class="bg-[#0b0c10] border border-[#181a23] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/40">
+            <label class="flex items-center space-x-4 cursor-pointer select-none">
+              <div class="relative flex items-center justify-center">
+                <input type="checkbox" id="chkNachnahme" class="appearance-none w-5 h-5 border border-[#2a2f40] rounded bg-[#12141a] checked:bg-rose-600 checked:border-rose-600 transition-colors peer">
+                <svg class="absolute w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              </div>
               <div class="flex flex-col">
-                <span class="text-xs font-bold text-white">Zahlung bei Lieferung (Nachnahme)</span>
-                <span class="text-[10px] text-rose-400 mt-0.5">+ 9,00 € Gebühr</span>
+                <span class="text-xs font-bold text-white tracking-wide">Zahlung bei Lieferung (Nachnahme)</span>
+                <span class="text-[10px] text-rose-400 mt-1 uppercase tracking-wider">+ 9,00 € Gebühr</span>
               </div>
             </label>
           </div>
 
-          <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-4 space-y-2.5">
+          <div class="bg-[#0b0c10] border border-[#181a23] rounded-2xl p-5 space-y-3">
             <div class="flex justify-between text-xs text-neutral-400">
               <span>Zwischensumme:</span><span id="chkSummarySubtotal" class="text-white">0,00 €</span>
             </div>
             <div class="flex justify-between text-xs text-neutral-400">
               <span>Versand:</span><span id="chkSummaryShipping" class="text-white">5,00 €</span>
             </div>
-            <div id="rowNachnahmeFee" class="hidden flex justify-between text-xs text-rose-400">
+            <div id="rowNachnahmeFee" class="hidden flex justify-between text-xs text-rose-400 font-medium">
               <span>Nachnahmegebühr:</span><span>9,00 €</span>
             </div>
-            <div class="border-t border-[#1d202b] pt-2.5 flex justify-between">
-              <span class="text-sm font-bold uppercase text-white">Gesamtbetrag:</span>
-              <span id="chkSummaryTotal" class="text-xl font-extrabold text-white">0,00 €</span>
+            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
+              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamtbetrag:</span>
+              <span id="chkSummaryTotal" class="text-xl font-bold text-rose-400">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnSubmitOrder" class="w-full py-4 rounded-2xl bg-rose-600 text-white font-bold tracking-wider uppercase text-sm shadow-[0_4px_25px_rgba(225,29,72,0.3)] active:scale-95 transition">
-            <span id="btnSubmitText">Bestellung verbindlich senden</span>
+          <button id="btnSubmitOrder" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-800 to-rose-600 text-white font-bold tracking-widest uppercase text-xs shadow-[0_4px_25px_rgba(225,29,72,0.3)] active:scale-95 transition">
+            <span id="btnSubmitText">Verbindlich Senden</span>
           </button>
         </div>
       </section>
 
       <!-- VIEW: ADDRESSES -->
-      <section id="viewAddresses" class="view-panel hidden animate-fade-in">
+      <section id="viewAddresses" class="view-panel hidden animate-fade-in relative z-10">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold uppercase text-white">Meine Adressen</h2>
-          <button id="btnOpenAddressModal" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-bold">+ Neu</button>
+          <h2 class="text-xl font-bold uppercase tracking-widest text-white">Adressen</h2>
+          <button id="btnOpenAddressModal" class="px-3 py-1.5 rounded-lg bg-rose-600 text-white text-[10px] uppercase tracking-wider font-bold">+ Neu</button>
         </div>
         <div id="addressListContainer" class="space-y-3"></div>
       </section>
 
       <!-- VIEW: ORDERS -->
-      <section id="viewOrders" class="view-panel hidden animate-fade-in">
-        <h2 class="text-xl font-bold uppercase text-white mb-6">Meine Bestellungen</h2>
+      <section id="viewOrders" class="view-panel hidden animate-fade-in relative z-10">
+        <h2 class="text-xl font-bold uppercase tracking-widest text-white mb-6">Historie</h2>
         <div id="ordersListContainer" class="space-y-3"></div>
       </section>
       
       <!-- VIEW: SUCCESS -->
-      <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-6">
-        <h2 class="text-2xl font-bold tracking-wider uppercase text-white mb-6">Erfolgreich</h2>
-        <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-5 text-left space-y-3 mb-6">
+      <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-8 relative z-10">
+        <h2 class="text-2xl font-bold tracking-widest uppercase text-rose-500 mb-6 glitch-effect">Erfolgreich</h2>
+        <div class="bg-[#0b0c10] border border-[#181a23] rounded-2xl p-6 text-left space-y-4 mb-8 shadow-2xl">
           <div class="flex justify-between text-xs">
-            <span class="text-neutral-500">Bestellnummer:</span>
-            <span id="succOrderNumber" class="text-white font-mono font-bold">NOX-000</span>
+            <span class="text-neutral-500 uppercase tracking-wider text-[10px]">Bestellnummer</span>
+            <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider">VOD-000</span>
           </div>
           <div class="flex justify-between text-xs">
-            <span class="text-neutral-500">Gesamtbetrag:</span>
-            <span id="succTotal" class="text-white font-bold text-base">0,00 €</span>
+            <span class="text-neutral-500 uppercase tracking-wider text-[10px]">Gesamtbetrag</span>
+            <span id="succTotal" class="text-rose-400 font-bold text-base">0,00 €</span>
           </div>
           
           <!-- رسالة الدفع عند التسليم -->
-          <div id="succNachnahmeMsg" class="text-[11px] text-rose-400 mt-2 hidden border-t border-rose-900/30 pt-2">
+          <div id="succNachnahmeMsg" class="text-xs text-rose-400 mt-4 hidden border-t border-[#1e222d] pt-4 font-medium leading-relaxed">
             Bitte halte den Betrag bei Lieferung passend bereit.
           </div>
 
-          <!-- رسالة التحويل البنكي (تمت إضافتها) -->
-          <div id="succTransferMsg" class="text-[11px] text-neutral-400 mt-2 hidden border-t border-[#1d202b] pt-2">
+          <!-- رسالة التحويل البنكي -->
+          <div id="succTransferMsg" class="text-xs text-neutral-300 mt-4 hidden border-t border-[#1e222d] pt-4 font-medium leading-relaxed">
             Bitte überweise den Gesamtbetrag auf das bekannte Konto.
           </div>
         </div>
-        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#1c1f2b] text-white font-bold text-xs uppercase active:scale-95 transition">Meine Bestellungen ansehen</button>
+        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#12141a] border border-[#1e222d] text-neutral-300 font-bold text-xs uppercase tracking-widest active:scale-95 transition">Zur Historie</button>
       </section>
 
     </main>
 
     <!-- BOTTOM NAVIGATION -->
-    <nav class="sticky bottom-0 z-30 flex items-center justify-around bg-[#0a0b0e]/95 backdrop-blur-xl border-t border-[#181a20] px-4 py-3">
-      <button data-nav="home" class="nav-item active flex flex-col items-center py-1 px-3 text-neutral-500 hover:text-white transition-colors">
+    <nav class="sticky bottom-0 z-30 flex items-center justify-around bg-[#07080a]/90 backdrop-blur-xl border-t border-[#12141a] px-4 py-3 pb-6">
+      <button data-nav="home" class="nav-item active flex flex-col items-center py-1 px-3 text-neutral-600 hover:text-white transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
-      <button data-nav="cart" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-500 hover:text-white transition-colors">
+      <button data-nav="cart" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-600 hover:text-white transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
       </button>
-      <button data-nav="addresses" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-500 hover:text-white transition-colors">
+      <button data-nav="addresses" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-600 hover:text-white transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
-      <button data-nav="orders" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-500 hover:text-white transition-colors">
+      <button data-nav="orders" class="nav-item flex flex-col items-center py-1 px-3 text-neutral-600 hover:text-white transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       </button>
     </nav>
 
     <!-- MODALS -->
-    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000cc] backdrop-blur-md flex items-end sm:items-center justify-center p-4">
-      <div class="bg-[#0f1116] border border-[#1d202b] rounded-3xl w-full max-w-sm p-6 space-y-5 shadow-2xl">
-        <h3 id="addressModalTitle" class="text-base font-bold uppercase text-white">Neue Adresse</h3>
+    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000e6] backdrop-blur-md flex items-end sm:items-center justify-center p-4">
+      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-3xl w-full max-w-sm p-6 space-y-5 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+        <h3 id="addressModalTitle" class="text-xs font-bold uppercase tracking-widest text-white">Neue Adresse</h3>
         <form id="addressForm" class="space-y-4">
           <input type="hidden" id="addressFormId">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
-            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
           </div>
-          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
-            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
           </div>
-          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
-          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
-          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-4 py-3 rounded-xl bg-[#15171e] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
+          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-4 py-3 rounded-xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-600 focus:outline-none transition">
           
           <div class="flex space-x-3 pt-2">
-            <button type="button" onclick="App.closeAddressModal()" class="w-1/2 py-3.5 rounded-xl bg-[#1c1f2b] text-neutral-300 font-bold text-xs active:scale-95 transition">Abbrechen</button>
-            <button type="submit" class="w-1/2 py-3.5 rounded-xl bg-rose-600 text-white font-bold text-xs active:scale-95 transition">Speichern</button>
+            <button type="button" onclick="App.closeAddressModal()" class="w-1/2 py-4 rounded-xl bg-[#181a23] text-neutral-400 font-bold text-[10px] uppercase tracking-wider active:scale-95 transition">Abbrechen</button>
+            <button type="submit" class="w-1/2 py-4 rounded-xl bg-rose-600 text-white font-bold text-[10px] uppercase tracking-wider active:scale-95 transition">Speichern</button>
           </div>
         </form>
       </div>
@@ -320,7 +380,7 @@
     updateClock();
 
     const StorageService = (function () {
-      const DB_NAME = 'NoxShopDB';
+      const DB_NAME = 'VOIDShopDB';
       let dbInstance = null;
 
       function openDatabase() {
@@ -374,8 +434,8 @@
         },
         getAllOrders: async () => (await getAll('orders')).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)),
         saveOrder: (order) => saveItem('orders', order),
-        getCartQty: () => parseInt(localStorage.getItem('nox_cart') || 1, 10),
-        setCartQty: (q) => localStorage.setItem('nox_cart', Math.max(1, q))
+        getCartQty: () => parseInt(localStorage.getItem('void_cart') || 1, 10),
+        setCartQty: (q) => localStorage.setItem('void_cart', Math.max(1, q))
       };
     })();
 
@@ -401,7 +461,7 @@
       showToast: (msg) => {
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
-        t.className = 'p-3 px-4 rounded-xl text-xs font-bold bg-[#15171e] border border-[#232734] text-neutral-200 shadow-2xl transition-all transform duration-300 translate-y-[-10px] opacity-0 flex items-center';
+        t.className = 'p-3 px-5 rounded-full text-xs font-bold bg-[#12141a] border border-[#232734] text-neutral-300 shadow-2xl transition-all transform duration-300 translate-y-[-10px] opacity-0 flex items-center tracking-wide';
         t.innerHTML = `<span class="text-rose-500 mr-2 text-lg leading-none">&bull;</span>${msg}`;
         c.appendChild(t);
         requestAnimationFrame(() => t.classList.replace('translate-y-[-10px]', 'translate-y-0') || t.classList.replace('opacity-0', 'opacity-100'));
@@ -422,12 +482,12 @@
           const res = await fetch('/api/send-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `NEUE BESTELLUNG: ${order.orderNumber}`, order })
+            body: JSON.stringify({ message: `VØID BESTELLUNG: ${order.orderNumber}`, order })
           });
           if(res.ok) return { success: true };
           throw new Error('API Fail');
         } catch(e) {
-          await new Promise(r => setTimeout(r, 600)); 
+          await new Promise(r => setTimeout(r, 800)); 
           return { success: true }; 
         }
       }
@@ -502,9 +562,9 @@
       renderAddresses: async () => {
         const list = await StorageService.getAllAddresses();
         document.getElementById('addressListContainer').innerHTML = list.map(a => `
-          <div class="p-4 bg-[#0f1116] rounded-2xl border border-[#1d202b]">
+          <div class="p-5 bg-[#0b0c10] rounded-2xl border border-[#181a23]">
             <div class="font-bold text-white text-sm">${a.firstName} ${a.lastName}</div>
-            <div class="text-xs text-neutral-400 mt-1">${a.street} ${a.number}, ${a.zip} ${a.city}</div>
+            <div class="text-xs text-neutral-400 mt-1.5 leading-relaxed">${a.street} ${a.number}<br>${a.zip} ${a.city}</div>
           </div>
         `).join('');
       },
@@ -537,11 +597,11 @@
       renderOrders: async () => {
         const list = await StorageService.getAllOrders();
         document.getElementById('ordersListContainer').innerHTML = list.map(o => `
-          <div class="p-4 bg-[#0f1116] rounded-2xl border border-[#1d202b] mb-3 text-xs text-neutral-300">
-            <div class="flex justify-between items-center"><span class="text-rose-400 font-bold">${o.orderNumber}</span><span class="font-bold text-white text-sm">${CartService.format(o.total)}</span></div>
-            ${o.isNachnahme ? `<div class="text-[10px] text-neutral-500 mt-1 uppercase tracking-wider">inkl. Nachnahme</div>` : ''}
+          <div class="p-5 bg-[#0b0c10] rounded-2xl border border-[#181a23] mb-3 text-xs text-neutral-300">
+            <div class="flex justify-between items-center"><span class="text-rose-400 font-mono font-bold">${o.orderNumber}</span><span class="font-bold text-white text-sm">${CartService.format(o.total)}</span></div>
+            ${o.isNachnahme ? `<div class="text-[9px] text-neutral-500 mt-2 uppercase tracking-widest font-bold">inkl. Nachnahme</div>` : ''}
           </div>
-        `).join('') || '<p class="text-xs text-neutral-500 text-center py-10 uppercase tracking-widest">Keine Bestellungen</p>';
+        `).join('') || '<p class="text-[10px] text-neutral-600 text-center py-12 uppercase tracking-widest font-bold">Keine Bestellungen</p>';
       },
 
       submitOrder: async () => {
@@ -555,7 +615,7 @@
         const finalTotal = isNachnahme ? c.total + 9.00 : c.total;
 
         const order = {
-          orderNumber: 'NOX-' + Date.now().toString().slice(-6),
+          orderNumber: 'VOD-' + Date.now().toString().slice(-6),
           createdAt: new Date().toISOString(),
           total: finalTotal,
           address: a,
@@ -581,7 +641,7 @@
           document.getElementById('chkNachnahme').checked = false; 
           router.navigate('success');
         }
-        document.getElementById('btnSubmitText').textContent = 'Bestellung verbindlich senden';
+        document.getElementById('btnSubmitText').textContent = 'Verbindlich Senden';
       }
     };
 
