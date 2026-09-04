@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>VØID — HELL</title>
-  <meta name="theme-color" content="#030305">
+  <meta name="theme-color" content="#020203">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,16 +31,18 @@
       touch-action: manipulation; overscroll-behavior-y: none; 
     }
 
-    .brand-title { font-family: var(--font-brand); }
+    .brand-title { font-family: var(--font-brand); cursor: pointer; }
     .font-mono-custom { font-family: var(--font-mono); }
 
-    /* تأثير الاهتزاز عند الأكشن */
+    /* تأثير الاهتزاز العنيف (Screen Shock) */
     @keyframes screenShock {
       0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      20% { transform: translate(3px, 3px) rotate(0.5deg); filter: contrast(120%); }
-      40% { transform: translate(-3px, -3px) rotate(-0.5deg); }
+      20% { transform: translate(4px, 4px) rotate(1deg); filter: contrast(130%); }
+      40% { transform: translate(-4px, -4px) rotate(-1deg); }
+      60% { transform: translate(2px, -4px) rotate(0.5deg); }
+      80% { transform: translate(-2px, 4px) rotate(-0.5deg); }
     }
-    .shake-active { animation: screenShock 0.2s cubic-bezier(.36,.07,.19,.97) both; }
+    .shake-active { animation: screenShock 0.25s cubic-bezier(.36,.07,.19,.97) both; }
 
     /* تشويش الشاشة العشوائي بالكامل */
     .glitch-critical {
@@ -48,16 +50,23 @@
       filter: invert(0.8) hue-rotate(90deg) contrast(150%);
     }
     @keyframes criticalGlitch {
-      0% { transform: translate(4px, -4px) skewX(2deg); }
-      100% { transform: translate(-4px, 4px) skewX(-2deg); }
+      0% { transform: translate(6px, -6px) skewX(3deg); }
+      100% { transform: translate(-6px, 6px) skewX(-3deg); }
+    }
+
+    /* تأثير انهيار الجاذبية (تدمير العناصر) */
+    @keyframes gravityFall {
+      0% { transform: translateY(0) rotate(0deg) scale(1); filter: brightness(1); }
+      15% { transform: translateY(-25px) rotate(-3deg) scale(1.05); filter: brightness(2) contrast(150%); }
+      100% { transform: translateY(150vh) rotate(45deg) scale(0.5); filter: brightness(0); opacity: 0; }
     }
 
     /* ليزر الماسح الضوئي (مخفف جداً) */
     .laser-beam {
       position: absolute; left: 0; width: 100%; height: 1px;
-      background: rgba(244,63,94,0.15);
-      box-shadow: 0 0 10px 1px rgba(244,63,94,0.1);
-      animation: laserSweep 6s infinite linear;
+      background: rgba(244,63,94,0.08);
+      box-shadow: 0 0 8px 1px rgba(244,63,94,0.05);
+      animation: laserSweep 8s infinite linear;
       opacity: 0; pointer-events: none; z-index: 9997;
     }
     @keyframes laserSweep {
@@ -74,14 +83,12 @@
       background-size: 100% 4px; opacity: 0.5;
     }
 
-    /* الانتقالات السينمائية للصفحات */
     @keyframes popInCinematic {
       0% { opacity: 0; transform: scale(0.95); filter: blur(10px); }
       100% { opacity: 1; transform: scale(1); filter: blur(0); }
     }
     .animate-fade-in { animation: popInCinematic 0.4s cubic-bezier(0.2, 1, 0.4, 1) forwards; }
 
-    /* التشويش النصي (Glitch) */
     @keyframes glitch {
       0%, 100% { transform: translate(0); opacity: 1; }
       10% { transform: translate(-2px, 1px); }
@@ -96,7 +103,6 @@
       text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.2);
     }
 
-    /* النار الثابتة في الأسفل (بدون شهب متطايرة) */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 40vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -114,7 +120,6 @@
       filter: blur(20px); 
     }
 
-    /* انفجارات الضغط */
     .click-ripple {
       position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
@@ -126,7 +131,6 @@
       100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
     }
 
-    /* الشريط السفلي المتفاعل */
     .nav-item.active { color: #f43f5e !important; transform: scale(1.15) translateY(-5px); filter: drop-shadow(0 0 10px rgba(225,29,72,0.6)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -134,21 +138,19 @@
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
     
-    /* ستايلات الرسالة المفاجئة */
     .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
 <body class="antialiased font-sans">
 
-  <!-- مؤثرات الشاشة الفوقية -->
   <div class="scanlines"></div> 
   <div class="laser-beam"></div>
 
   <!-- الرسالة الفجائية (System Override) -->
   <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
     <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
-      <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> VERBINDUNG WIRD HERGESTELLT...</div>
-      <div id="sysLine2" class="sys-msg-line text-neutral-400 text-xs tracking-widest uppercase">> DATENABGLEICH ERFOLGREICH.</div>
+      <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
+      <div id="sysLine2" class="sys-msg-line text-neutral-400 text-xs tracking-widest uppercase">> VERIFIKATION ABGESCHLOSSEN.</div>
       <div id="sysLine3" class="sys-msg-line text-rose-500 text-lg font-bold tracking-widest uppercase glitch-effect">> PRÄSENZ BESTÄTIGT:<br><span id="sysMsgName" class="text-white"></span></div>
     </div>
   </div>
@@ -158,7 +160,8 @@
     <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
-        <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect typewriter" data-text="VØID"></span>
+        <!-- 3 Clicks on this triggers the collapse -->
+        <span onclick="handleLogoClick()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect typewriter" data-text="VØID"></span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_12px_#f43f5e]"></span>
       </div>
       <div class="flex items-center space-x-4">
@@ -173,27 +176,22 @@
     <!-- MAIN CONTENT -->
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Static Clock & Radar) -->
+      <!-- VIEW: HOME (Dynamic Abnormal Clock) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
-
         <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-300 cursor-pointer" onclick="triggerActionShock()">
           <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[40px] pointer-events-none"></div>
           
           <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_35px_rgba(225,29,72,0.2)] relative z-20">
-            <!-- حلقات ثابتة -->
-            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 12" class="opacity-50" />
-            <circle cx="100" cy="100" r="96" fill="none" stroke="#ffffff" stroke-width="0.4" stroke-dasharray="1 15" class="opacity-30" />
+            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 12" class="opacity-40" />
+            <circle cx="100" cy="100" r="96" fill="none" stroke="#ffffff" stroke-width="0.4" stroke-dasharray="1 15" class="opacity-20" />
 
             <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="3" />
             
-            <!-- محددات كل الـ 12 ساعة -->
             <g stroke="#2a3040" stroke-linecap="round">
-              <!-- الخطوط الرئيسية الطويلة -->
               <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" />
               <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(90 100 100)"/>
               <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(180 100 100)"/>
               <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(270 100 100)"/>
-              <!-- الخطوط الفرعية القصيرة -->
               <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(30 100 100)"/>
               <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(60 100 100)"/>
               <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(120 100 100)"/>
@@ -210,7 +208,7 @@
             <text id="clockDay" x="100" y="135" fill="#9ca3af" font-size="8" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.9"></text>
             <text id="clockDate" x="100" y="152" fill="#f43f5e" font-size="11" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب (ثابتة) -->
+            <!-- العقارب (تتحرك مع الزمن الحقيقي) -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
@@ -344,7 +342,7 @@
 
     </main>
 
-    <!-- FIRE CONTAINER (Static Base) -->
+    <!-- FIRE CONTAINER -->
     <div class="fire-container">
       <div class="fire-glow-1"></div><div class="fire-glow-2"></div>
     </div>
@@ -399,7 +397,7 @@
     // --- Haptic Feedback ---
     function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
-    // --- Action Shock (رجفة الشاشة) ---
+    // --- Action Shock ---
     function triggerActionShock() {
       const app = document.getElementById('app');
       app.classList.remove('shake-active');
@@ -408,14 +406,53 @@
       triggerHaptic([40, 60, 40]);
     }
 
-    // --- تشويش الشاشة العشوائي غير المنتظم ---
+    // --- System Collapse (Tear Down) ---
+    let logoClickCount = 0;
+    let logoClickTimer;
+    function handleLogoClick() {
+      logoClickCount++;
+      clearTimeout(logoClickTimer);
+      triggerHaptic(30);
+      
+      if (logoClickCount === 3) {
+        initiateSystemCollapse();
+        logoClickCount = 0;
+      } else {
+        logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1000);
+      }
+    }
+
+    function initiateSystemCollapse() {
+      triggerHaptic([100, 50, 200, 50, 300, 50, 500]);
+      document.getElementById('app').classList.add('glitch-critical');
+      
+      // إسقاط كل العناصر تباعاً
+      const targets = document.querySelectorAll('header, nav, .view-panel.active > div, .view-panel.active > button, .fire-container, .scanlines, .laser-beam');
+      
+      targets.forEach(el => {
+        const delay = Math.random() * 1.2;
+        const duration = 0.8 + Math.random() * 1;
+        el.style.transition = 'none';
+        el.style.animation = `gravityFall ${duration}s cubic-bezier(0.55, 0.085, 0.68, 0.53) ${delay}s forwards`;
+      });
+
+      // شاشة النهاية
+      setTimeout(() => {
+        document.getElementById('app').innerHTML = `
+          <div class="h-full w-full flex items-center justify-center bg-black">
+            <span class="text-rose-600 font-mono text-xl tracking-[0.5em] animate-pulse glitch-effect">SYSTEM FATAL ERROR</span>
+          </div>
+        `;
+        document.getElementById('app').classList.remove('glitch-critical');
+      }, 3000);
+    }
+
+    // --- تشويش الشاشة العشوائي بالكامل ---
     function randomScreenGlitch() {
       const app = document.getElementById('app');
       app.classList.add('glitch-critical');
       triggerHaptic(20);
       setTimeout(() => { app.classList.remove('glitch-critical'); }, 50 + Math.random() * 100);
-      
-      // توقيت عشوائي بين 5 ثواني و 25 ثانية
       setTimeout(randomScreenGlitch, 5000 + Math.random() * 20000);
     }
     setTimeout(randomScreenGlitch, 8000);
@@ -433,18 +470,60 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Setup Static Clock ---
-    function setupStaticClock() {
+    // --- Clock, Date & Time Warp ---
+    const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
+    let timeOffset = 0;
+    let isWarping = false;
+    let warpSpeed = 0;
+
+    function triggerTimeWarp() {
+      if(isWarping) return;
+      isWarping = true;
+      warpSpeed = 500; 
+      triggerActionShock();
+      
+      const warpInt = setInterval(() => {
+        warpSpeed *= 1.15; // تسارع الزمن
+        timeOffset += warpSpeed;
+      }, 30);
+
+      setTimeout(() => {
+        clearInterval(warpInt);
+        isWarping = false;
+        timeOffset = 0; // العودة للزمن الحقيقي
+        triggerHaptic([50, 100, 50]);
+        const app = document.getElementById('app');
+        app.classList.add('shake-active');
+        app.style.filter = "invert(1) hue-rotate(180deg)";
+        setTimeout(() => {
+          app.classList.remove('shake-active');
+          app.style.filter = "none";
+        }, 150);
+      }, 3500); // 3.5 ثوانٍ من الجنون
+    }
+    
+    // تشغيل الجنون الزمني أحياناً
+    setInterval(() => {
+       if(Math.random() > 0.5) triggerTimeWarp();
+    }, 14000);
+
+    function updateClock() {
+      const now = new Date(Date.now() + timeOffset); // الزمن مضاف إليه إزاحة الجنون
+      const h = now.getHours(); const m = now.getMinutes(); const s = now.getSeconds(); const ms = now.getMilliseconds();
+      
+      const sDeg = (s + (ms / 1000)) * 6;
+      const mDeg = (m + (s / 60)) * 6;
+      const hDeg = ((h % 12) + (m / 60)) * 30;
+      
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
         if(el) { el.style.transform = `rotate(${deg}deg)`; el.style.transformOrigin = '100px 100px'; }
       };
-      setTransform('handHour', 305);
-      setTransform('handMinute', 60);
-      setTransform('handSecond', 180);
 
-      const now = new Date();
-      const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
+      setTransform('handSecond', sDeg);
+      setTransform('handMinute', mDeg);
+      setTransform('handHour', hDeg);
+
       const dayEl = document.getElementById('clockDay');
       const dateEl = document.getElementById('clockDate');
       if(dayEl && dateEl) {
@@ -454,8 +533,9 @@
         const yyyy = now.getFullYear();
         dateEl.textContent = `${dd}.${mm}.${yyyy}`;
       }
+      requestAnimationFrame(updateClock);
     }
-    setupStaticClock();
+    updateClock();
 
     // --- Typewriter Effect ---
     function triggerTypewriter(viewEl) {
@@ -666,7 +746,6 @@ ${order.address.country}
         
         overlay.classList.remove('hidden');
         
-        // رجفة وتشويش حاد عند الظهور
         document.getElementById('app').classList.add('glitch-critical');
         triggerHaptic([100, 50, 100]);
         setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 250);
@@ -679,13 +758,12 @@ ${order.address.country}
           triggerHaptic([60, 60]); 
         }, 3000);
         
-        // إخفاء الرسالة ببطء
         setTimeout(() => {
           overlay.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
           setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); }, 1000);
         }, 6500);
         
-      }, Math.floor(Math.random() * (15000 - 8000 + 1) + 8000)); // توقيت عشوائي بين 8 و 15 ثانية
+      }, Math.floor(Math.random() * (15000 - 8000 + 1) + 8000)); 
     }
 
     const App = {
