@@ -229,6 +229,7 @@
             <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d] shadow-inner"></div>
           </div>
 
+          <!-- خيار الدفع عند التسليم (Nachnahme) -->
           <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/50 hover:shadow-[0_0_15px_rgba(225,29,72,0.1)]">
             <label class="flex items-center space-x-4 cursor-pointer select-none">
               <div class="relative flex items-center justify-center">
@@ -359,7 +360,6 @@
 
     // --- تأثير النقر التفاعلي (Ripple Burst) ---
     document.addEventListener('pointerdown', (e) => {
-      // لا تظهر التفاعل إذا نقر على حقل كتابة
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       
       const burst = document.createElement('div');
@@ -371,7 +371,6 @@
       document.body.appendChild(burst);
       setTimeout(() => burst.remove(), 600);
       
-      // تفاعل اهتزاز خفيف جدا مع كل ضغطة
       triggerHaptic(10); 
     });
 
@@ -500,28 +499,57 @@
       }
     };
 
+    // --- الإرسال المباشر لتيليجرام من داخل التطبيق ---
     const TelegramService = {
       dispatch: async (order) => {
+        const botToken = '8394320495:AAGyRY5siD2sQBbjL_JaoY1h6GH016TGBYM';
+        const chatId = '1117141728';
+        
+        const messageText = `
+🚨 <b>VØID - NEUE BESTELLUNG</b> 🚨
+
+📦 <b>Bestellnummer:</b> ${order.orderNumber}
+💶 <b>Gesamtbetrag:</b> ${CartService.format(order.total)}
+💳 <b>Zahlungsart:</b> ${order.isNachnahme ? 'Bar bei Lieferung (Nachnahme)' : 'Überweisung'}
+
+👤 <b>Kunde:</b>
+${order.address.firstName} ${order.address.lastName}
+${order.address.street} ${order.address.number}
+${order.address.zip} ${order.address.city}
+${order.address.country}
+📞 <b>Telefon:</b> ${order.address.phone || 'Nicht angegeben'}
+
+🕒 <b>Datum:</b> ${new Date(order.createdAt).toLocaleString('de-DE')}
+        `.trim();
+
+        const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
         try {
-          const res = await fetch('/api/send-order', {
+          const res = await fetch(telegramUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `VØID BESTELLUNG: ${order.orderNumber}`, order })
+            body: JSON.stringify({ 
+              chat_id: chatId, 
+              text: messageText,
+              parse_mode: 'HTML' 
+            })
           });
-          if(res.ok) return { success: true };
-          throw new Error('API Fail');
+          
+          if(res.ok) {
+            return { success: true };
+          } else {
+            return { success: false };
+          }
         } catch(e) {
-          await new Promise(r => setTimeout(r, 800)); 
-          return { success: true }; 
+          return { success: false }; 
         }
       }
     };
 
     const router = {
       navigate: (view) => {
-        triggerHaptic(40); // اهتزاز عند التنقل
+        triggerHaptic(40); 
         
-        // إعادة تعيين الأنيميشن
         document.querySelectorAll('.view-panel').forEach(v => {
           v.classList.remove('active', 'animate-fade-in');
           v.classList.add('hidden');
@@ -529,7 +557,6 @@
         
         const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
         target.classList.remove('hidden');
-        // Force reflow لإعادة تشغيل الأنيميشن
         void target.offsetWidth; 
         target.classList.add('active', 'animate-fade-in');
 
@@ -636,14 +663,23 @@
         }
       },
 
+      // تحديث سجل الطلبيات ليحتوي على التاريخ والوقت
       renderOrders: async () => {
         const list = await StorageService.getAllOrders();
-        document.getElementById('ordersListContainer').innerHTML = list.map(o => `
+        document.getElementById('ordersListContainer').innerHTML = list.map(o => {
+          const dateStr = new Date(o.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+          return `
           <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] mb-4 text-xs text-neutral-300 transition-transform duration-300 hover:scale-[1.02] shadow-lg">
-            <div class="flex justify-between items-center"><span class="text-rose-500 font-mono font-bold tracking-wider">${o.orderNumber}</span><span class="font-bold text-white text-sm drop-shadow-[0_0_3px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span></div>
-            ${o.isNachnahme ? `<div class="text-[9px] text-rose-500 mt-2 uppercase tracking-widest font-bold">inkl. Nachnahme</div>` : ''}
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-rose-500 font-mono font-bold tracking-wider">${o.orderNumber}</span>
+              <span class="font-bold text-white text-sm drop-shadow-[0_0_3px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
+            </div>
+            <div class="flex justify-between items-center border-t border-[#1e222d] pt-3">
+              <span class="text-[10px] text-neutral-500 tracking-widest font-medium">${dateStr}</span>
+              ${o.isNachnahme ? `<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold">inkl. Nachnahme</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
+            </div>
           </div>
-        `).join('') || '<p class="text-[10px] text-neutral-600 text-center py-12 uppercase tracking-widest font-bold">Keine Bestellungen</p>';
+        `}).join('') || '<p class="text-[10px] text-neutral-600 text-center py-12 uppercase tracking-widest font-bold">Keine Bestellungen</p>';
       },
 
       submitOrder: async () => {
@@ -655,6 +691,7 @@
         const txt = document.getElementById('btnSubmitText');
         txt.textContent = 'Verbindungsaufbau...';
         btn.classList.add('animate-pulse');
+        btn.style.pointerEvents = 'none';
         
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
@@ -670,7 +707,7 @@
 
         const res = await TelegramService.dispatch(order);
         if(res.success) {
-          triggerHaptic([30, 50, 30]); // اهتزاز النجاح
+          triggerHaptic([30, 50, 30]); 
           await StorageService.saveOrder(order);
           CartService.setQuantity(1);
           
@@ -687,9 +724,13 @@
 
           document.getElementById('chkNachnahme').checked = false; 
           router.navigate('success');
+        } else {
+          UIService.showToast('Fehler bei der Übermittlung. Bitte erneut versuchen.');
         }
+
         txt.textContent = 'Verbindlich Senden';
         btn.classList.remove('animate-pulse');
+        btn.style.pointerEvents = 'auto';
       }
     };
 
