@@ -2,7 +2,6 @@
 <html lang="de" class="dark">
 <head>
   <meta charset="UTF-8">
-  <!-- منع التكبير والتحكم الدقيق في أبعاد الشاشة -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NØX — HELL</title>
   <meta name="theme-color" content="#0a0a0c">
@@ -29,7 +28,6 @@
       color: #f4f4f5;
       margin: 0;
       padding: 0;
-      /* منع التحديد والتكبير (Double-tap zoom) والتحديث بالسحب */
       user-select: none;
       -webkit-user-select: none;
       touch-action: manipulation;
@@ -45,7 +43,6 @@
     }
     .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 
-    /* تأثير النبض الخفيف لخلفية الساعة */
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.5; transform: scale(1); }
       50% { opacity: 0.8; transform: scale(1.05); }
@@ -55,7 +52,7 @@
     .nav-item.active { color: #f43f5e !important; }
     .nav-item.active svg { stroke: #f43f5e !important; }
 
-    ::-webkit-scrollbar { display: none; } /* إخفاء شريط التمرير لمظهر أنظف */
+    ::-webkit-scrollbar { display: none; } 
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col font-sans">
@@ -87,35 +84,32 @@
           
           <!-- تصميم الساعة الاحترافي SVG -->
           <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_20px_rgba(225,29,72,0.15)] z-10">
-            <!-- الإطار الخارجي والخلفية -->
             <circle cx="100" cy="100" r="96" fill="#07080a" stroke="#1c1f2b" stroke-width="2" />
             
-            <!-- علامات الساعات الأربع الرئيسية -->
+            <!-- علامات الساعات -->
             <line x1="100" y1="12" x2="100" y2="20" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
             <line x1="100" y1="188" x2="100" y2="180" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
             <line x1="12" y1="100" x2="20" y2="100" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
             <line x1="188" y1="100" x2="180" y2="100" stroke="#374151" stroke-width="2" stroke-linecap="round"/>
             
-            <!-- نقاط الدقائق المحيطية الدقيقة -->
             <circle cx="100" cy="100" r="86" fill="none" stroke="#1f2433" stroke-width="1.5" stroke-dasharray="1 7.9" />
 
-            <!-- عقرب الساعات (أحمر متوهج) -->
+            <!-- عقرب الساعات -->
             <g id="handHour">
               <line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))" />
             </g>
             
-            <!-- عقرب الدقائق (أبيض ناصع) -->
+            <!-- عقرب الدقائق -->
             <g id="handMinute">
               <line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
             </g>
             
-            <!-- عقرب الثواني (رمادي مع نقطة حمراء) -->
+            <!-- عقرب الثواني -->
             <g id="handSecond">
               <line x1="100" y1="115" x2="100" y2="18" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" />
               <circle cx="100" cy="18" r="3.5" fill="#f43f5e" />
             </g>
             
-            <!-- مركز الساعة (المحور) -->
             <circle cx="100" cy="100" r="5" fill="#07080a" stroke="#ffffff" stroke-width="2" />
           </svg>
         </div>
@@ -125,13 +119,12 @@
         </button>
       </section>
 
-      <!-- VIEW: CART / PRODUCT SELECTION -->
+      <!-- VIEW: CART -->
       <section id="viewCart" class="view-panel hidden animate-fade-in">
         <h2 class="text-xl font-bold tracking-wider uppercase text-white mb-1">HELL</h2>
         <p class="text-xs text-neutral-500 mb-6">Original Edition • 500g • Reines Konzentrat</p>
 
         <div id="cartContentState" class="space-y-4">
-          
           <div class="bg-[#0f1116] border border-[#1d202b] rounded-2xl p-6 flex flex-col items-center shadow-lg">
             <span class="text-3xl font-bold text-white mb-5">35,00 <span class="text-base text-neutral-500 font-normal">€</span></span>
             
@@ -236,8 +229,15 @@
             <span class="text-neutral-500">Gesamtbetrag:</span>
             <span id="succTotal" class="text-white font-bold text-base">0,00 €</span>
           </div>
+          
+          <!-- رسالة الدفع عند التسليم -->
           <div id="succNachnahmeMsg" class="text-[11px] text-rose-400 mt-2 hidden border-t border-rose-900/30 pt-2">
             Bitte halte den Betrag bei Lieferung passend bereit.
+          </div>
+
+          <!-- رسالة التحويل البنكي (تمت إضافتها) -->
+          <div id="succTransferMsg" class="text-[11px] text-neutral-400 mt-2 hidden border-t border-[#1d202b] pt-2">
+            Bitte überweise den Gesamtbetrag auf das bekannte Konto.
           </div>
         </div>
         <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#1c1f2b] text-white font-bold text-xs uppercase active:scale-95 transition">Meine Bestellungen ansehen</button>
@@ -261,7 +261,7 @@
       </button>
     </nav>
 
-    <!-- MODALS & UI COMPONENTS -->
+    <!-- MODALS -->
     <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000cc] backdrop-blur-md flex items-end sm:items-center justify-center p-4">
       <div class="bg-[#0f1116] border border-[#1d202b] rounded-3xl w-full max-w-sm p-6 space-y-5 shadow-2xl">
         <h3 id="addressModalTitle" class="text-base font-bold uppercase text-white">Neue Adresse</h3>
@@ -292,7 +292,6 @@
   </div>
 
   <script>
-    // --- حركة عقارب الساعة الانسيابية (Smooth Clock Animation) ---
     function updateClock() {
       const now = new Date();
       const h = now.getHours();
@@ -300,7 +299,6 @@
       const s = now.getSeconds();
       const ms = now.getMilliseconds();
       
-      // دمج الأجزاء من الثانية للحصول على حركة سلسة جداً لعقرب الثواني
       const sDeg = (s + (ms / 1000)) * 6;
       const mDeg = (m + (s / 60)) * 6;
       const hDeg = ((h % 12) + (m / 60)) * 30;
@@ -321,7 +319,6 @@
     }
     updateClock();
 
-    // --- نظام التخزين المحلي (Storage Service) ---
     const StorageService = (function () {
       const DB_NAME = 'NoxShopDB';
       let dbInstance = null;
@@ -382,7 +379,6 @@
       };
     })();
 
-    // --- حسابات السلة والأسعار (Cart & Pricing) ---
     const CartService = (function () {
       let qty = 1;
       const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
@@ -401,7 +397,6 @@
       };
     })();
 
-    // --- الإشعارات وواجهة المستخدم (UI Service) ---
     const UIService = {
       showToast: (msg) => {
         const c = document.getElementById('toastContainer');
@@ -421,7 +416,6 @@
       }
     };
 
-    // --- محاكاة إرسال تيليجرام (Telegram Dummy Service) ---
     const TelegramService = {
       dispatch: async (order) => {
         try {
@@ -433,13 +427,12 @@
           if(res.ok) return { success: true };
           throw new Error('API Fail');
         } catch(e) {
-          await new Promise(r => setTimeout(r, 600)); // محاكاة وقت المعالجة
+          await new Promise(r => setTimeout(r, 600)); 
           return { success: true }; 
         }
       }
     };
 
-    // --- المتحكم الأساسي للتطبيق (Main App Controller) ---
     const router = {
       navigate: (view) => {
         document.querySelectorAll('.view-panel').forEach(v => v.classList.add('hidden', 'active'));
@@ -460,14 +453,11 @@
         await StorageService.openDatabase();
         document.getElementById('cartQtyDisplay').textContent = CartService.getQuantity();
 
-        // تفعيل أزرار التنقل السفلية
         document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => router.navigate(b.dataset.nav));
         
-        // أزرار التحكم بالكمية
         document.getElementById('btnCartPlus').onclick = () => { CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
         document.getElementById('btnCartMinus').onclick = () => { if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
         
-        // زر الانتقال للدفع
         document.getElementById('btnGoToCheckout').onclick = async () => {
           const a = await StorageService.getSelectedAddress();
           if(!a) {
@@ -478,17 +468,14 @@
           }
         };
         
-        // تحديث إجمالي السعر عند تفعيل/إلغاء خيار الدفع عند الاستلام
         document.getElementById('chkNachnahme').addEventListener('change', () => App.renderCheckout());
 
-        // نوافذ العناوين
         document.getElementById('btnOpenAddressModal').onclick = () => {
           document.getElementById('addressForm').reset();
           document.getElementById('addressModal').classList.remove('hidden');
         };
         document.getElementById('addressForm').onsubmit = App.saveAddress;
 
-        // إرسال الطلب
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
       },
 
@@ -579,17 +566,19 @@
         if(res.success) {
           await StorageService.saveOrder(order);
           CartService.setQuantity(1);
-          document.getElementById('chkNachnahme').checked = false; 
-
+          
           document.getElementById('succOrderNumber').textContent = order.orderNumber;
           document.getElementById('succTotal').textContent = CartService.format(order.total);
           
           if(isNachnahme) {
              document.getElementById('succNachnahmeMsg').classList.remove('hidden');
+             document.getElementById('succTransferMsg').classList.add('hidden');
           } else {
              document.getElementById('succNachnahmeMsg').classList.add('hidden');
+             document.getElementById('succTransferMsg').classList.remove('hidden');
           }
 
+          document.getElementById('chkNachnahme').checked = false; 
           router.navigate('success');
         }
         document.getElementById('btnSubmitText').textContent = 'Bestellung verbindlich senden';
