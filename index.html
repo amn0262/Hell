@@ -8,44 +8,54 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root {
       --font-brand: 'Cinzel', serif;
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'Space Mono', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    /* تثبيت الشاشة لتتناسب تماماً مع حجم الموبايل */
     html, body {
       font-family: var(--font-sans);
       background-color: #030305;
       color: #f4f4f5;
-      margin: 0;
-      padding: 0;
-      height: 100dvh; /* الارتفاع الدقيق للشاشة */
-      width: 100vw;
-      overflow: hidden; /* قفل التمرير العام */
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      overscroll-behavior-y: none; 
+      margin: 0; padding: 0;
+      height: 100dvh; width: 100vw;
+      overflow: hidden; 
+      user-select: none; -webkit-user-select: none;
+      touch-action: manipulation; overscroll-behavior-y: none; 
     }
 
     .brand-title { font-family: var(--font-brand); }
+    .font-mono-custom { font-family: var(--font-mono); }
+
+    /* تأثيرات الشاشة (Scanlines) */
+    .scanlines {
+      position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+      background-size: 100% 4px;
+      opacity: 0.4;
+    }
 
     /* انتقالات سينمائية للصفحات */
     @keyframes popInCinematic {
-      0% { opacity: 0; transform: scale(0.92) translateY(20px); filter: blur(8px); }
+      0% { opacity: 0; transform: scale(0.9) translateY(30px); filter: blur(10px); }
       100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
     }
-    .animate-fade-in { animation: popInCinematic 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-fade-in { animation: popInCinematic 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    /* البطاقات الطافية */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-float-delayed { animation: float 6s ease-in-out infinite 3s; }
 
     /* توهج النبض للساعة */
     @keyframes pulseGlow {
@@ -59,7 +69,7 @@
     .animate-spin-slow { animation: spinOrbit 20s linear infinite; transform-origin: 100px 100px; }
     .animate-reverse-spin { animation: spinOrbit 12s linear infinite reverse; transform-origin: 100px 100px; }
 
-    /* تأثير التشويش (Glitch) الدائم */
+    /* تأثير التشويش (Glitch) */
     @keyframes glitch {
       0%, 100% { transform: translate(0); opacity: 1; }
       10% { transform: translate(-2px, 1px); }
@@ -74,33 +84,22 @@
       text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.3);
     }
 
-    /* الجسيمات المتطايرة الخلفية (Particles) */
+    /* الجسيمات المتطايرة (Particles) */
     @keyframes floatUp {
       0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
       20% { opacity: 0.8; }
       80% { opacity: 0.5; }
       100% { transform: translateY(-20vh) scale(2) rotate(360deg); opacity: 0; }
     }
-    .particle {
-      position: absolute;
-      bottom: -10px;
-      pointer-events: none;
-      animation: floatUp infinite linear;
-    }
+    .particle { position: absolute; bottom: -10px; pointer-events: none; animation: floatUp infinite linear; }
     .particle:nth-child(1) { left: 10%; width: 2px; height: 2px; background: #f43f5e; animation-duration: 6s; animation-delay: 0.5s; box-shadow: 0 0 8px #f43f5e; }
     .particle:nth-child(2) { left: 50%; width: 3px; height: 3px; background: #ffffff; animation-duration: 8s; animation-delay: 2s; box-shadow: 0 0 10px #ffffff; }
     .particle:nth-child(3) { left: 80%; width: 1.5px; height: 1.5px; background: #9ca3af; animation-duration: 5s; animation-delay: 0s; box-shadow: 0 0 5px #9ca3af; }
 
-    /* === تأثيرات النار والشهب من الأسفل === */
+    /* === تأثيرات النار والشهب === */
     .fire-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 45vh;
-      pointer-events: none;
-      z-index: 20; /* أسفل الشريط السفلي بقليل */
-      overflow: hidden;
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
+      pointer-events: none; z-index: 20; overflow: hidden;
       mask-image: linear-gradient(to top, black 20%, transparent 100%);
       -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
     }
@@ -115,60 +114,49 @@
       filter: blur(15px); animation: pulseGlow 3s infinite alternate-reverse;
     }
     .spark {
-      position: absolute;
-      bottom: 0;
-      width: 2px;
+      position: absolute; bottom: 0; width: 2px;
       background: linear-gradient(to top, transparent, #ffffff 20%, #f43f5e 80%, transparent);
-      border-radius: 50%;
-      opacity: 0;
-      animation: shootUp infinite ease-in-out;
-      box-shadow: 0 0 8px 1px rgba(244,63,94,0.8);
+      border-radius: 50%; opacity: 0; animation: shootUp infinite ease-in-out;
+      box-shadow: 0 0 10px 2px rgba(244,63,94,0.8);
     }
     @keyframes shootUp {
       0% { transform: translateY(20px) scale(0.5); opacity: 0; height: 10px; }
-      20% { opacity: 1; height: 35px; }
+      20% { opacity: 1; height: 40px; }
       80% { opacity: 0.8; }
-      100% { transform: translateY(-350px) scale(0.1); opacity: 0; height: 50px; }
+      100% { transform: translateY(-400px) scale(0.1); opacity: 0; height: 60px; }
     }
 
     /* تأثير الانفجار عند النقر */
     .click-ripple {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
+      position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
       background: radial-gradient(circle, rgba(244,63,94,0.8) 0%, rgba(244,63,94,0) 70%);
-      z-index: 9999;
-      animation: rippleAnim 0.6s ease-out forwards;
+      z-index: 9999; animation: rippleAnim 0.6s ease-out forwards;
     }
     @keyframes rippleAnim {
       0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
       100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
     }
 
-    input:focus {
-      box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
-      border-color: #f43f5e !important;
-    }
-
-    .nav-item.active { color: #f43f5e !important; transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(225,29,72,0.5)); }
+    /* الشريط السفلي المتفاعل */
+    .nav-item.active { color: #f43f5e !important; transform: scale(1.15) translateY(-5px); filter: drop-shadow(0 0 10px rgba(225,29,72,0.6)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
-    .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .nav-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-    /* إخفاء شريط التمرير ولكن الحفاظ على عمل التمرير */
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
   </style>
 </head>
 <body class="antialiased font-sans">
 
-  <!-- #app is now explicitly 100dvh -->
+  <div class="scanlines"></div> <!-- طبقة خطوط الشاشة القديمة -->
+
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
     <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#07080a]/80 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
-        <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
+        <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect typewriter" data-text="VØID"></span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse shadow-[0_0_10px_#f43f5e]"></span>
       </div>
       <div class="flex items-center space-x-4">
@@ -183,14 +171,14 @@
     <!-- MAIN SCROLLABLE CONTENT -->
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Mesmerizing Analog Clock + Particles) -->
+      <!-- VIEW: HOME (Mesmerizing Analog Clock + Date/Day + Particles) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
         
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <div class="particle"></div><div class="particle"></div><div class="particle"></div>
         </div>
 
-        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-700 hover:scale-105 cursor-pointer" onclick="triggerHaptic()">
+        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-700 hover:scale-105 cursor-pointer" onclick="triggerHaptic(50)">
           <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] animate-glow pointer-events-none"></div>
           
           <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.25)]">
@@ -206,6 +194,11 @@
             
             <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1d26" stroke-width="1.5" stroke-dasharray="1 7.37" />
 
+            <!-- التاريخ واليوم المدمج في الساعة -->
+            <text id="clockDay" x="100" y="132" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" opacity="0.8"></text>
+            <text id="clockDate" x="100" y="148" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 3px rgba(244,63,94,0.6))"></text>
+
+            <!-- العقارب -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="52" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
@@ -216,19 +209,17 @@
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 hover:text-white transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group">
-          <span class="relative z-10">EINTRETEN</span>
-          <div class="absolute inset-0 bg-rose-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group typewriter" data-text="EINTRETEN">
         </button>
       </section>
 
       <!-- VIEW: CART -->
       <section id="viewCart" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-1 glitch-effect">HELL</h2>
-        <p class="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest">Original Edition • 500g</p>
+        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-1 glitch-effect typewriter" data-text="HELL"></h2>
+        <p class="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest typewriter" data-text="Original Edition • 500g"></p>
 
         <div id="cartContentState" class="space-y-4">
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-6 flex flex-col items-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-[1.02]">
+          <div class="animate-float bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-6 flex flex-col items-center shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
             <span class="text-4xl font-bold text-white mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">35,00 <span class="text-xl text-neutral-500 font-normal">€</span></span>
             
             <div class="w-full bg-[#12141a] p-2 rounded-2xl border border-[#1e222d] flex items-center justify-between shadow-inner">
@@ -238,13 +229,13 @@
             </div>
           </div>
 
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
+          <div class="animate-float-delayed bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
             <div class="flex justify-between text-xs text-neutral-400">
               <span>Zwischensumme</span>
               <span id="cartSubtotal" class="text-white font-medium">0,00 €</span>
             </div>
             <div class="flex justify-between text-xs text-neutral-400">
-              <span>Versandkosten <span id="shippingRuleNote" class="text-[10px] text-neutral-600">(1–4 Stk: 5€)</span></span>
+              <span>Versand <span class="text-[10px] text-neutral-600">(1–4: 5€)</span></span>
               <span id="cartShipping" class="text-white font-medium">5,00 €</span>
             </div>
             <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
@@ -253,18 +244,16 @@
             </div>
           </div>
 
-          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right">
-            Zur Kasse
-          </button>
+          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right typewriter" data-text="ZUR KASSE"></button>
         </div>
       </section>
 
       <!-- VIEW: CHECKOUT -->
       <section id="viewCheckout" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-xl font-bold tracking-widest uppercase text-white mb-6">Bestellübersicht</h2>
+        <h2 class="text-xl font-bold tracking-widest uppercase text-white mb-6 typewriter" data-text="BESTELLÜBERSICHT"></h2>
         
         <div class="space-y-4">
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-transform duration-300 hover:scale-[1.01]">
+          <div class="animate-float bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4">
             <div class="flex justify-between mb-3 items-center">
               <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
               <button onclick="router.navigate('addresses')" class="text-[10px] text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
@@ -285,7 +274,7 @@
             </label>
           </div>
 
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
+          <div class="animate-float-delayed bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
             <div class="flex justify-between text-xs text-neutral-400">
               <span>Zwischensumme:</span><span id="chkSummarySubtotal" class="text-white font-medium">0,00 €</span>
             </div>
@@ -296,13 +285,13 @@
               <span>Nachnahmegebühr:</span><span>9,00 €</span>
             </div>
             <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
-              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamtbetrag:</span>
+              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamt:</span>
               <span id="chkSummaryTotal" class="text-xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.4)]">0,00 €</span>
             </div>
           </div>
 
           <button id="btnSubmitOrder" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_25px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right">
-            <span id="btnSubmitText">Verbindlich Senden</span>
+            <span id="btnSubmitText" class="typewriter" data-text="VERBINDLICH SENDEN"></span>
           </button>
         </div>
       </section>
@@ -310,7 +299,7 @@
       <!-- VIEW: ADDRESSES -->
       <section id="viewAddresses" class="view-panel hidden animate-fade-in relative z-10">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold uppercase tracking-widest text-white">Adressen</h2>
+          <h2 class="text-xl font-bold uppercase tracking-widest text-white typewriter" data-text="ADRESSEN"></h2>
           <button id="btnOpenAddressModal" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-500 border border-rose-500/30 text-[10px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all">Neu</button>
         </div>
         <div id="addressListContainer" class="space-y-4"></div>
@@ -318,14 +307,14 @@
 
       <!-- VIEW: ORDERS -->
       <section id="viewOrders" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-xl font-bold uppercase tracking-widest text-white mb-6">Historie</h2>
+        <h2 class="text-xl font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="HISTORIE"></h2>
         <div id="ordersListContainer" class="space-y-4"></div>
       </section>
       
       <!-- VIEW: SUCCESS -->
       <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-8 relative z-10">
-        <h2 class="text-3xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.5)]">Erfolgreich</h2>
-        <div class="bg-[#0b0c10]/90 backdrop-blur-md border border-[#181a23] rounded-3xl p-6 text-left space-y-4 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.6)] transform transition-transform duration-500 hover:scale-105">
+        <h2 class="text-3xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.5)] typewriter" data-text="ERFOLGREICH"></h2>
+        <div class="animate-float bg-[#0b0c10]/90 backdrop-blur-md border border-[#181a23] rounded-3xl p-6 text-left space-y-4 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
           <div class="flex justify-between text-xs items-center">
             <span class="text-neutral-500 uppercase tracking-widest text-[9px] font-bold">Bestellnummer</span>
             <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider text-sm bg-[#12141a] px-2 py-1 rounded-md">VOD-000</span>
@@ -335,25 +324,25 @@
             <span id="succTotal" class="text-rose-500 font-bold text-xl drop-shadow-[0_0_5px_rgba(225,29,72,0.3)]">0,00 €</span>
           </div>
           
-          <div id="succNachnahmeMsg" class="text-xs text-rose-400 mt-4 hidden border-t border-rose-900/30 pt-4 font-bold tracking-wide leading-relaxed text-center">
+          <div id="succNachnahmeMsg" class="text-xs text-rose-400 mt-4 hidden border-t border-rose-900/30 pt-4 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte halte den Betrag bei Lieferung passend bereit.
           </div>
 
-          <div id="succTransferMsg" class="text-xs text-neutral-300 mt-4 hidden border-t border-[#1e222d] pt-4 font-medium tracking-wide leading-relaxed text-center">
+          <div id="succTransferMsg" class="text-xs text-neutral-300 mt-4 hidden border-t border-[#1e222d] pt-4 font-medium tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte überweise den Gesamtbetrag auf das bekannte Konto.
           </div>
         </div>
-        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#12141a] border border-[#1e222d] text-neutral-400 hover:text-white hover:border-rose-900 font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-lg">Zur Historie</button>
+        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#12141a] border border-[#1e222d] text-neutral-400 hover:text-white hover:border-rose-900 font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-lg typewriter" data-text="ZUR HISTORIE"></button>
       </section>
 
     </main>
 
-    <!-- FIRE & SPARKS CONTAINER (يظهر أسفل الشريط السفلي) -->
+    <!-- FIRE & SPARKS CONTAINER -->
     <div class="fire-container">
       <div class="fire-glow-1"></div>
       <div class="fire-glow-2"></div>
       
-      <!-- الشهب النارية المتصاعدة -->
+      <!-- الشهب النارية المتصاعدة المتعددة -->
       <div class="spark" style="left: 10%; animation-duration: 1.8s; animation-delay: 0.1s;"></div>
       <div class="spark" style="left: 20%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
       <div class="spark" style="left: 35%; animation-duration: 1.5s; animation-delay: 0.9s;"></div>
@@ -366,7 +355,7 @@
       <div class="spark" style="left: 75%; animation-duration: 2.0s; animation-delay: 0.1s;"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (ثابت لا يختفي أبداً) -->
+    <!-- BOTTOM NAVIGATION (ثابت) -->
     <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#050608]/70 backdrop-blur-xl border-t border-rose-900/30 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -384,8 +373,8 @@
 
     <!-- MODALS -->
     <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f0] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
-      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-6 space-y-6 shadow-[0_0_60px_rgba(225,29,72,0.15)] animate-fade-in">
-        <h3 id="addressModalTitle" class="text-xs font-bold uppercase tracking-widest text-white glitch-effect">Neue Adresse</h3>
+      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-6 space-y-6 shadow-[0_0_60px_rgba(225,29,72,0.15)]">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-white glitch-effect typewriter" data-text="NEUE ADRESSE"></h3>
         <form id="addressForm" class="space-y-4">
           <input type="hidden" id="addressFormId">
           <div class="grid grid-cols-2 gap-3">
@@ -418,7 +407,7 @@
       if (navigator.vibrate) navigator.vibrate(ms);
     }
 
-    // --- تأثير النقر ---
+    // --- تأثير النقر (Ripple) ---
     document.addEventListener('pointerdown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       const burst = document.createElement('div');
@@ -429,10 +418,10 @@
       burst.style.height = '40px';
       document.body.appendChild(burst);
       setTimeout(() => burst.remove(), 600);
-      triggerHaptic(10); 
     });
 
-    // --- الساعة التفاعلية ---
+    // --- الساعة مع التاريخ واسم اليوم ---
+    const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
     function updateClock() {
       const now = new Date();
       const h = now.getHours();
@@ -455,33 +444,77 @@
       setTransform('handSecond', sDeg);
       setTransform('handMinute', mDeg);
       setTransform('handHour', hDeg);
+
+      // تحديث اليوم والتاريخ داخل الساعة
+      const dayEl = document.getElementById('clockDay');
+      const dateEl = document.getElementById('clockDate');
+      if(dayEl && dateEl) {
+        dayEl.textContent = daysArr[now.getDay()];
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const yyyy = now.getFullYear();
+        dateEl.textContent = `${dd}.${mm}.${yyyy}`;
+      }
       
       requestAnimationFrame(updateClock);
     }
     updateClock();
 
+    // --- دالة تأثير الآلة الكاتبة (Typewriter Effect) ---
+    function triggerTypewriter(viewEl) {
+      const elements = viewEl.querySelectorAll('.typewriter');
+      elements.forEach(el => {
+        const text = el.getAttribute('data-text');
+        if (!text) return;
+        el.textContent = '';
+        let i = 0;
+        function type() {
+          if (i < text.length) {
+            el.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, 30 + Math.random() * 40); // سرعة كتابة عشوائية تشبه الواقع
+          }
+        }
+        setTimeout(type, 300); // تأخير بسيط حتى تكتمل حركة ظهور الصفحة
+      });
+
+      // تشغيل الآلة الكاتبة للنصوص الديناميكية المخبأة (مثل رسائل النجاح)
+      const dynamicElements = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
+      dynamicElements.forEach(el => {
+        if (!el.hasAttribute('data-original-text')) {
+           el.setAttribute('data-original-text', el.textContent.trim());
+        }
+        const text = el.getAttribute('data-original-text');
+        el.textContent = '';
+        let i = 0;
+        function typeDyn() {
+          if (i < text.length) {
+            el.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeDyn, 25); 
+          }
+        }
+        setTimeout(typeDyn, 400);
+      });
+    }
+
+    // --- قاعدة البيانات المؤقتة والمنطق ---
     const StorageService = (function () {
       const DB_NAME = 'VOIDShopDB';
       let dbInstance = null;
-
       function openDatabase() {
         return new Promise((resolve, reject) => {
           if (dbInstance) return resolve(dbInstance);
           const request = indexedDB.open(DB_NAME, 1);
           request.onupgradeneeded = (e) => {
             const db = e.target.result;
-            if (!db.objectStoreNames.contains('addresses')) {
-              db.createObjectStore('addresses', { keyPath: 'id' }).createIndex('isDefault', 'isDefault');
-            }
-            if (!db.objectStoreNames.contains('orders')) {
-              db.createObjectStore('orders', { keyPath: 'orderNumber' }).createIndex('createdAt', 'createdAt');
-            }
+            if (!db.objectStoreNames.contains('addresses')) db.createObjectStore('addresses', { keyPath: 'id' }).createIndex('isDefault', 'isDefault');
+            if (!db.objectStoreNames.contains('orders')) db.createObjectStore('orders', { keyPath: 'orderNumber' }).createIndex('createdAt', 'createdAt');
           };
           request.onsuccess = (e) => resolve(dbInstance = e.target.result);
           request.onerror = (e) => reject(e.target.error);
         });
       }
-
       async function getAll(storeName) {
         const db = await openDatabase();
         return new Promise(res => {
@@ -490,7 +523,6 @@
           req.onsuccess = () => res(req.result || []);
         });
       }
-
       async function saveItem(storeName, item) {
         const db = await openDatabase();
         return new Promise(res => {
@@ -499,7 +531,6 @@
           req.onsuccess = () => res(item);
         });
       }
-
       return {
         openDatabase,
         getAllAddresses: () => getAll('addresses'),
@@ -523,17 +554,11 @@
     const CartService = (function () {
       let qty = 1;
       const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
-      
       return {
         init: () => qty = StorageService.getCartQty(),
         getQuantity: () => qty,
         setQuantity: (q) => { qty = Math.max(1, q); StorageService.setCartQty(qty); return qty; },
-        getCalculations: () => ({
-          quantity: qty,
-          subtotal: qty * 35.00,
-          shipping: calcShipping(qty),
-          total: (qty * 35.00) + calcShipping(qty)
-        }),
+        getCalculations: () => ({ quantity: qty, subtotal: qty * 35.00, shipping: calcShipping(qty), total: (qty * 35.00) + calcShipping(qty) }),
         format: (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €'
       };
     })();
@@ -543,10 +568,34 @@
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
         t.className = 'p-3 px-5 rounded-2xl text-xs font-bold bg-[#0b0c10]/95 backdrop-blur-md border border-[#232734] text-white shadow-[0_10px_30px_rgba(225,29,72,0.2)] transition-all transform duration-300 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide';
-        t.innerHTML = `<span class="text-rose-500 mr-3 text-xl leading-none animate-pulse">&bull;</span>${msg}`;
+        
+        const icon = document.createElement('span');
+        icon.className = 'text-rose-500 mr-3 text-xl leading-none animate-pulse';
+        icon.innerHTML = '&bull;';
+        
+        const textSpan = document.createElement('span');
+        t.appendChild(icon);
+        t.appendChild(textSpan);
         c.appendChild(t);
+        
         requestAnimationFrame(() => t.classList.replace('translate-y-[-20px]', 'translate-y-0') || t.classList.replace('scale-95', 'scale-100') || t.classList.replace('opacity-0', 'opacity-100'));
-        setTimeout(() => t.remove(), 3000);
+        
+        // تأثير الآلة الكاتبة للإشعار
+        let i = 0;
+        function typeToast() {
+          if (i < msg.length) {
+            textSpan.textContent += msg.charAt(i);
+            i++;
+            setTimeout(typeToast, 25);
+          }
+        }
+        typeToast();
+
+        setTimeout(() => {
+          t.style.opacity = '0';
+          t.style.transform = 'translateY(-20px) scale(0.95)';
+          setTimeout(() => t.remove(), 300);
+        }, 3000 + (msg.length * 25));
       },
       renderCart: () => {
         const c = CartService.getCalculations();
@@ -586,18 +635,9 @@ ${order.address.country}
           const res = await fetch(telegramUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              chat_id: chatId, 
-              text: messageText,
-              parse_mode: 'HTML' 
-            })
+            body: JSON.stringify({ chat_id: chatId, text: messageText, parse_mode: 'HTML' })
           });
-          
-          if(res.ok) {
-            return { success: true };
-          } else {
-            return { success: false };
-          }
+          return { success: res.ok };
         } catch(e) {
           return { success: false }; 
         }
@@ -619,14 +659,15 @@ ${order.address.country}
         target.classList.add('active', 'animate-fade-in');
 
         document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
-        
-        // إعادة تعيين السكرول للأعلى عند تغيير الصفحة
         document.getElementById('mainContent').scrollTo(0,0);
         
         if(view === 'cart') UIService.renderCart();
         if(view === 'checkout') App.renderCheckout();
         if(view === 'addresses') App.renderAddresses();
         if(view === 'orders') App.renderOrders();
+
+        // تفعيل حركة الآلة الكاتبة في الصفحة المفتوحة
+        triggerTypewriter(target);
       }
     };
 
@@ -662,6 +703,9 @@ ${order.address.country}
         document.getElementById('addressForm').onsubmit = App.saveAddress;
 
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
+
+        // تشغيل الآلة الكاتبة للصفحة الرئيسية عند البداية
+        triggerTypewriter(document.getElementById('viewHome'));
       },
 
       closeAddressModal: () => {
@@ -748,9 +792,19 @@ ${order.address.country}
         
         const btn = document.getElementById('btnSubmitOrder');
         const txt = document.getElementById('btnSubmitText');
-        txt.textContent = 'Verbindungsaufbau...';
+        
+        // إيقاف الزر مؤقتاً أثناء الإرسال
         btn.classList.add('animate-pulse');
         btn.style.pointerEvents = 'none';
+        
+        // تأثير الآلة الكاتبة لجملة الانتظار
+        txt.textContent = '';
+        let waitText = "VERBINDUNG...";
+        let w = 0;
+        function typeWait() {
+          if (w < waitText.length) { txt.textContent += waitText.charAt(w); w++; setTimeout(typeWait, 30); }
+        }
+        typeWait();
         
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
@@ -787,7 +841,8 @@ ${order.address.country}
           UIService.showToast('Fehler bei der Übermittlung. Bitte erneut versuchen.');
         }
 
-        txt.textContent = 'Verbindlich Senden';
+        // استعادة حالة الزر الأصلية
+        txt.textContent = 'VERBINDLICH SENDEN';
         btn.classList.remove('animate-pulse');
         btn.style.pointerEvents = 'auto';
       }
