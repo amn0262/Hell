@@ -22,17 +22,20 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* تثبيت الشاشة لتتناسب تماماً مع حجم الموبايل */
     html, body {
       font-family: var(--font-sans);
       background-color: #030305;
       color: #f4f4f5;
       margin: 0;
       padding: 0;
+      height: 100dvh; /* الارتفاع الدقيق للشاشة */
+      width: 100vw;
+      overflow: hidden; /* قفل التمرير العام */
       user-select: none;
       -webkit-user-select: none;
       touch-action: manipulation;
       overscroll-behavior-y: none; 
-      overflow-x: hidden;
     }
 
     .brand-title { font-family: var(--font-brand); }
@@ -71,7 +74,7 @@
       text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.3);
     }
 
-    /* الجسيمات المتطايرة (Particles) */
+    /* الجسيمات المتطايرة الخلفية (Particles) */
     @keyframes floatUp {
       0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
       20% { opacity: 0.8; }
@@ -87,8 +90,46 @@
     .particle:nth-child(1) { left: 10%; width: 2px; height: 2px; background: #f43f5e; animation-duration: 6s; animation-delay: 0.5s; box-shadow: 0 0 8px #f43f5e; }
     .particle:nth-child(2) { left: 50%; width: 3px; height: 3px; background: #ffffff; animation-duration: 8s; animation-delay: 2s; box-shadow: 0 0 10px #ffffff; }
     .particle:nth-child(3) { left: 80%; width: 1.5px; height: 1.5px; background: #9ca3af; animation-duration: 5s; animation-delay: 0s; box-shadow: 0 0 5px #9ca3af; }
-    .particle:nth-child(4) { left: 25%; width: 4px; height: 4px; background: #be123c; animation-duration: 10s; animation-delay: 1.5s; box-shadow: 0 0 12px #be123c; }
-    .particle:nth-child(5) { left: 90%; width: 2.5px; height: 2.5px; background: #f43f5e; animation-duration: 7s; animation-delay: 3s; box-shadow: 0 0 6px #f43f5e; }
+
+    /* === تأثيرات النار والشهب من الأسفل === */
+    .fire-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 45vh;
+      pointer-events: none;
+      z-index: 20; /* أسفل الشريط السفلي بقليل */
+      overflow: hidden;
+      mask-image: linear-gradient(to top, black 20%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
+    }
+    .fire-glow-1 {
+      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 150px;
+      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.7), transparent 70%);
+      filter: blur(20px); animation: pulseGlow 2.5s infinite alternate;
+    }
+    .fire-glow-2 {
+      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 120px;
+      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.5), transparent 70%);
+      filter: blur(15px); animation: pulseGlow 3s infinite alternate-reverse;
+    }
+    .spark {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to top, transparent, #ffffff 20%, #f43f5e 80%, transparent);
+      border-radius: 50%;
+      opacity: 0;
+      animation: shootUp infinite ease-in-out;
+      box-shadow: 0 0 8px 1px rgba(244,63,94,0.8);
+    }
+    @keyframes shootUp {
+      0% { transform: translateY(20px) scale(0.5); opacity: 0; height: 10px; }
+      20% { opacity: 1; height: 35px; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(-350px) scale(0.1); opacity: 0; height: 50px; }
+    }
 
     /* تأثير الانفجار عند النقر */
     .click-ripple {
@@ -105,7 +146,6 @@
       100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
     }
 
-    /* حقول الإدخال المتوهجة */
     input:focus {
       box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
       border-color: #f43f5e !important;
@@ -115,15 +155,18 @@
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+    /* إخفاء شريط التمرير ولكن الحفاظ على عمل التمرير */
     ::-webkit-scrollbar { display: none; } 
+    .scrollable-content { -webkit-overflow-scrolling: touch; }
   </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col font-sans">
+<body class="antialiased font-sans">
 
-  <div id="app" class="relative w-full max-w-md mx-auto min-h-screen bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
+  <!-- #app is now explicitly 100dvh -->
+  <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
     <!-- TOP BAR -->
-    <header class="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#07080a]/80 backdrop-blur-xl border-b border-[#181a20]">
+    <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#07080a]/80 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
         <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse shadow-[0_0_10px_#f43f5e]"></span>
@@ -137,13 +180,14 @@
       </div>
     </header>
 
-    <main id="mainContent" class="flex-1 overflow-y-auto px-5 pt-4 pb-28 relative">
+    <!-- MAIN SCROLLABLE CONTENT -->
+    <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
       <!-- VIEW: HOME (Mesmerizing Analog Clock + Particles) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
         
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+          <div class="particle"></div><div class="particle"></div><div class="particle"></div>
         </div>
 
         <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-700 hover:scale-105 cursor-pointer" onclick="triggerHaptic()">
@@ -172,7 +216,6 @@
           </svg>
         </div>
 
-        <!-- زر البداية المتفاعل -->
         <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 hover:text-white transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group">
           <span class="relative z-10">EINTRETEN</span>
           <div class="absolute inset-0 bg-rose-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
@@ -229,7 +272,6 @@
             <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d] shadow-inner"></div>
           </div>
 
-          <!-- خيار الدفع عند التسليم (Nachnahme) -->
           <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/50 hover:shadow-[0_0_15px_rgba(225,29,72,0.1)]">
             <label class="flex items-center space-x-4 cursor-pointer select-none">
               <div class="relative flex items-center justify-center">
@@ -306,8 +348,26 @@
 
     </main>
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="sticky bottom-0 z-30 flex items-center justify-around bg-[#050608]/95 backdrop-blur-2xl border-t border-[#12141a] px-4 py-3 pb-6">
+    <!-- FIRE & SPARKS CONTAINER (يظهر أسفل الشريط السفلي) -->
+    <div class="fire-container">
+      <div class="fire-glow-1"></div>
+      <div class="fire-glow-2"></div>
+      
+      <!-- الشهب النارية المتصاعدة -->
+      <div class="spark" style="left: 10%; animation-duration: 1.8s; animation-delay: 0.1s;"></div>
+      <div class="spark" style="left: 20%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
+      <div class="spark" style="left: 35%; animation-duration: 1.5s; animation-delay: 0.9s;"></div>
+      <div class="spark" style="left: 50%; animation-duration: 2.5s; animation-delay: 0.2s;"></div>
+      <div class="spark" style="left: 65%; animation-duration: 1.7s; animation-delay: 0.7s;"></div>
+      <div class="spark" style="left: 80%; animation-duration: 2.1s; animation-delay: 0.3s;"></div>
+      <div class="spark" style="left: 90%; animation-duration: 1.9s; animation-delay: 0.8s;"></div>
+      <div class="spark" style="left: 15%; animation-duration: 2.4s; animation-delay: 0.4s;"></div>
+      <div class="spark" style="left: 45%; animation-duration: 1.6s; animation-delay: 0.6s;"></div>
+      <div class="spark" style="left: 75%; animation-duration: 2.0s; animation-delay: 0.1s;"></div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION (ثابت لا يختفي أبداً) -->
+    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#050608]/70 backdrop-blur-xl border-t border-rose-900/30 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
@@ -353,15 +413,14 @@
   </div>
 
   <script>
-    // --- Haptic Feedback (الاهتزاز اللمسي) ---
+    // --- الاهتزاز اللمسي ---
     function triggerHaptic(ms = 30) {
       if (navigator.vibrate) navigator.vibrate(ms);
     }
 
-    // --- تأثير النقر التفاعلي (Ripple Burst) ---
+    // --- تأثير النقر ---
     document.addEventListener('pointerdown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      
       const burst = document.createElement('div');
       burst.className = 'click-ripple';
       burst.style.left = e.clientX + 'px';
@@ -370,11 +429,10 @@
       burst.style.height = '40px';
       document.body.appendChild(burst);
       setTimeout(() => burst.remove(), 600);
-      
       triggerHaptic(10); 
     });
 
-    // --- الساعة التفاعلية الدقيقة ---
+    // --- الساعة التفاعلية ---
     function updateClock() {
       const now = new Date();
       const h = now.getHours();
@@ -499,7 +557,7 @@
       }
     };
 
-    // --- الإرسال المباشر لتيليجرام من داخل التطبيق ---
+    // --- الربط المباشر مع تيليجرام ---
     const TelegramService = {
       dispatch: async (order) => {
         const botToken = '8394320495:AAGyRY5siD2sQBbjL_JaoY1h6GH016TGBYM';
@@ -561,7 +619,9 @@ ${order.address.country}
         target.classList.add('active', 'animate-fade-in');
 
         document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
-        window.scrollTo(0,0);
+        
+        // إعادة تعيين السكرول للأعلى عند تغيير الصفحة
+        document.getElementById('mainContent').scrollTo(0,0);
         
         if(view === 'cart') UIService.renderCart();
         if(view === 'checkout') App.renderCheckout();
@@ -663,7 +723,6 @@ ${order.address.country}
         }
       },
 
-      // تحديث سجل الطلبيات ليحتوي على التاريخ والوقت
       renderOrders: async () => {
         const list = await StorageService.getAllOrders();
         document.getElementById('ordersListContainer').innerHTML = list.map(o => {
