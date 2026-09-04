@@ -33,14 +33,14 @@ export const CartView: React.FC<CartViewProps> = ({
         </div>
         <h2 className="text-xl font-light tracking-wide text-white uppercase mb-2">Dein Warenkorb ist leer</h2>
         <p className="text-xs text-white/40 max-w-xs mb-8 leading-relaxed">
-          Wähle die gewünschte Menge von HELL auf der Startseite aus.
+          Wähle die gewünschte Menge von HELL auf der Bestellseite aus.
         </p>
         <button
-          id="cart-to-start-btn"
+          id="cart-to-order-btn"
           onClick={onGoToStart}
           className="h-12 px-8 rounded-2xl bg-white text-black font-bold text-[12px] uppercase tracking-widest hover:bg-neutral-200 transition-all active:scale-95 shadow-lg"
         >
-          Zum Produkt
+          Zur Bestellung
         </button>
       </div>
     );

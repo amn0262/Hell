@@ -100,9 +100,16 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
 
                 <div className="flex items-center justify-between text-xs text-white/50">
                   <span>{formattedDate}</span>
-                  <span className="text-white/80">
-                    {order.productName} × {order.quantity} Stück
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {(order.isCashOnDelivery || order.paymentMethod === 'Nachnahme') && (
+                      <span className="text-[9px] uppercase tracking-wider text-[#FF3B30] bg-[#FF3B30]/10 px-1.5 py-0.5 rounded font-mono">
+                        Nachnahme
+                      </span>
+                    )}
+                    <span className="text-white/80">
+                      {order.productName} × {order.quantity} Stück
+                    </span>
+                  </div>
                 </div>
 
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between">
@@ -202,9 +209,23 @@ export const OrdersView: React.FC<OrdersViewProps> = ({
                 <span>Versandkosten:</span>
                 <span>{formatPrice(selectedOrder.shippingCost)}</span>
               </div>
+              {(selectedOrder.isCashOnDelivery || selectedOrder.paymentMethod === 'Nachnahme' || selectedOrder.codFee) && (
+                <div className="flex justify-between text-[#FF3B30]">
+                  <span>Nachnahmegebühr:</span>
+                  <span className="font-mono">+{formatPrice(selectedOrder.codFee || 9.0)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-white/50">
+                <span>Zahlungsart:</span>
+                <span className="text-white">
+                  {selectedOrder.isCashOnDelivery || selectedOrder.paymentMethod === 'Nachnahme'
+                    ? 'Nachnahme (Barzahlung bei Zustellung)'
+                    : 'Vorkasse / Überweisung'}
+                </span>
+              </div>
               <div className="pt-2 border-t border-white/10 flex justify-between text-sm font-semibold text-white">
                 <span className="uppercase tracking-widest text-[11px]">Gesamtbetrag:</span>
-                <span>{formatPrice(selectedOrder.totalAmount)}</span>
+                <span className="font-mono text-base">{formatPrice(selectedOrder.totalAmount)}</span>
               </div>
             </div>
 

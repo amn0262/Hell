@@ -3,6 +3,7 @@ import { ActiveTab, Address, Order, OrderStatus } from './types';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { StartView } from './components/StartView';
+import { ProductOrderView } from './components/ProductOrderView';
 import { CartView } from './components/CartView';
 import { AddressesView } from './components/AddressesView';
 import { CheckoutView } from './components/CheckoutView';
@@ -177,8 +178,18 @@ export default function App() {
           <main className="flex-1 overflow-x-hidden">
             {activeTab === 'start' && (
               <StartView
-                onAddToCart={handleAddToCart}
+                onGoToOrder={() => setActiveTab('order')}
                 onGoToCart={() => setActiveTab('cart')}
+                cartCount={cartQuantity}
+              />
+            )}
+
+            {activeTab === 'order' && (
+              <ProductOrderView
+                onAddToCart={handleAddToCart}
+                onProceedToCheckout={() => setActiveTab('checkout')}
+                onGoToCart={() => setActiveTab('cart')}
+                onGoToStart={() => setActiveTab('start')}
                 cartCount={cartQuantity}
               />
             )}
@@ -188,7 +199,7 @@ export default function App() {
                 quantity={cartQuantity}
                 onUpdateQuantity={handleUpdateCartQuantity}
                 onProceedToCheckout={() => setActiveTab('checkout')}
-                onGoToStart={() => setActiveTab('start')}
+                onGoToStart={() => setActiveTab('order')}
               />
             )}
 
@@ -274,6 +285,15 @@ export default function App() {
             </p>
           </div>
 
+          <div className="space-y-2 opacity-40">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-white">
+              Astronomischer Zeitmesser
+            </p>
+            <p className="text-[11px] leading-relaxed">
+              Lebendige mechanische Visualisierung in Echtzeit-Präzision.
+            </p>
+          </div>
+
           <div className="mt-6 p-4 border border-white/5 rounded-2xl bg-white/[0.02]">
             <p className="text-[10px] uppercase tracking-widest opacity-40 mb-3 font-semibold">
               Versandkosten Rechner
@@ -285,6 +305,10 @@ export default function App() {
             <div className="flex justify-between text-[11px] opacity-40 text-zinc-400">
               <span>+2 Stück</span>
               <span className="font-mono">+2,00 €</span>
+            </div>
+            <div className="pt-2 mt-2 border-t border-white/5 flex justify-between text-[11px] text-white/60">
+              <span>Option Nachnahme</span>
+              <span className="font-mono text-[#FF3B30]">+9,00 €</span>
             </div>
           </div>
 

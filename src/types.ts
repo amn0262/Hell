@@ -14,6 +14,8 @@ export interface Address {
 
 export type OrderStatus = 'Gesendet' | 'Offen' | 'Bezahlt';
 
+export type PaymentMethod = 'Vorkasse' | 'Nachnahme';
+
 export interface Order {
   orderNumber: string;
   createdAt: number;
@@ -24,10 +26,13 @@ export interface Order {
   totalWeightGrams: number;
   subtotal: number;
   shippingCost: number;
+  codFee?: number;
   totalAmount: number;
+  paymentMethod?: PaymentMethod;
+  isCashOnDelivery?: boolean;
   shippingAddress: Address;
   status: OrderStatus;
   transmissionMode?: 'live' | 'simulated';
 }
 
-export type ActiveTab = 'start' | 'cart' | 'addresses' | 'orders' | 'checkout' | 'confirmation';
+export type ActiveTab = 'start' | 'order' | 'cart' | 'addresses' | 'orders' | 'checkout' | 'confirmation';

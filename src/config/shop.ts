@@ -3,6 +3,7 @@ export const SHOP_CONFIG = {
   productName: 'HELL',
   productPrice: 35.0,
   productWeightGrams: 500,
+  nachnahmeFee: 9.0,
   claim: 'HELL. Direkt. Vertraulich.',
   claimAlt: 'HELL. Einfach anders.',
   currency: '€',

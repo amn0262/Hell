@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, ShoppingBag, MapPin, Clock } from 'lucide-react';
+import { Compass, ShoppingBag, MapPin, Clock, Package } from 'lucide-react';
 import { ActiveTab } from '../types';
 
 interface BottomNavProps {
@@ -11,6 +11,7 @@ interface BottomNavProps {
 export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab, cartCount }) => {
   const items = [
     { id: 'start' as ActiveTab, label: 'Start', icon: Compass },
+    { id: 'order' as ActiveTab, label: 'Bestellen', icon: Package },
     { id: 'cart' as ActiveTab, label: 'Korb', icon: ShoppingBag, badge: cartCount },
     { id: 'addresses' as ActiveTab, label: 'Adressen', icon: MapPin },
     { id: 'orders' as ActiveTab, label: 'Historie', icon: Clock },

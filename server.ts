@@ -55,7 +55,13 @@ async function startServer() {
       const unitPrice = Number(order.unitPrice || 35).toLocaleString('de-DE', { minimumFractionDigits: 2 });
       const subtotal = Number(order.subtotal || quantity * 35).toLocaleString('de-DE', { minimumFractionDigits: 2 });
       const shippingCost = Number(order.shippingCost || 5).toLocaleString('de-DE', { minimumFractionDigits: 2 });
-      const totalAmount = Number(order.totalAmount || (quantity * 35 + 5)).toLocaleString('de-DE', { minimumFractionDigits: 2 });
+      const isNachnahme = Boolean(order.isCashOnDelivery || order.paymentMethod === 'Nachnahme');
+      const codFee = Number(order.codFee || (isNachnahme ? 9 : 0));
+      const codFeeFormatted = codFee.toLocaleString('de-DE', { minimumFractionDigits: 2 });
+      const totalAmount = Number(order.totalAmount || (quantity * 35 + 5 + (isNachnahme ? 9 : 0))).toLocaleString('de-DE', { minimumFractionDigits: 2 });
+      const paymentMethodText = isNachnahme
+        ? 'Nachnahme (Barzahlung bei Zustellung / +9,00 €)'
+        : 'Vorkasse / Überweisung';
 
       const addr = order.shippingAddress;
       const recipientName = `${clean(addr.firstName)} ${clean(addr.lastName)}`.trim();
@@ -78,7 +84,8 @@ async function startServer() {
 *Menge:* ${quantity} Stück (${totalWeightFormatted})
 *Einzelpreis:* ${unitPrice} €
 *Zwischensumme:* ${subtotal} €
-*Versand:* ${shippingCost} €
+*Versand:* ${shippingCost} €${isNachnahme ? `\n*Nachnahmegebühr:* ${codFeeFormatted} €` : ''}
+*Zahlungsart:* ${paymentMethodText}
 *Gesamtbetrag:* ${totalAmount} €
 
 *Lieferadresse:*

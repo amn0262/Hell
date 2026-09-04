@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, MapPin, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { ShieldCheck, MapPin, ArrowLeft, Loader2, AlertCircle, Banknote, Check } from 'lucide-react';
 import { Address, Order } from '../types';
 import { SHOP_CONFIG, calculateShipping, formatPrice, formatWeight, generateOrderNumber } from '../config/shop';
 import { saveOrder, setCartQuantity, getNextOrderSequence } from '../services/storage';
@@ -21,11 +21,13 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isNachnahme, setIsNachnahme] = useState(false);
 
   const unitPrice = SHOP_CONFIG.productPrice;
   const subtotal = quantity * unitPrice;
   const shippingCost = calculateShipping(quantity);
-  const totalAmount = subtotal + shippingCost;
+  const codFee = isNachnahme ? SHOP_CONFIG.nachnahmeFee : 0;
+  const totalAmount = subtotal + shippingCost + codFee;
   const totalWeightGrams = quantity * SHOP_CONFIG.productWeightGrams;
 
   const handleSendOrder = async () => {
@@ -58,7 +60,10 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
         totalWeightGrams,
         subtotal,
         shippingCost,
+        codFee,
         totalAmount,
+        paymentMethod: isNachnahme ? 'Nachnahme' : 'Vorkasse',
+        isCashOnDelivery: isNachnahme,
         shippingAddress: selectedAddress,
         status: 'Gesendet',
       };
@@ -166,9 +171,18 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
             <span>Versandkosten:</span>
             <span className="text-white font-medium">{formatPrice(shippingCost)}</span>
           </div>
+          {isNachnahme && (
+            <div className="flex justify-between text-[#FF3B30] animate-in fade-in duration-200">
+              <span className="flex items-center gap-1.5">
+                <Banknote className="w-3.5 h-3.5" />
+                <span>Nachnahmegebühr:</span>
+              </span>
+              <span className="font-medium font-mono">+{formatPrice(SHOP_CONFIG.nachnahmeFee)}</span>
+            </div>
+          )}
           <div className="pt-2 border-t border-white/10 flex justify-between text-sm font-semibold text-white">
             <span className="uppercase tracking-widest text-[11px]">Gesamt:</span>
-            <span className="text-white text-base">{formatPrice(totalAmount)}</span>
+            <span className="text-white text-base font-mono">{formatPrice(totalAmount)}</span>
           </div>
         </div>
       </div>
@@ -211,6 +225,57 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
         )}
       </div>
 
+      {/* Cash on Delivery / Nachnahme Toggle Button */}
+      <div className="rounded-2xl bg-[#111] border border-white/5 p-4 space-y-3 shadow-md">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] uppercase tracking-widest text-white/40">
+            ZAHLUNGSOPTION
+          </span>
+          <span className="text-[10px] uppercase tracking-wider text-[#FF3B30] font-mono">
+            {isNachnahme ? 'NACHNAHME AKTIV' : 'VORKASSE'}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          id="toggle-nachnahme-option-btn"
+          onClick={() => setIsNachnahme((prev) => !prev)}
+          className={`w-full p-3.5 rounded-xl border transition-all cursor-pointer select-none flex items-start gap-3.5 text-left ${
+            isNachnahme
+              ? 'bg-white/[0.07] border-[#FF3B30] shadow-[0_0_20px_rgba(255,59,48,0.2)] ring-1 ring-[#FF3B30]'
+              : 'bg-black/60 border-white/10 hover:border-white/25 hover:bg-black/80'
+          }`}
+          aria-pressed={isNachnahme}
+        >
+          {/* Custom Check / Indicator Box */}
+          <div
+            className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+              isNachnahme
+                ? 'bg-[#FF3B30] text-white shadow-[0_0_10px_#FF3B30]'
+                : 'border border-white/30 bg-white/5'
+            }`}
+          >
+            {isNachnahme && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+          </div>
+
+          <div className="flex-1">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-xs font-medium text-white tracking-wide">
+                Per Nachnahme versenden
+              </span>
+              <span className="text-xs font-mono font-bold text-[#FF3B30] whitespace-nowrap">
+                + 9,00 €
+              </span>
+            </div>
+            <p className="text-[11px] text-white/50 mt-1 leading-relaxed">
+              {isNachnahme
+                ? 'Zahlung erfolgt bei Erhalt der Ware direkt in bar an den Zusteller (+9,00 € Nachnahmegebühr).'
+                : 'Hier tippen, um per Nachnahme zu zahlen (Barzahlung bei Lieferung / +9,00 €).'}
+            </p>
+          </div>
+        </button>
+      </div>
+
       {/* Privacy Notice */}
       <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-black border border-white/5 text-[11px] text-white/40 text-left">
         <ShieldCheck className="w-4 h-4 text-[#FF3B30] shrink-0 mt-0.5" />
@@ -237,7 +302,11 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({
               <span>Übermittlung läuft …</span>
             </>
           ) : (
-            <span>Bestellung verbindlich senden</span>
+            <span>
+              {isNachnahme
+                ? 'Bestellung per Nachnahme senden'
+                : 'Bestellung verbindlich senden'}
+            </span>
           )}
         </button>
 

@@ -83,20 +83,46 @@ export const ConfirmationView: React.FC<ConfirmationViewProps> = ({
           <span>Artikel: {order.productName} × {order.quantity}</span>
           <span>Status: Gesendet</span>
         </div>
+
+        <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
+          <span className="text-white/40">Zahlungsart:</span>
+          <span className="text-white font-medium">
+            {order.isCashOnDelivery || order.paymentMethod === 'Nachnahme'
+              ? 'Nachnahme (+9,00 €)'
+              : 'Vorkasse / Überweisung'}
+          </span>
+        </div>
       </div>
 
       {/* Payment Instruction */}
       <div className="rounded-2xl bg-black border border-white/5 p-5 text-left space-y-2">
         <div className="flex items-center gap-2 text-[#FF3B30] font-semibold text-[10px] tracking-widest uppercase">
           <Clock className="w-3.5 h-3.5" />
-          <span>Zahlungshinweis</span>
+          <span>
+            {order.isCashOnDelivery || order.paymentMethod === 'Nachnahme'
+              ? 'Zahlung bei Zustellung (Nachnahme)'
+              : 'Zahlungshinweis'}
+          </span>
         </div>
-        <p className="text-xs text-white/90 leading-relaxed font-medium">
-          Bitte überweise den Gesamtbetrag auf das bereits bekannte Konto des Verkäufers.
-        </p>
-        <p className="text-[11px] text-white/40 leading-relaxed">
-          Deine Bestellung wird nach Zahlungseingang bearbeitet.
-        </p>
+        {order.isCashOnDelivery || order.paymentMethod === 'Nachnahme' ? (
+          <>
+            <p className="text-xs text-white/90 leading-relaxed font-medium">
+              Bitte halte den Betrag von {formatPrice(order.totalAmount)} bei der Übergabe durch den Zusteller passend in bar bereit.
+            </p>
+            <p className="text-[11px] text-white/40 leading-relaxed">
+              Deine Bestellung wird vorbereitet und auf den Weg gebracht.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-xs text-white/90 leading-relaxed font-medium">
+              Bitte überweise den Gesamtbetrag auf das bereits bekannte Konto des Verkäufers.
+            </p>
+            <p className="text-[11px] text-white/40 leading-relaxed">
+              Deine Bestellung wird nach Zahlungseingang bearbeitet.
+            </p>
+          </>
+        )}
       </div>
 
       {/* Privacy Guarantee Note */}
