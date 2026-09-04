@@ -34,7 +34,6 @@
     .brand-title { font-family: var(--font-brand); }
     .font-mono-custom { font-family: var(--font-mono); }
 
-    /* تأثيرات الشاشة (Scanlines) */
     .scanlines {
       position: fixed; inset: 0; z-index: 9998; pointer-events: none;
       background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
@@ -42,14 +41,12 @@
       opacity: 0.4;
     }
 
-    /* انتقالات سينمائية للصفحات */
     @keyframes popInCinematic {
       0% { opacity: 0; transform: scale(0.9) translateY(30px); filter: blur(10px); }
       100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
     }
     .animate-fade-in { animation: popInCinematic 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-    /* البطاقات الطافية */
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
@@ -57,19 +54,16 @@
     .animate-float { animation: float 6s ease-in-out infinite; }
     .animate-float-delayed { animation: float 6s ease-in-out infinite 3s; }
 
-    /* توهج النبض للساعة */
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.2; transform: scale(0.9); }
       50% { opacity: 0.6; transform: scale(1.15); }
     }
     .animate-glow { animation: pulseGlow 4s ease-in-out infinite; }
 
-    /* حلقات دوارة حول الساعة */
     @keyframes spinOrbit { 100% { transform: rotate(360deg); } }
     .animate-spin-slow { animation: spinOrbit 20s linear infinite; transform-origin: 100px 100px; }
     .animate-reverse-spin { animation: spinOrbit 12s linear infinite reverse; transform-origin: 100px 100px; }
 
-    /* تأثير التشويش (Glitch) */
     @keyframes glitch {
       0%, 100% { transform: translate(0); opacity: 1; }
       10% { transform: translate(-2px, 1px); }
@@ -84,7 +78,6 @@
       text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.3);
     }
 
-    /* الجسيمات المتطايرة (Particles) */
     @keyframes floatUp {
       0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
       20% { opacity: 0.8; }
@@ -96,7 +89,6 @@
     .particle:nth-child(2) { left: 50%; width: 3px; height: 3px; background: #ffffff; animation-duration: 8s; animation-delay: 2s; box-shadow: 0 0 10px #ffffff; }
     .particle:nth-child(3) { left: 80%; width: 1.5px; height: 1.5px; background: #9ca3af; animation-duration: 5s; animation-delay: 0s; box-shadow: 0 0 5px #9ca3af; }
 
-    /* === تأثيرات النار والشهب === */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -126,7 +118,6 @@
       100% { transform: translateY(-400px) scale(0.1); opacity: 0; height: 60px; }
     }
 
-    /* تأثير الانفجار عند النقر */
     .click-ripple {
       position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
@@ -138,7 +129,6 @@
       100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
     }
 
-    /* الشريط السفلي المتفاعل */
     .nav-item.active { color: #f43f5e !important; transform: scale(1.15) translateY(-5px); filter: drop-shadow(0 0 10px rgba(225,29,72,0.6)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -149,7 +139,7 @@
 </head>
 <body class="antialiased font-sans">
 
-  <div class="scanlines"></div> <!-- طبقة خطوط الشاشة القديمة -->
+  <div class="scanlines"></div> 
 
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
@@ -171,34 +161,27 @@
     <!-- MAIN SCROLLABLE CONTENT -->
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Mesmerizing Analog Clock + Date/Day + Particles) -->
+      <!-- VIEW: HOME -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
-        
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <div class="particle"></div><div class="particle"></div><div class="particle"></div>
         </div>
 
         <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-700 hover:scale-105 cursor-pointer" onclick="triggerHaptic(50)">
           <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] animate-glow pointer-events-none"></div>
-          
           <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.25)]">
             <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.5" stroke-dasharray="2 8" class="animate-reverse-spin opacity-50" />
             <circle cx="100" cy="100" r="98" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 12" class="animate-spin-slow opacity-40" />
-
             <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="2" />
-            
             <line x1="100" y1="18" x2="100" y2="26" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
             <line x1="100" y1="182" x2="100" y2="174" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
             <line x1="18" y1="100" x2="26" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
             <line x1="182" y1="100" x2="174" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            
             <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1d26" stroke-width="1.5" stroke-dasharray="1 7.37" />
 
-            <!-- التاريخ واليوم المدمج في الساعة -->
             <text id="clockDay" x="100" y="132" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" opacity="0.8"></text>
             <text id="clockDate" x="100" y="148" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 3px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="52" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
@@ -209,8 +192,7 @@
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group typewriter" data-text="EINTRETEN">
-        </button>
+        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group typewriter" data-text="EINTRETEN"></button>
       </section>
 
       <!-- VIEW: CART -->
@@ -258,7 +240,7 @@
               <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
               <button onclick="router.navigate('addresses')" class="text-[10px] text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
             </div>
-            <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d] shadow-inner"></div>
+            <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d] shadow-inner text-xs text-white leading-relaxed tracking-wide"></div>
           </div>
 
           <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/50 hover:shadow-[0_0_15px_rgba(225,29,72,0.1)]">
@@ -302,7 +284,7 @@
           <h2 class="text-xl font-bold uppercase tracking-widest text-white typewriter" data-text="ADRESSEN"></h2>
           <button id="btnOpenAddressModal" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-500 border border-rose-500/30 text-[10px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all">Neu</button>
         </div>
-        <div id="addressListContainer" class="space-y-4"></div>
+        <div id="addressListContainer" class="space-y-4 pb-4"></div>
       </section>
 
       <!-- VIEW: ORDERS -->
@@ -339,10 +321,7 @@
 
     <!-- FIRE & SPARKS CONTAINER -->
     <div class="fire-container">
-      <div class="fire-glow-1"></div>
-      <div class="fire-glow-2"></div>
-      
-      <!-- الشهب النارية المتصاعدة المتعددة -->
+      <div class="fire-glow-1"></div><div class="fire-glow-2"></div>
       <div class="spark" style="left: 10%; animation-duration: 1.8s; animation-delay: 0.1s;"></div>
       <div class="spark" style="left: 20%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
       <div class="spark" style="left: 35%; animation-duration: 1.5s; animation-delay: 0.9s;"></div>
@@ -355,7 +334,7 @@
       <div class="spark" style="left: 75%; animation-duration: 2.0s; animation-delay: 0.1s;"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (ثابت) -->
+    <!-- BOTTOM NAVIGATION -->
     <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#050608]/70 backdrop-blur-xl border-t border-rose-900/30 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
       <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -371,10 +350,10 @@
       </button>
     </nav>
 
-    <!-- MODALS -->
+    <!-- MODAL (Edit/New Address) -->
     <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f0] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
       <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-6 space-y-6 shadow-[0_0_60px_rgba(225,29,72,0.15)]">
-        <h3 class="text-xs font-bold uppercase tracking-widest text-white glitch-effect typewriter" data-text="NEUE ADRESSE"></h3>
+        <h3 id="addressModalTitle" class="text-xs font-bold uppercase tracking-widest text-white glitch-effect">NEUE ADRESSE</h3>
         <form id="addressForm" class="space-y-4">
           <input type="hidden" id="addressFormId">
           <div class="grid grid-cols-2 gap-3">
@@ -402,12 +381,8 @@
   </div>
 
   <script>
-    // --- الاهتزاز اللمسي ---
-    function triggerHaptic(ms = 30) {
-      if (navigator.vibrate) navigator.vibrate(ms);
-    }
+    function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
-    // --- تأثير النقر (Ripple) ---
     document.addEventListener('pointerdown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       const burst = document.createElement('div');
@@ -420,14 +395,10 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- الساعة مع التاريخ واسم اليوم ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
     function updateClock() {
       const now = new Date();
-      const h = now.getHours();
-      const m = now.getMinutes();
-      const s = now.getSeconds();
-      const ms = now.getMilliseconds();
+      const h = now.getHours(); const m = now.getMinutes(); const s = now.getSeconds(); const ms = now.getMilliseconds();
       
       const sDeg = (s + (ms / 1000)) * 6;
       const mDeg = (m + (s / 60)) * 6;
@@ -435,17 +406,13 @@
       
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
-        if(el) {
-          el.style.transform = `rotate(${deg}deg)`;
-          el.style.transformOrigin = '100px 100px';
-        }
+        if(el) { el.style.transform = `rotate(${deg}deg)`; el.style.transformOrigin = '100px 100px'; }
       };
 
       setTransform('handSecond', sDeg);
       setTransform('handMinute', mDeg);
       setTransform('handHour', hDeg);
 
-      // تحديث اليوم والتاريخ داخل الساعة
       const dayEl = document.getElementById('clockDay');
       const dateEl = document.getElementById('clockDate');
       if(dayEl && dateEl) {
@@ -455,12 +422,10 @@
         const yyyy = now.getFullYear();
         dateEl.textContent = `${dd}.${mm}.${yyyy}`;
       }
-      
       requestAnimationFrame(updateClock);
     }
     updateClock();
 
-    // --- دالة تأثير الآلة الكاتبة (Typewriter Effect) ---
     function triggerTypewriter(viewEl) {
       const elements = viewEl.querySelectorAll('.typewriter');
       elements.forEach(el => {
@@ -469,36 +434,24 @@
         el.textContent = '';
         let i = 0;
         function type() {
-          if (i < text.length) {
-            el.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, 30 + Math.random() * 40); // سرعة كتابة عشوائية تشبه الواقع
-          }
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(type, 30 + Math.random() * 40); }
         }
-        setTimeout(type, 300); // تأخير بسيط حتى تكتمل حركة ظهور الصفحة
+        setTimeout(type, 300);
       });
 
-      // تشغيل الآلة الكاتبة للنصوص الديناميكية المخبأة (مثل رسائل النجاح)
       const dynamicElements = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
       dynamicElements.forEach(el => {
-        if (!el.hasAttribute('data-original-text')) {
-           el.setAttribute('data-original-text', el.textContent.trim());
-        }
+        if (!el.hasAttribute('data-original-text')) el.setAttribute('data-original-text', el.textContent.trim());
         const text = el.getAttribute('data-original-text');
         el.textContent = '';
         let i = 0;
         function typeDyn() {
-          if (i < text.length) {
-            el.textContent += text.charAt(i);
-            i++;
-            setTimeout(typeDyn, 25); 
-          }
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 25); }
         }
         setTimeout(typeDyn, 400);
       });
     }
 
-    // --- قاعدة البيانات المؤقتة والمنطق ---
     const StorageService = (function () {
       const DB_NAME = 'VOIDShopDB';
       let dbInstance = null;
@@ -540,6 +493,27 @@
           if (list.length === 0) addr.isDefault = true;
           return saveItem('addresses', addr);
         },
+        deleteAddress: async (id) => {
+          const db = await openDatabase();
+          return new Promise(res => {
+            const tx = db.transaction(['addresses'], 'readwrite');
+            tx.objectStore('addresses').delete(id);
+            tx.oncomplete = () => res(true);
+          });
+        },
+        setDefaultAddress: async (id) => {
+          const db = await openDatabase();
+          const addrs = await getAll('addresses');
+          return new Promise(res => {
+            const tx = db.transaction(['addresses'], 'readwrite');
+            const store = tx.objectStore('addresses');
+            addrs.forEach(a => {
+              a.isDefault = (a.id === id);
+              store.put(a);
+            });
+            tx.oncomplete = () => res(true);
+          });
+        },
         getSelectedAddress: async () => {
           const addrs = await getAll('addresses');
           return addrs.find(a => a.isDefault) || addrs[0] || null;
@@ -574,26 +548,18 @@
         icon.innerHTML = '&bull;';
         
         const textSpan = document.createElement('span');
-        t.appendChild(icon);
-        t.appendChild(textSpan);
-        c.appendChild(t);
+        t.appendChild(icon); t.appendChild(textSpan); c.appendChild(t);
         
         requestAnimationFrame(() => t.classList.replace('translate-y-[-20px]', 'translate-y-0') || t.classList.replace('scale-95', 'scale-100') || t.classList.replace('opacity-0', 'opacity-100'));
         
-        // تأثير الآلة الكاتبة للإشعار
         let i = 0;
         function typeToast() {
-          if (i < msg.length) {
-            textSpan.textContent += msg.charAt(i);
-            i++;
-            setTimeout(typeToast, 25);
-          }
+          if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 25); }
         }
         typeToast();
 
         setTimeout(() => {
-          t.style.opacity = '0';
-          t.style.transform = 'translateY(-20px) scale(0.95)';
+          t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)';
           setTimeout(() => t.remove(), 300);
         }, 3000 + (msg.length * 25));
       },
@@ -606,7 +572,6 @@
       }
     };
 
-    // --- الربط المباشر مع تيليجرام ---
     const TelegramService = {
       dispatch: async (order) => {
         const botToken = '8394320495:AAGyRY5siD2sQBbjL_JaoY1h6GH016TGBYM';
@@ -666,7 +631,6 @@ ${order.address.country}
         if(view === 'addresses') App.renderAddresses();
         if(view === 'orders') App.renderOrders();
 
-        // تفعيل حركة الآلة الكاتبة في الصفحة المفتوحة
         triggerTypewriter(target);
       }
     };
@@ -698,13 +662,15 @@ ${order.address.country}
         document.getElementById('btnOpenAddressModal').onclick = () => {
           triggerHaptic(20);
           document.getElementById('addressForm').reset();
+          document.getElementById('addressFormId').value = '';
+          document.getElementById('addressModalTitle').setAttribute('data-text', 'NEUE ADRESSE');
           document.getElementById('addressModal').classList.remove('hidden');
+          triggerTypewriter(document.getElementById('addressModal'));
         };
         document.getElementById('addressForm').onsubmit = App.saveAddress;
 
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
-        // تشغيل الآلة الكاتبة للصفحة الرئيسية عند البداية
         triggerTypewriter(document.getElementById('viewHome'));
       },
 
@@ -716,7 +682,17 @@ ${order.address.country}
       saveAddress: async (e) => {
         e.preventDefault();
         triggerHaptic(40);
+        const idStr = document.getElementById('addressFormId').value;
+        let isDef = false;
+        if(idStr) {
+          const existingList = await StorageService.getAllAddresses();
+          const existing = existingList.find(a => a.id === idStr);
+          if (existing) isDef = existing.isDefault;
+        }
+
         const addr = {
+          id: idStr ? idStr : undefined,
+          isDefault: isDef,
           firstName: document.getElementById('addrFirstName').value,
           lastName: document.getElementById('addrLastName').value,
           street: document.getElementById('addrStreet').value,
@@ -729,15 +705,59 @@ ${order.address.country}
         await StorageService.saveAddress(addr);
         App.closeAddressModal();
         UIService.showToast('Erfolgreich gespeichert');
+        
+        if (document.getElementById('viewAddresses').classList.contains('active')) { App.renderAddresses(); }
+        if (document.getElementById('viewCheckout').classList.contains('active')) { App.renderCheckout(); }
+      },
+
+      setDefault: async (id) => {
+        triggerHaptic(20);
+        await StorageService.setDefaultAddress(id);
         App.renderAddresses();
+      },
+
+      editAddress: async (id) => {
+        triggerHaptic(20);
+        const list = await StorageService.getAllAddresses();
+        const a = list.find(x => x.id === id);
+        if(!a) return;
+        document.getElementById('addressFormId').value = a.id;
+        document.getElementById('addrFirstName').value = a.firstName;
+        document.getElementById('addrLastName').value = a.lastName;
+        document.getElementById('addrStreet').value = a.street;
+        document.getElementById('addrNumber').value = a.number;
+        document.getElementById('addrZip').value = a.zip;
+        document.getElementById('addrCity').value = a.city;
+        document.getElementById('addrCountry').value = a.country;
+        document.getElementById('addrPhone').value = a.phone || '';
+        
+        document.getElementById('addressModalTitle').setAttribute('data-text', 'ADRESSE BEARBEITEN');
+        document.getElementById('addressModal').classList.remove('hidden');
+        triggerTypewriter(document.getElementById('addressModal'));
+      },
+
+      deleteAddress: async (id) => {
+        triggerHaptic(30);
+        if(confirm('Adresse wirklich löschen?')) {
+          await StorageService.deleteAddress(id);
+          UIService.showToast('Adresse gelöscht');
+          App.renderAddresses();
+        }
       },
 
       renderAddresses: async () => {
         const list = await StorageService.getAllAddresses();
         document.getElementById('addressListContainer').innerHTML = list.map(a => `
-          <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] transition-transform duration-300 hover:scale-[1.02] cursor-pointer shadow-lg" onclick="triggerHaptic(15)">
+          <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] transition-transform duration-300 hover:scale-[1.02] shadow-lg">
             <div class="font-bold text-white text-sm tracking-wide">${a.firstName} ${a.lastName}</div>
             <div class="text-xs text-neutral-400 mt-2 leading-relaxed font-medium">${a.street} ${a.number}<br>${a.zip} ${a.city}</div>
+            <div class="flex justify-between items-center mt-4 border-t border-[#1e222d] pt-3">
+              ${a.isDefault ? '<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-600/10 px-2 py-1 rounded">Aktiv</span>' : `<button onclick="App.setDefault('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Wählen</button>`}
+              <div class="flex space-x-4">
+                 <button onclick="App.editAddress('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Edit</button>
+                 <button onclick="App.deleteAddress('${a.id}')" class="text-[10px] text-rose-900 hover:text-rose-500 uppercase tracking-widest font-bold transition-colors">Delete</button>
+              </div>
+            </div>
           </div>
         `).join('');
       },
@@ -754,16 +774,14 @@ ${order.address.country}
         document.getElementById('chkSummaryShipping').textContent = CartService.format(c.shipping);
         
         const rowNachnahme = document.getElementById('rowNachnahmeFee');
-        if(isNachnahme) {
-            rowNachnahme.classList.remove('hidden');
-        } else {
-            rowNachnahme.classList.add('hidden');
-        }
+        if(isNachnahme) { rowNachnahme.classList.remove('hidden'); } else { rowNachnahme.classList.add('hidden'); }
 
         document.getElementById('chkSummaryTotal').textContent = CartService.format(finalTotal);
         
         if(a) {
           document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-white leading-relaxed font-medium tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`;
+        } else {
+          document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-rose-500 leading-relaxed font-medium tracking-wide">Keine Adresse gewählt</div>`;
         }
       },
 
@@ -793,11 +811,9 @@ ${order.address.country}
         const btn = document.getElementById('btnSubmitOrder');
         const txt = document.getElementById('btnSubmitText');
         
-        // إيقاف الزر مؤقتاً أثناء الإرسال
         btn.classList.add('animate-pulse');
         btn.style.pointerEvents = 'none';
         
-        // تأثير الآلة الكاتبة لجملة الانتظار
         txt.textContent = '';
         let waitText = "VERBINDUNG...";
         let w = 0;
@@ -841,7 +857,6 @@ ${order.address.country}
           UIService.showToast('Fehler bei der Übermittlung. Bitte erneut versuchen.');
         }
 
-        // استعادة حالة الزر الأصلية
         txt.textContent = 'VERBINDLICH SENDEN';
         btn.classList.remove('animate-pulse');
         btn.style.pointerEvents = 'auto';
