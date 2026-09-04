@@ -34,61 +34,117 @@
     .brand-title { font-family: var(--font-brand); }
     .font-mono-custom { font-family: var(--font-mono); }
 
+    /* تأثير الاهتزاز العنيف (Screen Shock) */
+    @keyframes screenShock {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(4px, 4px) rotate(1deg); filter: contrast(150%); }
+      40% { transform: translate(-4px, -4px) rotate(-1deg); filter: brightness(120%); }
+      60% { transform: translate(4px, -2px) rotate(1deg); }
+      80% { transform: translate(-2px, 4px) rotate(-0.5deg); }
+    }
+    .shake-active { animation: screenShock 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+
+    /* ليزر الماسح الضوئي */
+    .laser-beam {
+      position: absolute; left: 0; width: 100%; height: 2px;
+      background: rgba(244,63,94,0.8);
+      box-shadow: 0 0 15px 3px rgba(244,63,94,0.8);
+      animation: laserSweep 5s infinite linear;
+      opacity: 0; pointer-events: none; z-index: 9997;
+    }
+    @keyframes laserSweep {
+      0% { top: -10%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 110%; opacity: 0; }
+    }
+
+    /* لمعة الأزرار (Button Glare) */
+    .btn-glare { position: relative; overflow: hidden; }
+    .btn-glare::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+      transform: skewX(-25deg);
+      animation: glareSweep 4s infinite;
+    }
+    @keyframes glareSweep {
+      0% { left: -100%; }
+      20%, 100% { left: 200%; }
+    }
+
+    /* رادار وموجات خلف الساعة */
+    @keyframes radarPulse {
+      0% { transform: scale(0.8); opacity: 0.8; border-width: 2px; }
+      100% { transform: scale(2.2); opacity: 0; border-width: 0.5px; }
+    }
+    .radar-ring {
+      position: absolute; inset: 0; border-radius: 50%; border: solid rgba(244,63,94,0.6);
+      animation: radarPulse 3s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+      pointer-events: none;
+    }
+
+    /* خطوط الشاشة القديمة */
     .scanlines {
       position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
-      background-size: 100% 4px;
-      opacity: 0.4;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3));
+      background-size: 100% 4px; opacity: 0.5;
     }
 
+    /* الانتقالات السينمائية للصفحات */
     @keyframes popInCinematic {
-      0% { opacity: 0; transform: scale(0.9) translateY(30px); filter: blur(10px); }
+      0% { opacity: 0; transform: scale(0.85) translateY(40px); filter: blur(15px); }
       100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
     }
-    .animate-fade-in { animation: popInCinematic 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-fade-in { animation: popInCinematic 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) forwards; }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    /* الطفو المغناطيسي للبطاقات */
+    @keyframes magneticFloat {
+      0%, 100% { transform: translateY(0) rotateX(0deg); }
+      50% { transform: translateY(-10px) rotateX(2deg); }
     }
-    .animate-float { animation: float 6s ease-in-out infinite; }
-    .animate-float-delayed { animation: float 6s ease-in-out infinite 3s; }
+    .animate-float { animation: magneticFloat 5s ease-in-out infinite; }
+    .animate-float-delayed { animation: magneticFloat 5s ease-in-out infinite 2.5s; }
 
+    /* التوهج الخلفي */
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.2; transform: scale(0.9); }
-      50% { opacity: 0.6; transform: scale(1.15); }
+      50% { opacity: 0.7; transform: scale(1.15); filter: hue-rotate(15deg); }
     }
-    .animate-glow { animation: pulseGlow 4s ease-in-out infinite; }
+    .animate-glow { animation: pulseGlow 3s ease-in-out infinite; }
 
+    /* دوران الحلقات الفضائية */
     @keyframes spinOrbit { 100% { transform: rotate(360deg); } }
-    .animate-spin-slow { animation: spinOrbit 20s linear infinite; transform-origin: 100px 100px; }
-    .animate-reverse-spin { animation: spinOrbit 12s linear infinite reverse; transform-origin: 100px 100px; }
+    .animate-spin-slow { animation: spinOrbit 15s linear infinite; transform-origin: 100px 100px; }
+    .animate-reverse-spin { animation: spinOrbit 10s linear infinite reverse; transform-origin: 100px 100px; }
 
+    /* التشويش السيبراني (Glitch) */
     @keyframes glitch {
       0%, 100% { transform: translate(0); opacity: 1; }
-      10% { transform: translate(-2px, 1px); }
-      20% { transform: translate(2px, -1px); opacity: 0.8; }
-      30% { transform: translate(-1px, 2px); }
-      40% { transform: translate(1px, -2px); opacity: 0.9; }
+      10% { transform: translate(-3px, 2px); filter: brightness(150%); }
+      20% { transform: translate(3px, -2px); opacity: 0.8; }
+      30% { transform: translate(-2px, 3px); }
+      40% { transform: translate(2px, -3px); opacity: 0.9; }
       50% { transform: translate(0); }
     }
     .glitch-effect {
       display: inline-block;
-      animation: glitch 4s cubic-bezier(.25, .46, .45, .94) infinite;
-      text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.3);
+      animation: glitch 3s cubic-bezier(.25, .46, .45, .94) infinite;
+      text-shadow: 2px 0 rgba(225,29,72,0.8), -2px 0 rgba(0,255,255,0.4);
     }
 
+    /* الجسيمات المتطايرة (الشرارات) */
     @keyframes floatUp {
       0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
-      20% { opacity: 0.8; }
-      80% { opacity: 0.5; }
-      100% { transform: translateY(-20vh) scale(2) rotate(360deg); opacity: 0; }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.6; }
+      100% { transform: translateY(-20vh) scale(2.5) rotate(360deg); opacity: 0; }
     }
     .particle { position: absolute; bottom: -10px; pointer-events: none; animation: floatUp infinite linear; }
-    .particle:nth-child(1) { left: 10%; width: 2px; height: 2px; background: #f43f5e; animation-duration: 6s; animation-delay: 0.5s; box-shadow: 0 0 8px #f43f5e; }
-    .particle:nth-child(2) { left: 50%; width: 3px; height: 3px; background: #ffffff; animation-duration: 8s; animation-delay: 2s; box-shadow: 0 0 10px #ffffff; }
-    .particle:nth-child(3) { left: 80%; width: 1.5px; height: 1.5px; background: #9ca3af; animation-duration: 5s; animation-delay: 0s; box-shadow: 0 0 5px #9ca3af; }
+    .particle:nth-child(1) { left: 10%; width: 2px; height: 2px; background: #f43f5e; animation-duration: 5s; animation-delay: 0.2s; box-shadow: 0 0 10px #f43f5e; }
+    .particle:nth-child(2) { left: 50%; width: 3px; height: 3px; background: #ffffff; animation-duration: 7s; animation-delay: 1s; box-shadow: 0 0 12px #ffffff; }
+    .particle:nth-child(3) { left: 80%; width: 1.5px; height: 1.5px; background: #9ca3af; animation-duration: 4s; animation-delay: 0s; box-shadow: 0 0 6px #9ca3af; }
 
+    /* حاوية النيران الأساسية */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -96,42 +152,32 @@
       -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
     }
     .fire-glow-1 {
-      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 150px;
-      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.7), transparent 70%);
-      filter: blur(20px); animation: pulseGlow 2.5s infinite alternate;
+      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 160px;
+      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.8), transparent 70%);
+      filter: blur(20px); animation: pulseGlow 2s infinite alternate;
     }
     .fire-glow-2 {
-      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 120px;
-      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.5), transparent 70%);
-      filter: blur(15px); animation: pulseGlow 3s infinite alternate-reverse;
-    }
-    .spark {
-      position: absolute; bottom: 0; width: 2px;
-      background: linear-gradient(to top, transparent, #ffffff 20%, #f43f5e 80%, transparent);
-      border-radius: 50%; opacity: 0; animation: shootUp infinite ease-in-out;
-      box-shadow: 0 0 10px 2px rgba(244,63,94,0.8);
-    }
-    @keyframes shootUp {
-      0% { transform: translateY(20px) scale(0.5); opacity: 0; height: 10px; }
-      20% { opacity: 1; height: 40px; }
-      80% { opacity: 0.8; }
-      100% { transform: translateY(-400px) scale(0.1); opacity: 0; height: 60px; }
+      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 130px;
+      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.6), transparent 70%);
+      filter: blur(15px); animation: pulseGlow 2.5s infinite alternate-reverse;
     }
 
+    /* انفجارات الضغط */
     .click-ripple {
       position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
-      background: radial-gradient(circle, rgba(244,63,94,0.8) 0%, rgba(244,63,94,0) 70%);
-      z-index: 9999; animation: rippleAnim 0.6s ease-out forwards;
+      background: radial-gradient(circle, rgba(244,63,94,0.9) 0%, rgba(244,63,94,0) 70%);
+      z-index: 9999; animation: rippleAnim 0.5s ease-out forwards;
     }
     @keyframes rippleAnim {
       0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
     }
 
-    .nav-item.active { color: #f43f5e !important; transform: scale(1.15) translateY(-5px); filter: drop-shadow(0 0 10px rgba(225,29,72,0.6)); }
+    /* الشريط السفلي المتفاعل */
+    .nav-item.active { color: #f43f5e !important; transform: scale(1.2) translateY(-6px); filter: drop-shadow(0 0 12px rgba(225,29,72,0.8)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
-    .nav-item { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
@@ -139,7 +185,9 @@
 </head>
 <body class="antialiased font-sans">
 
+  <!-- مؤثرات الشاشة الفوقية -->
   <div class="scanlines"></div> 
+  <div class="laser-beam"></div>
 
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
@@ -147,132 +195,154 @@
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#07080a]/80 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
         <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect typewriter" data-text="VØID"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse shadow-[0_0_10px_#f43f5e]"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse shadow-[0_0_12px_#f43f5e]"></span>
       </div>
       <div class="flex items-center space-x-4">
         <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-500 hover:text-rose-400 transition-all duration-300 active:scale-75 hover:rotate-12">
-          <svg class="w-6 h-6 drop-shadow-[0_0_5px_rgba(255,255,255,0.1)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          <svg class="w-6 h-6 drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </button>
       </div>
     </header>
 
-    <!-- MAIN SCROLLABLE CONTENT -->
+    <!-- MAIN CONTENT -->
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME -->
+      <!-- VIEW: HOME (The Clock with all hours & radar) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <div class="particle"></div><div class="particle"></div><div class="particle"></div>
         </div>
 
-        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-700 hover:scale-105 cursor-pointer" onclick="triggerHaptic(50)">
-          <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] animate-glow pointer-events-none"></div>
-          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.25)]">
-            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.5" stroke-dasharray="2 8" class="animate-reverse-spin opacity-50" />
-            <circle cx="100" cy="100" r="98" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 12" class="animate-spin-slow opacity-40" />
-            <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="2" />
-            <line x1="100" y1="18" x2="100" y2="26" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <line x1="100" y1="182" x2="100" y2="174" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <line x1="18" y1="100" x2="26" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <line x1="182" y1="100" x2="174" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1d26" stroke-width="1.5" stroke-dasharray="1 7.37" />
+        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-500 hover:scale-110 cursor-pointer" onclick="triggerActionShock()">
+          
+          <!-- توهج ورادار النبضات -->
+          <div class="absolute inset-0 bg-rose-700/20 rounded-full filter blur-[50px] animate-glow pointer-events-none"></div>
+          <div class="radar-ring" style="animation-delay: 0s;"></div>
+          <div class="radar-ring" style="animation-delay: 1.5s;"></div>
+          
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_35px_rgba(225,29,72,0.3)] relative z-20">
+            <!-- الحلقات الدوارة -->
+            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="1" stroke-dasharray="2 12" class="animate-reverse-spin opacity-70" />
+            <circle cx="100" cy="100" r="96" fill="none" stroke="#ffffff" stroke-width="0.5" stroke-dasharray="1 15" class="animate-spin-slow opacity-50" />
 
-            <text id="clockDay" x="100" y="132" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" opacity="0.8"></text>
-            <text id="clockDate" x="100" y="148" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 3px rgba(244,63,94,0.6))"></text>
-
-            <g id="handHour"><line x1="100" y1="100" x2="100" y2="52" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" /></g>
-            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(255,255,255,0.4))" /></g>
-            <g id="handSecond">
-              <line x1="100" y1="112" x2="100" y2="22" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" />
-              <circle cx="100" cy="22" r="3.5" fill="#f43f5e" filter="drop-shadow(0 0 6px rgba(244,63,94,1))" />
+            <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="3" />
+            
+            <!-- محددات كل الـ 12 ساعة -->
+            <g stroke="#2a3040" stroke-linecap="round">
+              <!-- الخطوط الرئيسية الطويلة -->
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" />
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(90 100 100)"/>
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(180 100 100)"/>
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(270 100 100)"/>
+              <!-- الخطوط الفرعية القصيرة -->
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(30 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(60 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(120 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(150 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(210 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(240 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(300 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(330 100 100)"/>
             </g>
-            <circle cx="100" cy="100" r="4.5" fill="#040406" stroke="#ffffff" stroke-width="2.5" filter="drop-shadow(0 0 3px rgba(255,255,255,0.5))"/>
+            
+            <circle cx="100" cy="100" r="76" fill="none" stroke="#1a1d26" stroke-width="1" stroke-dasharray="1 6.63" />
+
+            <!-- التاريخ واليوم -->
+            <text id="clockDay" x="100" y="135" fill="#9ca3af" font-size="8" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.9"></text>
+            <text id="clockDate" x="100" y="152" fill="#f43f5e" font-size="11" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 0 5px rgba(244,63,94,0.8))"></text>
+
+            <!-- العقارب -->
+            <g id="handHour"><line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(244,63,94,1))" /></g>
+            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,255,255,0.6))" /></g>
+            <g id="handSecond">
+              <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
+              <circle cx="100" cy="20" r="4" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,1))" />
+            </g>
+            <circle cx="100" cy="100" r="5" fill="#040406" stroke="#ffffff" stroke-width="2.5" filter="drop-shadow(0 0 5px rgba(255,255,255,0.8))"/>
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group typewriter" data-text="EINTRETEN"></button>
+        <button onclick="triggerActionShock(); router.navigate('cart');" class="btn-glare relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border-2 border-rose-800 text-white font-serif tracking-[0.4em] uppercase text-sm hover:border-rose-400 transition-all duration-200 active:scale-90 active:bg-rose-700 shadow-[0_0_30px_rgba(225,29,72,0.3)] group typewriter" data-text="EINTRETEN"></button>
       </section>
 
       <!-- VIEW: CART -->
       <section id="viewCart" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-1 glitch-effect typewriter" data-text="HELL"></h2>
-        <p class="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest typewriter" data-text="Original Edition • 500g"></p>
+        <h2 class="text-3xl font-bold tracking-[0.3em] uppercase text-white mb-1 glitch-effect typewriter" data-text="HELL"></h2>
+        <p class="text-xs text-rose-500 font-bold mb-6 uppercase tracking-widest typewriter" data-text="Original Edition • 500g"></p>
 
-        <div id="cartContentState" class="space-y-4">
-          <div class="animate-float bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-6 flex flex-col items-center shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-            <span class="text-4xl font-bold text-white mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">35,00 <span class="text-xl text-neutral-500 font-normal">€</span></span>
+        <div id="cartContentState" class="space-y-5">
+          <div class="animate-float bg-[#0b0c10]/90 backdrop-blur-xl border border-[#1e222d] rounded-3xl p-7 flex flex-col items-center shadow-[0_15px_50px_rgba(225,29,72,0.15)]">
+            <span class="text-5xl font-bold text-white mb-8 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">35,00 <span class="text-2xl text-neutral-500 font-normal">€</span></span>
             
-            <div class="w-full bg-[#12141a] p-2 rounded-2xl border border-[#1e222d] flex items-center justify-between shadow-inner">
-              <button id="btnCartMinus" class="w-14 h-14 rounded-xl bg-[#181b24] hover:bg-[#202430] hover:text-rose-400 text-neutral-400 text-3xl active:scale-75 transition-all duration-200">−</button>
-              <span id="cartQtyDisplay" class="text-3xl font-bold text-white tracking-widest drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">1</span>
-              <button id="btnCartPlus" class="w-14 h-14 rounded-xl bg-[#181b24] hover:bg-[#202430] hover:text-rose-400 text-neutral-400 text-3xl active:scale-75 transition-all duration-200">+</button>
+            <div class="w-full bg-[#15171e] p-2.5 rounded-[1.25rem] border border-[#232734] flex items-center justify-between shadow-inner">
+              <button id="btnCartMinus" class="w-16 h-16 rounded-2xl bg-[#1c1f2b] hover:bg-rose-900/30 hover:text-rose-400 text-neutral-400 text-4xl font-light active:scale-75 transition-all duration-200">−</button>
+              <span id="cartQtyDisplay" class="text-4xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">1</span>
+              <button id="btnCartPlus" class="w-16 h-16 rounded-2xl bg-[#1c1f2b] hover:bg-rose-900/30 hover:text-rose-400 text-neutral-400 text-4xl font-light active:scale-75 transition-all duration-200">+</button>
             </div>
           </div>
 
-          <div class="animate-float-delayed bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
-            <div class="flex justify-between text-xs text-neutral-400">
-              <span>Zwischensumme</span>
-              <span id="cartSubtotal" class="text-white font-medium">0,00 €</span>
+          <div class="animate-float-delayed bg-[#0b0c10]/90 backdrop-blur-xl border border-[#1e222d] rounded-3xl p-6 space-y-4">
+            <div class="flex justify-between text-sm text-neutral-400 font-medium">
+              <span>Zwischensumme</span><span id="cartSubtotal" class="text-white">0,00 €</span>
             </div>
-            <div class="flex justify-between text-xs text-neutral-400">
-              <span>Versand <span class="text-[10px] text-neutral-600">(1–4: 5€)</span></span>
-              <span id="cartShipping" class="text-white font-medium">5,00 €</span>
+            <div class="flex justify-between text-sm text-neutral-400 font-medium">
+              <span>Versand <span class="text-[10px] text-rose-500 ml-1">(1–4: 5€)</span></span><span id="cartShipping" class="text-white">5,00 €</span>
             </div>
-            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
-              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamt</span>
-              <span id="cartTotal" class="text-xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.4)]">0,00 €</span>
+            <div class="border-t border-[#232734] pt-4 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-widest text-white">Gesamt</span>
+              <span id="cartTotal" class="text-2xl font-bold text-rose-500 drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right typewriter" data-text="ZUR KASSE"></button>
+          <button id="btnGoToCheckout" class="btn-glare w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_30px_rgba(225,29,72,0.4)] active:scale-95 transition-all duration-200 bg-[length:200%_auto] hover:bg-right typewriter" data-text="ZUR KASSE"></button>
         </div>
       </section>
 
       <!-- VIEW: CHECKOUT -->
       <section id="viewCheckout" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-xl font-bold tracking-widest uppercase text-white mb-6 typewriter" data-text="BESTELLÜBERSICHT"></h2>
+        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-6 typewriter" data-text="ÜBERSICHT"></h2>
         
         <div class="space-y-4">
-          <div class="animate-float bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4">
-            <div class="flex justify-between mb-3 items-center">
-              <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
-              <button onclick="router.navigate('addresses')" class="text-[10px] text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
+          <div class="animate-float bg-[#0b0c10]/90 backdrop-blur-md border border-[#1e222d] rounded-3xl p-5">
+            <div class="flex justify-between mb-4 items-center">
+              <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
+              <button onclick="triggerActionShock(); router.navigate('addresses')" class="text-xs text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
             </div>
-            <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d] shadow-inner text-xs text-white leading-relaxed tracking-wide"></div>
+            <div id="chkSelectedAddressCard" class="p-4 bg-[#15171e] rounded-2xl border border-[#232734] shadow-inner text-sm text-white leading-relaxed tracking-wide font-medium"></div>
           </div>
 
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/50 hover:shadow-[0_0_15px_rgba(225,29,72,0.1)]">
-            <label class="flex items-center space-x-4 cursor-pointer select-none">
+          <div class="bg-[#0b0c10]/90 backdrop-blur-md border border-[#1e222d] rounded-3xl p-5 hover:border-rose-600/50 hover:shadow-[0_0_20px_rgba(225,29,72,0.15)] transition-all">
+            <label class="flex items-center space-x-5 cursor-pointer select-none">
               <div class="relative flex items-center justify-center">
-                <input type="checkbox" id="chkNachnahme" class="appearance-none w-6 h-6 border border-[#2a2f40] rounded-md bg-[#12141a] checked:bg-rose-600 checked:border-rose-600 transition-all duration-300 peer">
-                <svg class="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 peer-checked:scale-110 pointer-events-none transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                <input type="checkbox" id="chkNachnahme" class="appearance-none w-7 h-7 border-2 border-[#2a2f40] rounded-lg bg-[#15171e] checked:bg-rose-600 checked:border-rose-600 transition-all duration-200 peer">
+                <svg class="absolute w-5 h-5 text-white opacity-0 peer-checked:opacity-100 peer-checked:scale-110 pointer-events-none transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
               </div>
               <div class="flex flex-col">
-                <span class="text-xs font-bold text-white tracking-wide">Zahlung bei Lieferung</span>
-                <span class="text-[10px] text-rose-500 mt-1 uppercase tracking-widest font-bold">+ 9,00 € Gebühr</span>
+                <span class="text-sm font-bold text-white tracking-wide">Zahlung bei Lieferung</span>
+                <span class="text-[11px] text-rose-500 mt-1 uppercase tracking-widest font-bold">+ 9,00 € Gebühr</span>
               </div>
             </label>
           </div>
 
-          <div class="animate-float-delayed bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
-            <div class="flex justify-between text-xs text-neutral-400">
+          <div class="animate-float-delayed bg-[#0b0c10]/90 backdrop-blur-md border border-[#1e222d] rounded-3xl p-6 space-y-4">
+            <div class="flex justify-between text-sm text-neutral-400">
               <span>Zwischensumme:</span><span id="chkSummarySubtotal" class="text-white font-medium">0,00 €</span>
             </div>
-            <div class="flex justify-between text-xs text-neutral-400">
+            <div class="flex justify-between text-sm text-neutral-400">
               <span>Versand:</span><span id="chkSummaryShipping" class="text-white font-medium">5,00 €</span>
             </div>
-            <div id="rowNachnahmeFee" class="hidden flex justify-between text-xs text-rose-500 font-bold transition-all duration-300">
+            <div id="rowNachnahmeFee" class="hidden flex justify-between text-sm text-rose-500 font-bold transition-all duration-300">
               <span>Nachnahmegebühr:</span><span>9,00 €</span>
             </div>
-            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
-              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamt:</span>
-              <span id="chkSummaryTotal" class="text-xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.4)]">0,00 €</span>
+            <div class="border-t border-[#232734] pt-4 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-widest text-white">Gesamtbetrag:</span>
+              <span id="chkSummaryTotal" class="text-2xl font-bold text-rose-500 drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnSubmitOrder" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_25px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right">
+          <button id="btnSubmitOrder" class="btn-glare w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_35px_rgba(225,29,72,0.4)] active:scale-95 transition-all duration-200 bg-[length:200%_auto] hover:bg-right">
             <span id="btnSubmitText" class="typewriter" data-text="VERBINDLICH SENDEN"></span>
           </button>
         </div>
@@ -281,120 +351,130 @@
       <!-- VIEW: ADDRESSES -->
       <section id="viewAddresses" class="view-panel hidden animate-fade-in relative z-10">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold uppercase tracking-widest text-white typewriter" data-text="ADRESSEN"></h2>
-          <button id="btnOpenAddressModal" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-500 border border-rose-500/30 text-[10px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all">Neu</button>
+          <h2 class="text-2xl font-bold uppercase tracking-widest text-white typewriter" data-text="ADRESSEN"></h2>
+          <button id="btnOpenAddressModal" class="px-5 py-2.5 rounded-xl bg-rose-600/20 text-rose-500 border border-rose-500/40 text-[11px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all shadow-[0_0_10px_rgba(225,29,72,0.2)]">Neu</button>
         </div>
         <div id="addressListContainer" class="space-y-4 pb-4"></div>
       </section>
 
       <!-- VIEW: ORDERS -->
       <section id="viewOrders" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-xl font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="HISTORIE"></h2>
+        <h2 class="text-2xl font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="HISTORIE"></h2>
         <div id="ordersListContainer" class="space-y-4"></div>
       </section>
       
       <!-- VIEW: SUCCESS -->
       <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-8 relative z-10">
-        <h2 class="text-3xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.5)] typewriter" data-text="ERFOLGREICH"></h2>
-        <div class="animate-float bg-[#0b0c10]/90 backdrop-blur-md border border-[#181a23] rounded-3xl p-6 text-left space-y-4 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
-          <div class="flex justify-between text-xs items-center">
-            <span class="text-neutral-500 uppercase tracking-widest text-[9px] font-bold">Bestellnummer</span>
-            <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider text-sm bg-[#12141a] px-2 py-1 rounded-md">VOD-000</span>
+        <h2 class="text-4xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_20px_rgba(225,29,72,0.6)] typewriter" data-text="ERFOLGREICH"></h2>
+        <div class="animate-float bg-[#0b0c10]/95 backdrop-blur-xl border-2 border-rose-900/40 rounded-[2rem] p-7 text-left space-y-5 mb-8 shadow-[0_15px_50px_rgba(225,29,72,0.2)]">
+          <div class="flex justify-between text-sm items-center">
+            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">Bestellnummer</span>
+            <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider text-base bg-[#15171e] px-3 py-1.5 rounded-lg border border-[#232734]">VOD-000</span>
           </div>
-          <div class="flex justify-between text-xs items-center mt-2">
-            <span class="text-neutral-500 uppercase tracking-widest text-[9px] font-bold">Gesamtbetrag</span>
-            <span id="succTotal" class="text-rose-500 font-bold text-xl drop-shadow-[0_0_5px_rgba(225,29,72,0.3)]">0,00 €</span>
+          <div class="flex justify-between text-sm items-center mt-3">
+            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">Gesamtbetrag</span>
+            <span id="succTotal" class="text-rose-500 font-bold text-2xl drop-shadow-[0_0_8px_rgba(225,29,72,0.4)]">0,00 €</span>
           </div>
           
-          <div id="succNachnahmeMsg" class="text-xs text-rose-400 mt-4 hidden border-t border-rose-900/30 pt-4 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
+          <div id="succNachnahmeMsg" class="text-sm text-rose-400 mt-5 hidden border-t border-rose-900/40 pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte halte den Betrag bei Lieferung passend bereit.
           </div>
 
-          <div id="succTransferMsg" class="text-xs text-neutral-300 mt-4 hidden border-t border-[#1e222d] pt-4 font-medium tracking-wide leading-relaxed text-center typewriter-dynamic">
+          <div id="succTransferMsg" class="text-sm text-white mt-5 hidden border-t border-[#232734] pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte überweise den Gesamtbetrag auf das bekannte Konto.
           </div>
         </div>
-        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#12141a] border border-[#1e222d] text-neutral-400 hover:text-white hover:border-rose-900 font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-lg typewriter" data-text="ZUR HISTORIE"></button>
+        <button onclick="triggerActionShock(); router.navigate('orders')" class="btn-glare w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
       </section>
 
     </main>
 
-    <!-- FIRE & SPARKS CONTAINER -->
+    <!-- FIRE & SPARKS CONTAINER (Expanded effect) -->
     <div class="fire-container">
       <div class="fire-glow-1"></div><div class="fire-glow-2"></div>
-      <div class="spark" style="left: 10%; animation-duration: 1.8s; animation-delay: 0.1s;"></div>
-      <div class="spark" style="left: 20%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
-      <div class="spark" style="left: 35%; animation-duration: 1.5s; animation-delay: 0.9s;"></div>
-      <div class="spark" style="left: 50%; animation-duration: 2.5s; animation-delay: 0.2s;"></div>
-      <div class="spark" style="left: 65%; animation-duration: 1.7s; animation-delay: 0.7s;"></div>
-      <div class="spark" style="left: 80%; animation-duration: 2.1s; animation-delay: 0.3s;"></div>
-      <div class="spark" style="left: 90%; animation-duration: 1.9s; animation-delay: 0.8s;"></div>
-      <div class="spark" style="left: 15%; animation-duration: 2.4s; animation-delay: 0.4s;"></div>
-      <div class="spark" style="left: 45%; animation-duration: 1.6s; animation-delay: 0.6s;"></div>
-      <div class="spark" style="left: 75%; animation-duration: 2.0s; animation-delay: 0.1s;"></div>
+      <div class="spark" style="left: 10%; animation-duration: 1.6s; animation-delay: 0.1s;"></div>
+      <div class="spark" style="left: 20%; animation-duration: 2.1s; animation-delay: 0.4s;"></div>
+      <div class="spark" style="left: 30%; animation-duration: 1.4s; animation-delay: 0.8s;"></div>
+      <div class="spark" style="left: 45%; animation-duration: 2.5s; animation-delay: 0.2s;"></div>
+      <div class="spark" style="left: 55%; animation-duration: 1.5s; animation-delay: 0.6s;"></div>
+      <div class="spark" style="left: 70%; animation-duration: 2.0s; animation-delay: 0.3s;"></div>
+      <div class="spark" style="left: 85%; animation-duration: 1.8s; animation-delay: 0.7s;"></div>
+      <div class="spark" style="left: 95%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
     </div>
 
     <!-- BOTTOM NAVIGATION -->
-    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#050608]/70 backdrop-blur-xl border-t border-rose-900/30 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#050608]/80 backdrop-blur-2xl border-t border-rose-900/40 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgba(225,29,72,0.1)]">
+      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-300">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
-      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-300">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
       </button>
-      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-300">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
-      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-300">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       </button>
     </nav>
 
-    <!-- MODAL (Edit/New Address) -->
-    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f0] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
-      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-6 space-y-6 shadow-[0_0_60px_rgba(225,29,72,0.15)]">
-        <h3 id="addressModalTitle" class="text-xs font-bold uppercase tracking-widest text-white glitch-effect">NEUE ADRESSE</h3>
+    <!-- MODAL (Adresse) -->
+    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f5] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
+      <div class="bg-[#0b0c10] border-2 border-[#1e222d] rounded-[2rem] w-full max-w-sm p-7 space-y-6 shadow-[0_0_80px_rgba(225,29,72,0.2)]">
+        <h3 id="addressModalTitle" class="text-sm font-bold uppercase tracking-widest text-white glitch-effect typewriter" data-text="NEUE ADRESSE"></h3>
         <form id="addressForm" class="space-y-4">
           <input type="hidden" id="addressFormId">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           </div>
-          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           </div>
-          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           
-          <div class="flex space-x-3 pt-4">
-            <button type="button" onclick="App.closeAddressModal()" class="w-1/2 py-4 rounded-2xl bg-[#181a23] text-neutral-400 hover:text-white font-bold text-[10px] uppercase tracking-widest active:scale-90 transition-all duration-200">Abbrechen</button>
-            <button type="submit" class="w-1/2 py-4 rounded-2xl bg-rose-600 text-white font-bold text-[10px] uppercase tracking-widest active:scale-90 transition-all duration-200 shadow-[0_0_15px_rgba(225,29,72,0.4)]">Speichern</button>
+          <div class="flex space-x-4 pt-4">
+            <button type="button" onclick="triggerActionShock(); App.closeAddressModal()" class="w-1/2 py-4 rounded-2xl bg-[#1a1d26] text-neutral-400 hover:text-white font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-200">Abbrechen</button>
+            <button type="submit" class="btn-glare w-1/2 py-4 rounded-2xl bg-rose-600 text-white font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-200 shadow-[0_0_20px_rgba(225,29,72,0.5)]">Speichern</button>
           </div>
         </form>
       </div>
     </div>
 
-    <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-2 pointer-events-none w-11/12 max-w-sm"></div>
+    <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-3 pointer-events-none w-11/12 max-w-sm"></div>
   </div>
 
   <script>
+    // --- Haptic Feedback ---
     function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
+    // --- Action Shock (رجفة الشاشة) ---
+    function triggerActionShock() {
+      const app = document.getElementById('app');
+      app.classList.remove('shake-active');
+      void app.offsetWidth; // Force Reflow
+      app.classList.add('shake-active');
+      triggerHaptic([40, 60, 40]);
+    }
+
+    // --- Ripple Click ---
     document.addEventListener('pointerdown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button')) return;
       const burst = document.createElement('div');
       burst.className = 'click-ripple';
       burst.style.left = e.clientX + 'px';
       burst.style.top = e.clientY + 'px';
-      burst.style.width = '40px';
-      burst.style.height = '40px';
+      burst.style.width = '50px';
+      burst.style.height = '50px';
       document.body.appendChild(burst);
       setTimeout(() => burst.remove(), 600);
     });
 
+    // --- Clock & Date ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
     function updateClock() {
       const now = new Date();
@@ -426,6 +506,7 @@
     }
     updateClock();
 
+    // --- Typewriter Effect ---
     function triggerTypewriter(viewEl) {
       const elements = viewEl.querySelectorAll('.typewriter');
       elements.forEach(el => {
@@ -434,24 +515,25 @@
         el.textContent = '';
         let i = 0;
         function type() {
-          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(type, 30 + Math.random() * 40); }
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(type, 20 + Math.random() * 30); }
         }
-        setTimeout(type, 300);
+        setTimeout(type, 250);
       });
 
-      const dynamicElements = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
-      dynamicElements.forEach(el => {
+      const dynElements = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
+      dynElements.forEach(el => {
         if (!el.hasAttribute('data-original-text')) el.setAttribute('data-original-text', el.textContent.trim());
         const text = el.getAttribute('data-original-text');
         el.textContent = '';
         let i = 0;
         function typeDyn() {
-          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 25); }
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 20); }
         }
-        setTimeout(typeDyn, 400);
+        setTimeout(typeDyn, 350);
       });
     }
 
+    // --- Storage Service ---
     const StorageService = (function () {
       const DB_NAME = 'VOIDShopDB';
       let dbInstance = null;
@@ -507,10 +589,7 @@
           return new Promise(res => {
             const tx = db.transaction(['addresses'], 'readwrite');
             const store = tx.objectStore('addresses');
-            addrs.forEach(a => {
-              a.isDefault = (a.id === id);
-              store.put(a);
-            });
+            addrs.forEach(a => { a.isDefault = (a.id === id); store.put(a); });
             tx.oncomplete = () => res(true);
           });
         },
@@ -541,10 +620,10 @@
       showToast: (msg) => {
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
-        t.className = 'p-3 px-5 rounded-2xl text-xs font-bold bg-[#0b0c10]/95 backdrop-blur-md border border-[#232734] text-white shadow-[0_10px_30px_rgba(225,29,72,0.2)] transition-all transform duration-300 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide';
+        t.className = 'p-4 px-6 rounded-2xl text-sm font-bold bg-[#0b0c10]/95 backdrop-blur-xl border border-[#232734] text-white shadow-[0_15px_40px_rgba(225,29,72,0.3)] transition-all transform duration-300 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide w-full';
         
         const icon = document.createElement('span');
-        icon.className = 'text-rose-500 mr-3 text-xl leading-none animate-pulse';
+        icon.className = 'text-rose-500 mr-3 text-2xl leading-none animate-pulse';
         icon.innerHTML = '&bull;';
         
         const textSpan = document.createElement('span');
@@ -554,14 +633,14 @@
         
         let i = 0;
         function typeToast() {
-          if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 25); }
+          if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 20); }
         }
         typeToast();
 
         setTimeout(() => {
           t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)';
-          setTimeout(() => t.remove(), 300);
-        }, 3000 + (msg.length * 25));
+          setTimeout(() => t.remove(), 400);
+        }, 3500 + (msg.length * 20));
       },
       renderCart: () => {
         const c = CartService.getCalculations();
@@ -576,7 +655,6 @@
       dispatch: async (order) => {
         const botToken = '8394320495:AAGyRY5siD2sQBbjL_JaoY1h6GH016TGBYM';
         const chatId = '1117141728';
-        
         const messageText = `
 🚨 <b>VØID - NEUE BESTELLUNG</b> 🚨
 
@@ -593,30 +671,18 @@ ${order.address.country}
 
 🕒 <b>Datum:</b> ${new Date(order.createdAt).toLocaleString('de-DE')}
         `.trim();
-
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
         try {
-          const res = await fetch(telegramUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text: messageText, parse_mode: 'HTML' })
-          });
+          const res = await fetch(telegramUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text: messageText, parse_mode: 'HTML' }) });
           return { success: res.ok };
-        } catch(e) {
-          return { success: false }; 
-        }
+        } catch(e) { return { success: false }; }
       }
     };
 
     const router = {
       navigate: (view) => {
-        triggerHaptic(40); 
-        
-        document.querySelectorAll('.view-panel').forEach(v => {
-          v.classList.remove('active', 'animate-fade-in');
-          v.classList.add('hidden');
-        });
+        triggerHaptic(50); 
+        document.querySelectorAll('.view-panel').forEach(v => { v.classList.remove('active', 'animate-fade-in'); v.classList.add('hidden'); });
         
         const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
         target.classList.remove('hidden');
@@ -643,24 +709,20 @@ ${order.address.country}
 
         document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => router.navigate(b.dataset.nav));
         
-        document.getElementById('btnCartPlus').onclick = () => { triggerHaptic(20); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
-        document.getElementById('btnCartMinus').onclick = () => { triggerHaptic(20); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
+        document.getElementById('btnCartPlus').onclick = () => { triggerActionShock(); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
+        document.getElementById('btnCartMinus').onclick = () => { triggerActionShock(); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
         
         document.getElementById('btnGoToCheckout').onclick = async () => {
-          triggerHaptic(30);
+          triggerActionShock();
           const a = await StorageService.getSelectedAddress();
-          if(!a) {
-             UIService.showToast('Bitte lege zuerst eine Lieferadresse an');
-             router.navigate('addresses');
-          } else {
-             router.navigate('checkout');
-          }
+          if(!a) { UIService.showToast('BITTE LEGE ZUERST EINE LIEFERADRESSE AN'); router.navigate('addresses'); } 
+          else { router.navigate('checkout'); }
         };
         
-        document.getElementById('chkNachnahme').addEventListener('change', () => { triggerHaptic(20); App.renderCheckout(); });
+        document.getElementById('chkNachnahme').addEventListener('change', () => { triggerActionShock(); App.renderCheckout(); });
 
         document.getElementById('btnOpenAddressModal').onclick = () => {
-          triggerHaptic(20);
+          triggerActionShock();
           document.getElementById('addressForm').reset();
           document.getElementById('addressFormId').value = '';
           document.getElementById('addressModalTitle').setAttribute('data-text', 'NEUE ADRESSE');
@@ -668,20 +730,17 @@ ${order.address.country}
           triggerTypewriter(document.getElementById('addressModal'));
         };
         document.getElementById('addressForm').onsubmit = App.saveAddress;
-
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
         triggerTypewriter(document.getElementById('viewHome'));
       },
 
       closeAddressModal: () => {
-        triggerHaptic(20);
-        document.getElementById('addressModal').classList.add('hidden');
+        triggerHaptic(30); document.getElementById('addressModal').classList.add('hidden');
       },
 
       saveAddress: async (e) => {
-        e.preventDefault();
-        triggerHaptic(40);
+        e.preventDefault(); triggerActionShock();
         const idStr = document.getElementById('addressFormId').value;
         let isDef = false;
         if(idStr) {
@@ -691,71 +750,52 @@ ${order.address.country}
         }
 
         const addr = {
-          id: idStr ? idStr : undefined,
-          isDefault: isDef,
-          firstName: document.getElementById('addrFirstName').value,
-          lastName: document.getElementById('addrLastName').value,
-          street: document.getElementById('addrStreet').value,
-          number: document.getElementById('addrNumber').value,
-          zip: document.getElementById('addrZip').value,
-          city: document.getElementById('addrCity').value,
-          country: document.getElementById('addrCountry').value,
-          phone: document.getElementById('addrPhone').value
+          id: idStr ? idStr : undefined, isDefault: isDef,
+          firstName: document.getElementById('addrFirstName').value, lastName: document.getElementById('addrLastName').value,
+          street: document.getElementById('addrStreet').value, number: document.getElementById('addrNumber').value,
+          zip: document.getElementById('addrZip').value, city: document.getElementById('addrCity').value,
+          country: document.getElementById('addrCountry').value, phone: document.getElementById('addrPhone').value
         };
         await StorageService.saveAddress(addr);
         App.closeAddressModal();
-        UIService.showToast('Erfolgreich gespeichert');
+        UIService.showToast('ADRESSE ERFOLGREICH GESPEICHERT');
         
         if (document.getElementById('viewAddresses').classList.contains('active')) { App.renderAddresses(); }
         if (document.getElementById('viewCheckout').classList.contains('active')) { App.renderCheckout(); }
       },
 
-      setDefault: async (id) => {
-        triggerHaptic(20);
-        await StorageService.setDefaultAddress(id);
-        App.renderAddresses();
-      },
-
+      setDefault: async (id) => { triggerActionShock(); await StorageService.setDefaultAddress(id); App.renderAddresses(); },
       editAddress: async (id) => {
-        triggerHaptic(20);
-        const list = await StorageService.getAllAddresses();
-        const a = list.find(x => x.id === id);
+        triggerActionShock();
+        const list = await StorageService.getAllAddresses(); const a = list.find(x => x.id === id);
         if(!a) return;
-        document.getElementById('addressFormId').value = a.id;
-        document.getElementById('addrFirstName').value = a.firstName;
-        document.getElementById('addrLastName').value = a.lastName;
-        document.getElementById('addrStreet').value = a.street;
-        document.getElementById('addrNumber').value = a.number;
-        document.getElementById('addrZip').value = a.zip;
-        document.getElementById('addrCity').value = a.city;
-        document.getElementById('addrCountry').value = a.country;
+        document.getElementById('addressFormId').value = a.id; document.getElementById('addrFirstName').value = a.firstName;
+        document.getElementById('addrLastName').value = a.lastName; document.getElementById('addrStreet').value = a.street;
+        document.getElementById('addrNumber').value = a.number; document.getElementById('addrZip').value = a.zip;
+        document.getElementById('addrCity').value = a.city; document.getElementById('addrCountry').value = a.country;
         document.getElementById('addrPhone').value = a.phone || '';
-        
         document.getElementById('addressModalTitle').setAttribute('data-text', 'ADRESSE BEARBEITEN');
         document.getElementById('addressModal').classList.remove('hidden');
         triggerTypewriter(document.getElementById('addressModal'));
       },
-
       deleteAddress: async (id) => {
-        triggerHaptic(30);
+        triggerActionShock();
         if(confirm('Adresse wirklich löschen?')) {
-          await StorageService.deleteAddress(id);
-          UIService.showToast('Adresse gelöscht');
-          App.renderAddresses();
+          await StorageService.deleteAddress(id); UIService.showToast('ADRESSE GELÖSCHT'); App.renderAddresses();
         }
       },
 
       renderAddresses: async () => {
         const list = await StorageService.getAllAddresses();
         document.getElementById('addressListContainer').innerHTML = list.map(a => `
-          <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] transition-transform duration-300 hover:scale-[1.02] shadow-lg">
+          <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-3xl border border-[#1e222d] transition-transform duration-300 hover:scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
             <div class="font-bold text-white text-sm tracking-wide">${a.firstName} ${a.lastName}</div>
             <div class="text-xs text-neutral-400 mt-2 leading-relaxed font-medium">${a.street} ${a.number}<br>${a.zip} ${a.city}</div>
-            <div class="flex justify-between items-center mt-4 border-t border-[#1e222d] pt-3">
-              ${a.isDefault ? '<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-600/10 px-2 py-1 rounded">Aktiv</span>' : `<button onclick="App.setDefault('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Wählen</button>`}
-              <div class="flex space-x-4">
+            <div class="flex justify-between items-center mt-5 border-t border-[#232734] pt-4">
+              ${a.isDefault ? '<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-600/10 px-3 py-1.5 rounded-lg border border-rose-900/30">Aktiv</span>' : `<button onclick="App.setDefault('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Wählen</button>`}
+              <div class="flex space-x-5">
                  <button onclick="App.editAddress('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Edit</button>
-                 <button onclick="App.deleteAddress('${a.id}')" class="text-[10px] text-rose-900 hover:text-rose-500 uppercase tracking-widest font-bold transition-colors">Delete</button>
+                 <button onclick="App.deleteAddress('${a.id}')" class="text-[10px] text-rose-600 hover:text-rose-400 uppercase tracking-widest font-bold transition-colors">Delete</button>
               </div>
             </div>
           </div>
@@ -765,24 +805,18 @@ ${order.address.country}
       renderCheckout: async () => {
         const c = CartService.getCalculations();
         const a = await StorageService.getSelectedAddress();
-        
         const isNachnahme = document.getElementById('chkNachnahme').checked;
         const nachnahmeFee = isNachnahme ? 9.00 : 0.00;
         const finalTotal = c.total + nachnahmeFee;
 
         document.getElementById('chkSummarySubtotal').textContent = CartService.format(c.subtotal);
         document.getElementById('chkSummaryShipping').textContent = CartService.format(c.shipping);
-        
         const rowNachnahme = document.getElementById('rowNachnahmeFee');
         if(isNachnahme) { rowNachnahme.classList.remove('hidden'); } else { rowNachnahme.classList.add('hidden'); }
 
         document.getElementById('chkSummaryTotal').textContent = CartService.format(finalTotal);
-        
-        if(a) {
-          document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-white leading-relaxed font-medium tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`;
-        } else {
-          document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-rose-500 leading-relaxed font-medium tracking-wide">Keine Adresse gewählt</div>`;
-        }
+        if(a) { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-sm text-white leading-relaxed font-medium tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`; } 
+        else { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-rose-500 leading-relaxed font-bold tracking-widest uppercase">Keine Adresse gewählt</div>`; }
       },
 
       renderOrders: async () => {
@@ -790,36 +824,31 @@ ${order.address.country}
         document.getElementById('ordersListContainer').innerHTML = list.map(o => {
           const dateStr = new Date(o.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
           return `
-          <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] mb-4 text-xs text-neutral-300 transition-transform duration-300 hover:scale-[1.02] shadow-lg">
-            <div class="flex justify-between items-center mb-3">
-              <span class="text-rose-500 font-mono font-bold tracking-wider">${o.orderNumber}</span>
-              <span class="font-bold text-white text-sm drop-shadow-[0_0_3px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
+          <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-3xl border border-[#1e222d] mb-4 text-xs text-neutral-300 transition-transform duration-300 hover:scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-rose-500 font-mono font-bold tracking-wider text-sm">${o.orderNumber}</span>
+              <span class="font-bold text-white text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
             </div>
-            <div class="flex justify-between items-center border-t border-[#1e222d] pt-3">
-              <span class="text-[10px] text-neutral-500 tracking-widest font-medium">${dateStr}</span>
-              ${o.isNachnahme ? `<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold">inkl. Nachnahme</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
+            <div class="flex justify-between items-center border-t border-[#232734] pt-4">
+              <span class="text-[10px] text-neutral-500 tracking-widest font-bold">${dateStr}</span>
+              ${o.isNachnahme ? `<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-900/20 px-2 py-1 rounded">inkl. Nachnahme</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
             </div>
           </div>
         `}).join('') || '<p class="text-[10px] text-neutral-600 text-center py-12 uppercase tracking-widest font-bold">Keine Bestellungen</p>';
       },
 
       submitOrder: async () => {
-        triggerHaptic(50);
+        triggerActionShock();
         const a = await StorageService.getSelectedAddress();
-        if(!a) return UIService.showToast('Bitte wähle eine Lieferadresse.');
+        if(!a) return UIService.showToast('BITTE WÄHLE EINE LIEFERADRESSE');
         
         const btn = document.getElementById('btnSubmitOrder');
         const txt = document.getElementById('btnSubmitText');
         
-        btn.classList.add('animate-pulse');
-        btn.style.pointerEvents = 'none';
+        btn.classList.add('animate-pulse'); btn.style.pointerEvents = 'none';
         
-        txt.textContent = '';
-        let waitText = "VERBINDUNG...";
-        let w = 0;
-        function typeWait() {
-          if (w < waitText.length) { txt.textContent += waitText.charAt(w); w++; setTimeout(typeWait, 30); }
-        }
+        txt.textContent = ''; let waitText = "VERBINDUNG WIRD AUFGEBAUT..."; let w = 0;
+        function typeWait() { if (w < waitText.length) { txt.textContent += waitText.charAt(w); w++; setTimeout(typeWait, 20); } }
         typeWait();
         
         const c = CartService.getCalculations();
@@ -828,38 +857,31 @@ ${order.address.country}
 
         const order = {
           orderNumber: 'VOD-' + Date.now().toString().slice(-6),
-          createdAt: new Date().toISOString(),
-          total: finalTotal,
-          address: a,
-          isNachnahme: isNachnahme
+          createdAt: new Date().toISOString(), total: finalTotal, address: a, isNachnahme: isNachnahme
         };
 
         const res = await TelegramService.dispatch(order);
         if(res.success) {
-          triggerHaptic([30, 50, 30]); 
-          await StorageService.saveOrder(order);
-          CartService.setQuantity(1);
+          triggerHaptic([40, 60, 40]); 
+          await StorageService.saveOrder(order); CartService.setQuantity(1);
           
           document.getElementById('succOrderNumber').textContent = order.orderNumber;
           document.getElementById('succTotal').textContent = CartService.format(order.total);
           
           if(isNachnahme) {
-             document.getElementById('succNachnahmeMsg').classList.remove('hidden');
-             document.getElementById('succTransferMsg').classList.add('hidden');
+             document.getElementById('succNachnahmeMsg').classList.remove('hidden'); document.getElementById('succTransferMsg').classList.add('hidden');
           } else {
-             document.getElementById('succNachnahmeMsg').classList.add('hidden');
-             document.getElementById('succTransferMsg').classList.remove('hidden');
+             document.getElementById('succNachnahmeMsg').classList.add('hidden'); document.getElementById('succTransferMsg').classList.remove('hidden');
           }
 
           document.getElementById('chkNachnahme').checked = false; 
           router.navigate('success');
         } else {
-          UIService.showToast('Fehler bei der Übermittlung. Bitte erneut versuchen.');
+          UIService.showToast('FEHLER BEI DER ÜBERMITTLUNG. BITTE ERNEUT VERSUCHEN.');
         }
 
         txt.textContent = 'VERBINDLICH SENDEN';
-        btn.classList.remove('animate-pulse');
-        btn.style.pointerEvents = 'auto';
+        btn.classList.remove('animate-pulse'); btn.style.pointerEvents = 'auto';
       }
     };
 
