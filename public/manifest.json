@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "NØX — HELL",
+  "short_name": "NØX",
+  "description": "Minimalistischer, geheimnisvoller Online-Shop für HELL.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

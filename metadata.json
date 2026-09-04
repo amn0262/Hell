@@ -1,0 +1,6 @@
+{
+  "name": "NØX — HELL",
+  "description": "Minimalistischer, geheimnisvoller Online-Shop für HELL mit lokalem Speicher und diskreter Bestellabwicklung.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

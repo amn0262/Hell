@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#09090b"/>
+  <defs>
+    <radialGradient id="crimsonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e11d48" stop-opacity="0.3"/>
+      <stop offset="60%" stop-color="#e11d48" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#09090b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#71717a" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#27272a" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Subtle ambient aura -->
+  <circle cx="256" cy="256" r="210" fill="url(#crimsonGlow)"/>
+  
+  <!-- Outer Sacred Geometry Hexagon/Rhombs -->
+  <g transform="translate(256, 256)">
+    <!-- Outer diamond -->
+    <polygon points="0,-180 156,0 0,180 -156,0" fill="none" stroke="url(#edgeGrad)" stroke-width="2.5" stroke-dasharray="320 8"/>
+    
+    <!-- Inverted Triangle (HELL Monolith) -->
+    <polygon points="0,140 -120,-70 120,-70" fill="#0f0f13" stroke="#e4e4e7" stroke-width="3" stroke-linejoin="round"/>
+    
+    <!-- Central Crimson Singularity -->
+    <polygon points="0,70 -50,-20 50,-20" fill="#18181b" stroke="#e11d48" stroke-width="2.5" stroke-linejoin="round"/>
+    
+    <!-- Center Core Point -->
+    <circle cx="0" cy="15" r="5" fill="#f43f5e"/>
+    <circle cx="0" cy="15" r="14" fill="none" stroke="#e11d48" stroke-width="1" stroke-opacity="0.6"/>
+    
+    <!-- Precision Crosshairs -->
+    <line x1="0" y1="-170" x2="0" y2="-120" stroke="#71717a" stroke-width="1.5"/>
+    <line x1="0" y1="120" x2="0" y2="170" stroke="#71717a" stroke-width="1.5"/>
+    <line x1="-150" y1="0" x2="-100" y2="0" stroke="#71717a" stroke-width="1.5"/>
+    <line x1="100" y1="0" x2="150" y2="0" stroke="#71717a" stroke-width="1.5"/>
+  </g>
+</svg>
