@@ -41,10 +41,7 @@
       background-size: 100% 8px;
       animation: moveLines 0.3s linear infinite;
     }
-    @keyframes moveLines {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 8px; }
-    }
+    @keyframes moveLines { 0% { background-position: 0 0; } 100% { background-position: 0 8px; } }
 
     /* الاهتزاز السريع عند الأكشن */
     @keyframes screenShock {
@@ -66,7 +63,39 @@
       100% { transform: translate(-15px, 15px) skewX(-8deg); }
     }
 
-    /* ليزر الماسح الضوئي (مخفف جداً وشفاف) */
+    /* === تأثيرات التلفزيون القديم المضافة (CRT TV Static & VCR) === */
+    .tv-noise {
+      position: fixed; inset: 0; z-index: 100001; pointer-events: none;
+      background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      opacity: 0; mix-blend-mode: overlay;
+    }
+    .tv-noise.show {
+      animation: staticFlicker 0.1s infinite;
+      opacity: 0.6; /* شدة غبار الشاشة */
+    }
+    @keyframes staticFlicker {
+      0% { transform: translate(0,0) scale(1.1); }
+      20% { transform: translate(-10px,10px) scale(1.1); }
+      40% { transform: translate(10px,-10px) scale(1.1); }
+      60% { transform: translate(-10px,-10px) scale(1.1); }
+      80% { transform: translate(10px,10px) scale(1.1); }
+      100% { transform: translate(0,0) scale(1.1); }
+    }
+
+    .vcr-bar {
+      position: fixed; left: 0; width: 100%; height: 12vh;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: hue-rotate(90deg) contrast(150%) blur(2px);
+      -webkit-backdrop-filter: hue-rotate(90deg) contrast(150%) blur(2px);
+      z-index: 100000; pointer-events: none; opacity: 0; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .vcr-bar.show { animation: vcrJump 0.2s infinite linear; opacity: 1; }
+    @keyframes vcrJump {
+      0% { top: -20%; } 100% { top: 120%; }
+    }
+    /* ======================================================== */
+
+    /* ليزر الماسح الضوئي */
     .laser-beam {
       position: absolute; left: 0; width: 100%; height: 1px;
       background: rgba(244,63,94,0.1);
@@ -74,12 +103,7 @@
       animation: laserSweep 5s infinite linear;
       opacity: 0; pointer-events: none; z-index: 9997;
     }
-    @keyframes laserSweep {
-      0% { top: -10%; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { top: 110%; opacity: 0; }
-    }
+    @keyframes laserSweep { 0% { top: -10%; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
 
     /* خطوط الشاشة الكلاسيكية */
     .scanlines {
@@ -106,8 +130,7 @@
       50% { transform: translate(0); }
     }
     .glitch-effect {
-      display: inline-block;
-      animation: glitch 2.5s cubic-bezier(.25, .46, .45, .94) infinite;
+      display: inline-block; animation: glitch 2.5s cubic-bezier(.25, .46, .45, .94) infinite;
       text-shadow: 3px 0 rgba(225,29,72,0.8), -3px 0 rgba(0,255,255,0.4);
     }
 
@@ -120,8 +143,7 @@
     }
     .fire-glow-1 {
       position: absolute; bottom: -30px; left: -10%; width: 120%; height: 160px;
-      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.6), transparent 70%);
-      filter: blur(20px); 
+      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.6), transparent 70%); filter: blur(20px); 
     }
 
     /* تأثير ضغط الإصبع */
@@ -131,19 +153,14 @@
       background: radial-gradient(circle, rgba(244,63,94,1) 0%, rgba(244,63,94,0) 70%);
       z-index: 9999; animation: rippleAnim 0.4s ease-out forwards;
     }
-    @keyframes rippleAnim {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(6); opacity: 0; }
-    }
+    @keyframes rippleAnim { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
 
-    /* الشريط السفلي المتفاعل */
     .nav-item.active { color: #f43f5e !important; transform: scale(1.2) translateY(-6px); filter: drop-shadow(0 0 15px rgba(225,29,72,0.8)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
-    
     .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
@@ -154,12 +171,16 @@
   <div class="scanlines"></div> 
   <div class="laser-beam"></div>
 
-  <!-- الأخطاء الوهمية المجنونة (Fake Action Errors) -->
+  <!-- تأثير تشويش التلفزيون القديم VCR -->
+  <div id="tvNoiseOverlay" class="tv-noise"></div>
+  <div id="vcrBarOverlay" class="vcr-bar"></div>
+
+  <!-- الأخطاء الوهمية المجنونة -->
   <div id="fakeErrorOverlay" class="hidden fixed inset-0 z-[99999] bg-rose-600/90 mix-blend-color-burn flex items-center justify-center pointer-events-none">
     <div id="fakeErrorText" class="text-black text-6xl font-black font-mono tracking-tighter uppercase glitch-critical text-center mix-blend-overlay w-full px-4 break-words leading-none"></div>
   </div>
 
-  <!-- الفلاش الأحمر الحاد (يستخدم وقت الانفجار) -->
+  <!-- الفلاش الأحمر الحاد للانفجار -->
   <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
 
   <!-- الرسالة الفجائية (System Override) -->
@@ -221,7 +242,6 @@
             <text id="clockDay" x="100" y="135" fill="#9ca3af" font-size="8" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.9"></text>
             <text id="clockDate" x="100" y="152" fill="#f43f5e" font-size="11" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب الثابتة (تتحرك مع الزلزال الزمني فقط) -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
@@ -421,13 +441,18 @@
       void app.offsetWidth; 
       app.classList.add('shake-active');
       triggerHaptic([40, 60, 40]);
-      triggerFakeError(); // إظهار أخطاء وهمية أحياناً
     }
 
     // --- الانفجار وتطاير العناصر (Glitch Explosion Element Scatter) ---
     function triggerExplosion() {
       triggerHaptic([50, 100, 150, 50, 100]); 
       const app = document.getElementById('app');
+      
+      // إضافة شاشة تشويش تلفزيون مكثفة مع الانفجار
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      const vcrBar = document.getElementById('vcrBarOverlay');
+      tvNoise.classList.add('show');
+      vcrBar.classList.add('show');
       
       app.classList.add('glitch-critical');
       
@@ -447,6 +472,9 @@
 
       setTimeout(() => {
         app.classList.remove('glitch-critical');
+        tvNoise.classList.remove('show');
+        vcrBar.classList.remove('show');
+        
         flash.style.transition = 'opacity 0.3s ease-out';
         flash.style.opacity = '0';
         
@@ -456,14 +484,42 @@
         });
         
         setTimeout(() => flash.remove(), 300);
-      }, 150);
+      }, 150); // وقت الانفجار سريع جداً ليعطي تأثير الأكشن
     }
+
+    // --- تشويش الشاشة العشوائي بالكامل (TV Static Glitch) ---
+    function randomScreenGlitch() {
+      const app = document.getElementById('app');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      const vcrBar = document.getElementById('vcrBarOverlay');
+      
+      const isHeavy = Math.random() > 0.6; // 40% فرصة لتشويش تلفزيوني قوي
+      
+      if (isHeavy) {
+        tvNoise.classList.add('show');
+        vcrBar.classList.add('show');
+        app.classList.add('glitch-critical');
+        triggerHaptic([40, 20, 40]);
+        setTimeout(() => { 
+          tvNoise.classList.remove('show'); 
+          vcrBar.classList.remove('show'); 
+          app.classList.remove('glitch-critical'); 
+        }, 150 + Math.random() * 200);
+      } else {
+        app.classList.add('glitch-critical');
+        triggerHaptic(20);
+        setTimeout(() => { app.classList.remove('glitch-critical'); }, 50 + Math.random() * 100);
+      }
+      
+      setTimeout(randomScreenGlitch, 3000 + Math.random() * 15000);
+    }
+    setTimeout(randomScreenGlitch, 5000);
 
     // --- Fake Action Errors ---
     function triggerFakeError() {
       if(Math.random() > 0.25) return; 
       const err = document.getElementById('fakeErrorOverlay');
-      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "UNAUTHORIZED ENTITY"];
+      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "SIGNAL LOST"];
       document.getElementById('fakeErrorText').textContent = texts[Math.floor(Math.random() * texts.length)];
       err.classList.remove('hidden');
       triggerHaptic([100, 50, 100]);
@@ -483,51 +539,16 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Crazy Static Clock Logic ---
+    // --- Static Clock Logic ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
-    let insanityOffset = { s: 0, m: 0, h: 0 };
-    let clockInsanity = false;
-
-    // تثبيت عقارب الساعة على 10:10 افتراضياً (للتصميم)
     let staticTime = { h: 10, m: 10, s: 30 }; 
-
-    function triggerTimeWarp() {
-      if(clockInsanity) return;
-      clockInsanity = true;
-      triggerActionShock();
-      document.getElementById('app').classList.add('glitch-critical');
-      setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 150);
-      
-      setTimeout(() => {
-        clockInsanity = false; 
-        triggerHaptic([50, 100, 50]);
-        const app = document.getElementById('app');
-        app.classList.add('shake-active');
-        app.style.filter = "invert(1) hue-rotate(180deg)";
-        setTimeout(() => { app.classList.remove('shake-active'); app.style.filter = "none"; }, 150);
-      }, 1000 + Math.random() * 1500);
-    }
-    
-    setInterval(() => {
-       if(Math.random() > 0.7) triggerTimeWarp();
-    }, 12000);
 
     function updateClock() {
       let h = staticTime.h; let m = staticTime.m; let s = staticTime.s; 
-      
-      if (clockInsanity) {
-         insanityOffset.s += (Math.random() - 0.5) * 150; 
-         insanityOffset.m += (Math.random() - 0.5) * 80;
-         insanityOffset.h += (Math.random() - 0.5) * 50;
-      } else {
-         insanityOffset.s *= 0.85; 
-         insanityOffset.m *= 0.85;
-         insanityOffset.h *= 0.85;
-      }
 
-      const sDeg = (s * 6) + insanityOffset.s;
-      const mDeg = (m * 6) + insanityOffset.m;
-      const hDeg = (h * 30) + (m / 2) + insanityOffset.h;
+      const sDeg = (s * 6);
+      const mDeg = (m * 6);
+      const hDeg = (h * 30) + (m / 2);
       
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
@@ -760,7 +781,7 @@ ${order.address.country}
           if(view === 'orders') App.renderOrders();
 
           triggerTypewriter(target);
-        }, 150); // إظهار الصفحة الجديدة بعد الانفجار مباشرة
+        }, 150); 
       }
     };
 
@@ -778,9 +799,14 @@ ${order.address.country}
         
         overlay.classList.remove('hidden');
         
+        // استخدام تشويش التلفاز للرسالة أيضاً
+        document.getElementById('tvNoiseOverlay').classList.add('show');
         document.getElementById('app').classList.add('glitch-critical');
         triggerHaptic([100, 50, 100]);
-        setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 250);
+        setTimeout(() => {
+            document.getElementById('app').classList.remove('glitch-critical');
+            document.getElementById('tvNoiseOverlay').classList.remove('show');
+        }, 300);
 
         l1.style.opacity = '1'; triggerHaptic(20);
         setTimeout(() => { l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
