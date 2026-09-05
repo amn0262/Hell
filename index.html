@@ -153,7 +153,6 @@
     .animate-spin-slow { animation: spinOrbit 25s linear infinite; transform-origin: 100px 100px; }
     .animate-reverse-spin { animation: spinOrbit 18s linear infinite reverse; transform-origin: 100px 100px; }
 
-    /* تأثير الانفجار اللمسي */
     .click-ripple {
       position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
@@ -166,7 +165,6 @@
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-    /* صندوق تشفير الهكر */
     .decode-box {
       position: relative; overflow: hidden;
       border: 2px solid #f43f5e; box-shadow: inset 0 0 30px rgba(244,63,94,0.4), 0 0 30px rgba(244,63,94,0.6);
@@ -189,42 +187,32 @@
       cursor: pointer; overflow: hidden; margin-top: 2rem;
       border: 1px solid rgba(225,29,72,0.2);
     }
-    /* الهالة الخارجية الدوارة */
     .black-hole-btn::before {
       content: ''; position: absolute; inset: -50%;
       background: conic-gradient(transparent, rgba(225,29,72,0.4), transparent 40%);
       animation: spinOrbit 3s linear infinite;
     }
-    /* حافة أفق الحدث */
     .bh-ring {
       position: absolute; inset: 2px;
       border-radius: 50%;
       border: 1px dashed rgba(244,63,94,0.5);
       animation: spinOrbit 6s linear infinite reverse;
     }
-    /* جزيئات تبتلع للداخل */
     @keyframes swallowIn {
       0% { transform: scale(1.5) rotate(0deg); opacity: 0; }
       20% { opacity: 1; }
       100% { transform: scale(0) rotate(360deg); opacity: 0; filter: blur(2px); }
     }
     .bh-particle {
-      position: absolute;
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      border-top: 3px solid #f43f5e;
-      border-right: 2px solid transparent;
+      position: absolute; width: 100%; height: 100%; border-radius: 50%;
+      border-top: 3px solid #f43f5e; border-right: 2px solid transparent;
       animation: swallowIn 2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     }
     .bh-particle:nth-child(2) { animation-delay: -0.6s; border-top-color: #9f1239; }
     .bh-particle:nth-child(3) { animation-delay: -1.2s; border-top-color: #fff; width: 80%; height: 80%; }
-    
-    /* المركز المظلم للثقب */
     .bh-core {
-      position: absolute; z-index: 2;
-      width: 45px; height: 45px;
-      background: #000; border-radius: 50%;
-      box-shadow: 0 0 20px 10px #000;
+      position: absolute; z-index: 2; width: 45px; height: 45px;
+      background: #000; border-radius: 50%; box-shadow: 0 0 20px 10px #000;
     }
 
     ::-webkit-scrollbar { display: none; } 
@@ -240,12 +228,12 @@
   <div id="tvNoiseOverlay" class="tv-noise"></div>
   <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- شاشة التحذير الافتتاحية -->
+  <!-- شاشة التحذير الافتتاحية بالرمز بدلا من النص -->
   <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
-    <h1 class="text-6xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8 pointer-events-none drop-shadow-[0_0_20px_#e11d48]">WARNUNG</h1>
-    <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter pointer-events-none" data-text="SYSTEM GEFÄHRDET."></p>
-    <p class="text-rose-900 font-mono text-xs tracking-widest text-center mt-6 typewriter-delayed pointer-events-none" data-text="ES GIBT KEIN ZURÜCK MEHR..."></p>
-    <div id="enterBtnHint" class="mt-16 opacity-0 transition-opacity duration-1000">
+    <svg class="w-36 h-36 text-rose-600 mb-8 glitch-effect drop-shadow-[0_0_40px_rgba(225,29,72,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    </svg>
+    <div id="enterBtnHint" class="mt-12 opacity-0 transition-opacity duration-1000">
       <span class="px-8 py-3 border border-rose-900 bg-rose-950/30 text-rose-500 font-mono text-xs tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(225,29,72,0.3)]">KLICK UM ZU BEGINNEN</span>
     </div>
   </div>
@@ -267,29 +255,29 @@
 
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
-    <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
         <span onclick="triggerActionShock()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_15px_#f43f5e] animate-pulse"></span>
       </div>
-      <div class="flex items-center space-x-4"></div> <!-- تم إزالة أيقونة السلة -->
+      <div class="flex items-center space-x-4"></div>
     </header>
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
       <!-- VIEW: HOME (Shattered Random Clock & Black Hole Button) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
-        <div class="relative w-72 h-72 flex items-center justify-center mb-10 mt-4 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
+        
+        <!-- الساعة التي تقرأ الـ Triple Click -->
+        <div class="relative w-72 h-72 flex items-center justify-center mb-10 mt-4 z-10 cursor-pointer" onclick="handleClockClick()">
           <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[50px] pointer-events-none"></div>
           
-          <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20">
-            <!-- الشظايا والمسارات العشوائية المفتوحة (بدون الدوائر المحددة) -->
+          <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20 transition-all duration-300">
+            <!-- الشظايا والمسارات العشوائية المفتوحة -->
             <path d="M100 0 L115 15 L180 30 L195 80 L180 160 L100 195 L20 160 L5 80 L20 30 Z" fill="none" stroke="#1e222d" stroke-width="1.5" stroke-dasharray="5 15" class="animate-spin-slow opacity-60" />
             <path d="M100 15 L125 35 L160 55 L175 100 L155 150 L100 180 L45 150 L25 100 L40 55 Z" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 20" class="opacity-50 animate-reverse-spin" />
             <path d="M100 25 L115 45 L140 60 L150 100 L140 140 L100 160 L60 140 L50 100 L60 60 Z" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 10" class="opacity-30 animate-spin-slow" />
             
-            <!-- محددات حادة للساعات -->
             <g stroke="#374151" stroke-linecap="butt">
               <line x1="100" y1="10" x2="100" y2="35" stroke-width="2.5" stroke="#f43f5e" /> 
               <line x1="100" y1="18" x2="100" y2="32" stroke-width="2.5" transform="rotate(90 100 100)"/>
@@ -308,20 +296,17 @@
             <text id="clockDay" x="100" y="140" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.7"></text>
             <text id="clockDate" x="100" y="155" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب الحقيقية -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="50" stroke="#f43f5e" stroke-width="4" stroke-linecap="butt" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="butt" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
               <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="1" stroke-linecap="butt" />
-              <!-- رأس حاد للثواني -->
               <polygon points="98,20 102,20 100,10" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
             </g>
-            <!-- مركز غامض -->
             <circle cx="100" cy="100" r="3" fill="#040406" stroke="#ffffff" stroke-width="1.5" />
           </svg>
         </div>
 
-        <!-- زر الثقب الأسود (Black Hole Portal) -->
+        <!-- زر الثقب الأسود -->
         <button onclick="triggerActionShock(); router.navigate('cart');" class="black-hole-btn active:scale-90 transition-transform duration-300">
            <div class="bh-ring"></div>
            <div class="bh-particle"></div>
@@ -447,7 +432,6 @@
           </div>
         </div>
 
-        <!-- رسالة التحويل العبقرية (Hacker Decoder Box) -->
         <div id="succTransferMsg" class="hidden relative mb-8 decode-box rounded-[2rem] p-6">
           <div class="absolute inset-0 bg-rose-500 opacity-10 animate-pulse pointer-events-none"></div>
           <p id="hackerDecodeText" class="decode-text relative z-10"></p>
@@ -519,10 +503,8 @@
   </div>
 
   <script>
-    // --- Haptic Feedback ---
     function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
-    // --- Action Shock ---
     function triggerActionShock() {
       const app = document.getElementById('app');
       app.classList.remove('shake-active');
@@ -531,7 +513,7 @@
       triggerHaptic([40, 60, 40]);
     }
 
-    // --- Dynamic Irregular Fire ---
+    // Dynamic Irregular Fire
     setInterval(() => {
       const f1 = document.querySelector('.fire-glow-1');
       const f2 = document.querySelector('.fire-glow-2');
@@ -546,7 +528,7 @@
       }
     }, 150); 
 
-    // --- Extreme Submission Overload (50+ actions) ---
+    // Extreme Submission Overload (50+ actions)
     function triggerExtremeOverload(callback) {
       const app = document.getElementById('app');
       const flash = document.getElementById('explosionFlash');
@@ -586,7 +568,7 @@
       }, 40); 
     }
 
-    // --- Hacker Decode Effect ---
+    // Hacker Decode Effect
     function hackerDecode(el, text) {
        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!';
        let iterations = 0;
@@ -603,7 +585,7 @@
        }, 30);
     }
 
-    // --- Random Screen Glitch ---
+    // Random Screen Glitch
     function randomScreenGlitch() {
       const app = document.getElementById('app');
       const tvNoise = document.getElementById('tvNoiseOverlay');
@@ -624,7 +606,7 @@
       setTimeout(randomScreenGlitch, 4000 + Math.random() * 15000);
     }
 
-    // --- Fake Action Errors ---
+    // Fake Action Errors
     function triggerFakeError() {
       if(Math.random() > 0.25) return; 
       const err = document.getElementById('fakeErrorOverlay');
@@ -635,7 +617,7 @@
       setTimeout(() => err.classList.add('hidden'), 150 + Math.random() * 150);
     }
 
-    // --- Remove Horror Screen ---
+    // Horror Screen Click
     document.getElementById('horrorOverlay').addEventListener('click', function() {
        this.classList.add('opacity-0');
        triggerHaptic(50);
@@ -647,7 +629,7 @@
 
     setTimeout(() => { document.getElementById('enterBtnHint').classList.remove('opacity-0'); }, 2000);
 
-    // --- Ripple ---
+    // Ripple
     document.addEventListener('pointerdown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
       const burst = document.createElement('div');
@@ -659,49 +641,69 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Crazy Clock Logic with Accel/Decel and Real Time Recovery ---
+    // --- Crazy Clock Logic with 3 Clicks ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
     let clockState = 'NORMAL'; 
     let spinVelocity = 0;
     let visualAngle = { s: 0, m: 0, h: 0 };
+    let colorShift = 0;
 
-    function breakClock() {
-      if(clockState !== 'NORMAL') return;
+    let clockClickCount = 0;
+    let clockClickTimer;
+
+    function handleClockClick() {
+      triggerActionShock();
+      
+      clockClickCount++;
+      clearTimeout(clockClickTimer);
+      if (clockClickCount === 3) {
+        if(clockState === 'NORMAL') {
+          startTimeWarp();
+        }
+        clockClickCount = 0;
+      } else {
+        clockClickTimer = setTimeout(() => { clockClickCount = 0; }, 800);
+      }
+    }
+
+    function startTimeWarp() {
       clockState = 'ACCEL';
       spinVelocity = 1;
-      
-      triggerActionShock();
       document.getElementById('clockSvg').classList.add('clock-broken');
       
       setTimeout(() => {
-        clockState = 'DECEL';
+        clockState = 'PEAK';
         
-        // Flash when starting to decelerate
         const flash = document.createElement('div');
         flash.className = 'fixed inset-0 bg-white z-[99999] pointer-events-none';
         flash.style.opacity = '1';
-        flash.style.transition = 'opacity 1s ease-out';
+        flash.style.transition = 'opacity 1.5s ease-out';
         document.body.appendChild(flash);
         
-        triggerHaptic([100, 50, 100, 50, 200]);
+        triggerHaptic([100, 50, 200, 50, 300]);
+        document.getElementById('app').classList.add('glitch-critical');
         
         requestAnimationFrame(() => {
           flash.style.opacity = '0';
-          setTimeout(() => flash.remove(), 1000);
+          setTimeout(() => flash.remove(), 1500);
         });
-        
-      }, 2500);
+
+        setTimeout(() => {
+          document.getElementById('app').classList.remove('glitch-critical');
+          clockState = 'DECEL';
+        }, 200);
+
+      }, 3500);
 
       setTimeout(() => {
         clockState = 'NORMAL';
         document.getElementById('clockSvg').classList.remove('clock-broken');
+        document.getElementById('clockSvg').style.filter = '';
         document.getElementById('handSecond').style.opacity = 1;
         document.getElementById('handMinute').style.opacity = 1;
         document.getElementById('handHour').style.opacity = 1;
-      }, 4000);
+      }, 7500);
     }
-    
-    setInterval(() => { if(Math.random() > 0.6) breakClock(); }, 12000);
 
     function updateClock() {
       const realNow = new Date();
@@ -711,27 +713,41 @@
       const realM = (m + (s / 60)) * 6;
       const realH = ((h % 12) + (m / 60)) * 30;
 
+      const clockSvg = document.getElementById('clockSvg');
+
       if (clockState === 'ACCEL') {
-         spinVelocity = Math.min(spinVelocity * 1.08, 180); 
+         spinVelocity = Math.min(spinVelocity * 1.05, 300); 
+         visualAngle.s += spinVelocity;
+         visualAngle.m += spinVelocity * 0.7;
+         visualAngle.h += spinVelocity * 0.4;
+         
+         colorShift += 5;
+         clockSvg.style.filter = `hue-rotate(${colorShift}deg) brightness(${1 + spinVelocity/150}) drop-shadow(0 0 ${spinVelocity/10}px #f43f5e)`;
+
+      } else if (clockState === 'PEAK') {
          visualAngle.s += spinVelocity;
          visualAngle.m += spinVelocity * 0.7;
          visualAngle.h += spinVelocity * 0.4;
       } else if (clockState === 'DECEL') {
-         spinVelocity *= 0.90; 
+         spinVelocity *= 0.92; 
          visualAngle.s += spinVelocity;
          visualAngle.m += spinVelocity * 0.7;
          visualAngle.h += spinVelocity * 0.4;
+         
+         colorShift -= 5;
+         clockSvg.style.filter = `hue-rotate(${colorShift}deg) brightness(${1 + spinVelocity/150})`;
       } else {
          visualAngle.s = realS;
          visualAngle.m = realM;
          visualAngle.h = realH;
+         clockSvg.style.filter = '';
       }
 
       if(clockState !== 'NORMAL') {
-         const handOpacity = Math.max(1 - (spinVelocity / 150), 0.1);
+         const handOpacity = Math.max(1 - (spinVelocity / 200), 0.05);
          document.getElementById('handSecond').style.opacity = handOpacity;
-         document.getElementById('handMinute').style.opacity = handOpacity;
-         document.getElementById('handHour').style.opacity = Math.max(handOpacity, 0.3); 
+         document.getElementById('handMinute').style.opacity = Math.max(handOpacity, 0.1);
+         document.getElementById('handHour').style.opacity = Math.max(handOpacity, 0.2); 
       }
 
       const setTransform = (id, deg) => {
@@ -917,50 +933,12 @@ ${order.address.country}
       }
     };
 
-    function scheduleMysteriousGreeting() {
-      setTimeout(async () => {
-        const addr = await StorageService.getSelectedAddress();
-        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNTE ENTITÄT"; 
-        
-        const overlay = document.getElementById('sysMsgOverlay');
-        const l1 = document.getElementById('sysLine1');
-        const l2 = document.getElementById('sysLine2');
-        const l3 = document.getElementById('sysLine3');
-        const nameEl = document.getElementById('sysMsgName');
-        
-        overlay.classList.remove('hidden');
-        
-        document.getElementById('tvNoiseOverlay').classList.add('show');
-        document.getElementById('app').classList.add('glitch-critical');
-        triggerHaptic([100, 50, 100]);
-        setTimeout(() => {
-            document.getElementById('app').classList.remove('glitch-critical');
-            document.getElementById('tvNoiseOverlay').classList.remove('show');
-        }, 300);
-
-        l1.style.opacity = '1'; triggerHaptic(20);
-        setTimeout(() => { l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
-        setTimeout(() => { 
-          nameEl.textContent = name;
-          l3.style.opacity = '1'; 
-          triggerHaptic([60, 60]); 
-        }, 3000);
-        
-        setTimeout(() => {
-          overlay.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
-          setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); }, 1000);
-        }, 6500);
-        
-      }, Math.floor(Math.random() * (20000 - 10000 + 1) + 10000)); 
-    }
-
     const App = {
       init: async () => {
         CartService.init();
         await StorageService.openDatabase();
         document.getElementById('cartQtyDisplay').textContent = CartService.getQuantity();
 
-        // ربط أزرار الـ nav بـ router.navigate
         document.querySelectorAll('[data-nav]').forEach(b => {
           b.onclick = (e) => {
             e.preventDefault();
@@ -993,7 +971,6 @@ ${order.address.country}
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
         triggerTypewriter(document.getElementById('viewHome'));
-        scheduleMysteriousGreeting();
       },
 
       closeAddressModal: () => {
