@@ -34,39 +34,32 @@
     .brand-title { font-family: var(--font-brand); cursor: pointer; }
     .font-mono-custom { font-family: var(--font-mono); }
 
-    /* تأثير الاهتزاز العنيف (Screen Shock) */
+    /* اهتزاز الشاشة العنيف */
     @keyframes screenShock {
       0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      20% { transform: translate(4px, 4px) rotate(1deg); filter: contrast(130%); }
-      40% { transform: translate(-4px, -4px) rotate(-1deg); }
-      60% { transform: translate(2px, -4px) rotate(0.5deg); }
-      80% { transform: translate(-2px, 4px) rotate(-0.5deg); }
+      20% { transform: translate(6px, 6px) rotate(1.5deg); filter: contrast(150%); }
+      40% { transform: translate(-6px, -6px) rotate(-1.5deg); }
+      60% { transform: translate(4px, -4px) rotate(1deg); }
+      80% { transform: translate(-4px, 4px) rotate(-1deg); }
     }
     .shake-active { animation: screenShock 0.25s cubic-bezier(.36,.07,.19,.97) both; }
 
-    /* تشويش الشاشة العشوائي بالكامل */
+    /* تشويش الشاشة المدمر (Glitch Critical) */
     .glitch-critical {
-      animation: criticalGlitch 0.15s infinite alternate;
-      filter: invert(0.8) hue-rotate(90deg) contrast(150%);
+      animation: criticalGlitch 0.1s infinite alternate;
+      filter: invert(1) hue-rotate(90deg) contrast(200%);
     }
     @keyframes criticalGlitch {
-      0% { transform: translate(6px, -6px) skewX(3deg); }
-      100% { transform: translate(-6px, 6px) skewX(-3deg); }
+      0% { transform: translate(10px, -10px) skewX(5deg); }
+      100% { transform: translate(-10px, 10px) skewX(-5deg); }
     }
 
-    /* تأثير انهيار الجاذبية (تدمير العناصر) */
-    @keyframes gravityFall {
-      0% { transform: translateY(0) rotate(0deg) scale(1); filter: brightness(1); }
-      15% { transform: translateY(-25px) rotate(-3deg) scale(1.05); filter: brightness(2) contrast(150%); }
-      100% { transform: translateY(150vh) rotate(45deg) scale(0.5); filter: brightness(0); opacity: 0; }
-    }
-
-    /* ليزر الماسح الضوئي (مخفف جداً) */
+    /* ليزر الماسح الضوئي */
     .laser-beam {
       position: absolute; left: 0; width: 100%; height: 1px;
-      background: rgba(244,63,94,0.08);
-      box-shadow: 0 0 8px 1px rgba(244,63,94,0.05);
-      animation: laserSweep 8s infinite linear;
+      background: rgba(244,63,94,0.1);
+      box-shadow: 0 0 8px 1px rgba(244,63,94,0.1);
+      animation: laserSweep 7s infinite linear;
       opacity: 0; pointer-events: none; z-index: 9997;
     }
     @keyframes laserSweep {
@@ -76,7 +69,6 @@
       100% { top: 110%; opacity: 0; }
     }
 
-    /* خطوط الشاشة القديمة */
     .scanlines {
       position: fixed; inset: 0; z-index: 9998; pointer-events: none;
       background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3));
@@ -84,7 +76,7 @@
     }
 
     @keyframes popInCinematic {
-      0% { opacity: 0; transform: scale(0.95); filter: blur(10px); }
+      0% { opacity: 0; transform: scale(0.95); filter: blur(15px); }
       100% { opacity: 1; transform: scale(1); filter: blur(0); }
     }
     .animate-fade-in { animation: popInCinematic 0.4s cubic-bezier(0.2, 1, 0.4, 1) forwards; }
@@ -99,10 +91,11 @@
     }
     .glitch-effect {
       display: inline-block;
-      animation: glitch 4s cubic-bezier(.25, .46, .45, .94) infinite;
-      text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.2);
+      animation: glitch 3s cubic-bezier(.25, .46, .45, .94) infinite;
+      text-shadow: 2px 0 rgba(225,29,72,0.8), -2px 0 rgba(0,255,255,0.4);
     }
 
+    /* نيران القاعدة */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 40vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -113,11 +106,6 @@
       position: absolute; bottom: -30px; left: -10%; width: 120%; height: 160px;
       background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.5), transparent 70%);
       filter: blur(25px); 
-    }
-    .fire-glow-2 {
-      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 130px;
-      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.3), transparent 70%);
-      filter: blur(20px); 
     }
 
     .click-ripple {
@@ -146,7 +134,19 @@
   <div class="scanlines"></div> 
   <div class="laser-beam"></div>
 
-  <!-- الرسالة الفجائية (System Override) -->
+  <!-- 1. شاشة الرعب الافتتاحية (Horror Onboarding) -->
+  <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
+    <h1 class="text-5xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8">WARNUNG</h1>
+    <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter" data-text="DU HAST DEN HORROR BETRETEN."></p>
+    <p class="text-rose-900 font-mono text-xs tracking-widest text-center mt-6 typewriter-delayed" data-text="ES GIBT KEIN ZURÜCK MEHR..."></p>
+  </div>
+
+  <!-- 2. الأخطاء الوهمية المجنونة (Fake Action Errors) -->
+  <div id="fakeErrorOverlay" class="hidden fixed inset-0 z-[99999] bg-rose-600/90 mix-blend-color-burn flex items-center justify-center pointer-events-none">
+    <div id="fakeErrorText" class="text-black text-5xl font-black font-mono tracking-tighter uppercase glitch-critical text-center mix-blend-overlay w-full px-4 break-words leading-none"></div>
+  </div>
+
+  <!-- 3. الرسالة الفجائية (System Override) -->
   <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
     <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
       <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
@@ -155,13 +155,13 @@
     </div>
   </div>
 
+  <!-- التطبيق الأساسي -->
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
     <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
-        <!-- 3 Clicks on this triggers the collapse -->
-        <span onclick="handleLogoClick()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect typewriter" data-text="VØID"></span>
+        <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_12px_#f43f5e]"></span>
       </div>
       <div class="flex items-center space-x-4">
@@ -173,10 +173,9 @@
       </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Dynamic Abnormal Clock) -->
+      <!-- VIEW: HOME (Crazy Clock) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
         <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-300 cursor-pointer" onclick="triggerActionShock()">
           <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[40px] pointer-events-none"></div>
@@ -184,7 +183,6 @@
           <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_35px_rgba(225,29,72,0.2)] relative z-20">
             <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 12" class="opacity-40" />
             <circle cx="100" cy="100" r="96" fill="none" stroke="#ffffff" stroke-width="0.4" stroke-dasharray="1 15" class="opacity-20" />
-
             <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="3" />
             
             <g stroke="#2a3040" stroke-linecap="round">
@@ -204,11 +202,9 @@
             
             <circle cx="100" cy="100" r="76" fill="none" stroke="#1a1d26" stroke-width="1" stroke-dasharray="1 6.63" />
 
-            <!-- التاريخ واليوم -->
             <text id="clockDay" x="100" y="135" fill="#9ca3af" font-size="8" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.9"></text>
             <text id="clockDate" x="100" y="152" fill="#f43f5e" font-size="11" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب (تتحرك مع الزمن الحقيقي) -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
@@ -251,7 +247,9 @@
             </div>
           </div>
 
-          <button id="btnGoToCheckout" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200 typewriter" data-text="ZUR KASSE"></button>
+          <button id="btnGoToCheckout" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200">
+            <span class="typewriter" data-text="ZUR KASSE"></span>
+          </button>
         </div>
       </section>
 
@@ -297,7 +295,9 @@
             </div>
           </div>
 
-          <button id="btnSubmitOrder" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_30px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200 typewriter" data-text="VERBINDLICH SENDEN"></button>
+          <button id="btnSubmitOrder" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_30px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200">
+            <span id="btnSubmitText" class="typewriter" data-text="VERBINDLICH SENDEN"></span>
+          </button>
         </div>
       </section>
 
@@ -344,7 +344,7 @@
 
     <!-- FIRE CONTAINER -->
     <div class="fire-container">
-      <div class="fire-glow-1"></div><div class="fire-glow-2"></div>
+      <div class="fire-glow-1"></div>
     </div>
 
     <!-- BOTTOM NAVIGATION -->
@@ -404,62 +404,35 @@
       void app.offsetWidth; 
       app.classList.add('shake-active');
       triggerHaptic([40, 60, 40]);
+      triggerFakeError(); // إظهار أخطاء وهمية أحياناً
     }
 
-    // --- System Collapse (Tear Down) ---
-    let logoClickCount = 0;
-    let logoClickTimer;
-    function handleLogoClick() {
-      logoClickCount++;
-      clearTimeout(logoClickTimer);
-      triggerHaptic(30);
-      
-      if (logoClickCount === 3) {
-        initiateSystemCollapse();
-        logoClickCount = 0;
-      } else {
-        logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1000);
-      }
+    // --- Fake Action Errors (توليد أخطاء عنيفة وهمية للحظات) ---
+    function triggerFakeError() {
+      if(Math.random() > 0.3) return; // 30% نسبة الحدوث
+      const err = document.getElementById('fakeErrorOverlay');
+      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "UNAUTHORIZED ENTITY"];
+      document.getElementById('fakeErrorText').textContent = texts[Math.floor(Math.random() * texts.length)];
+      err.classList.remove('hidden');
+      triggerHaptic([100, 50, 100]);
+      setTimeout(() => err.classList.add('hidden'), 250 + Math.random() * 200);
     }
 
-    function initiateSystemCollapse() {
-      triggerHaptic([100, 50, 200, 50, 300, 50, 500]);
-      document.getElementById('app').classList.add('glitch-critical');
-      
-      // إسقاط كل العناصر تباعاً
-      const targets = document.querySelectorAll('header, nav, .view-panel.active > div, .view-panel.active > button, .fire-container, .scanlines, .laser-beam');
-      
-      targets.forEach(el => {
-        const delay = Math.random() * 1.2;
-        const duration = 0.8 + Math.random() * 1;
-        el.style.transition = 'none';
-        el.style.animation = `gravityFall ${duration}s cubic-bezier(0.55, 0.085, 0.68, 0.53) ${delay}s forwards`;
-      });
-
-      // شاشة النهاية
-      setTimeout(() => {
-        document.getElementById('app').innerHTML = `
-          <div class="h-full w-full flex items-center justify-center bg-black">
-            <span class="text-rose-600 font-mono text-xl tracking-[0.5em] animate-pulse glitch-effect">SYSTEM FATAL ERROR</span>
-          </div>
-        `;
-        document.getElementById('app').classList.remove('glitch-critical');
-      }, 3000);
-    }
-
-    // --- تشويش الشاشة العشوائي بالكامل ---
-    function randomScreenGlitch() {
-      const app = document.getElementById('app');
-      app.classList.add('glitch-critical');
-      triggerHaptic(20);
-      setTimeout(() => { app.classList.remove('glitch-critical'); }, 50 + Math.random() * 100);
-      setTimeout(randomScreenGlitch, 5000 + Math.random() * 20000);
-    }
-    setTimeout(randomScreenGlitch, 8000);
+    // --- Horror Welcome Message ---
+    setTimeout(() => {
+       const overlay = document.getElementById('horrorOverlay');
+       triggerHaptic([100, 50, 200, 50, 400]);
+       
+       // اختفاء شاشة الرعب بعد 4 ثواني
+       setTimeout(() => {
+          overlay.classList.add('opacity-0');
+          setTimeout(() => overlay.classList.add('hidden'), 1000);
+       }, 4000);
+    }, 500);
 
     // --- Ripple Click ---
     document.addEventListener('pointerdown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button')) return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
       const burst = document.createElement('div');
       burst.className = 'click-ripple';
       burst.style.left = e.clientX + 'px';
@@ -470,50 +443,52 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Clock, Date & Time Warp ---
+    // --- Crazy Clock Logic (الجنون الزمني) ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
-    let timeOffset = 0;
-    let isWarping = false;
-    let warpSpeed = 0;
+    let insanityOffsetS = 0;
+    let insanityOffsetM = 0;
+    let insanityOffsetH = 0;
+    let clockInsanity = false;
 
     function triggerTimeWarp() {
-      if(isWarping) return;
-      isWarping = true;
-      warpSpeed = 500; 
+      if(clockInsanity) return;
+      clockInsanity = true;
       triggerActionShock();
+      document.getElementById('app').classList.add('glitch-critical');
+      setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 200);
       
-      const warpInt = setInterval(() => {
-        warpSpeed *= 1.15; // تسارع الزمن
-        timeOffset += warpSpeed;
-      }, 30);
-
       setTimeout(() => {
-        clearInterval(warpInt);
-        isWarping = false;
-        timeOffset = 0; // العودة للزمن الحقيقي
+        clockInsanity = false; // العودة للزمن الحقيقي
         triggerHaptic([50, 100, 50]);
         const app = document.getElementById('app');
         app.classList.add('shake-active');
         app.style.filter = "invert(1) hue-rotate(180deg)";
-        setTimeout(() => {
-          app.classList.remove('shake-active');
-          app.style.filter = "none";
-        }, 150);
-      }, 3500); // 3.5 ثوانٍ من الجنون
+        setTimeout(() => { app.classList.remove('shake-active'); app.style.filter = "none"; }, 150);
+      }, 1500 + Math.random() * 2000);
     }
     
-    // تشغيل الجنون الزمني أحياناً
+    // تشغيل الجنون الزمني عشوائياً
     setInterval(() => {
-       if(Math.random() > 0.5) triggerTimeWarp();
-    }, 14000);
+       if(Math.random() > 0.6) triggerTimeWarp();
+    }, 10000);
 
     function updateClock() {
-      const now = new Date(Date.now() + timeOffset); // الزمن مضاف إليه إزاحة الجنون
+      const now = new Date(); 
       const h = now.getHours(); const m = now.getMinutes(); const s = now.getSeconds(); const ms = now.getMilliseconds();
       
-      const sDeg = (s + (ms / 1000)) * 6;
-      const mDeg = (m + (s / 60)) * 6;
-      const hDeg = ((h % 12) + (m / 60)) * 30;
+      if (clockInsanity) {
+         insanityOffsetS += (Math.random() - 0.2) * 150; 
+         insanityOffsetM += (Math.random() - 0.2) * 80;
+         insanityOffsetH += (Math.random() - 0.5) * 50;
+      } else {
+         insanityOffsetS = insanityOffsetS * 0.85; // عودة ناعمة
+         insanityOffsetM = insanityOffsetM * 0.85;
+         insanityOffsetH = insanityOffsetH * 0.85;
+      }
+
+      const sDeg = (s + (ms / 1000)) * 6 + insanityOffsetS;
+      const mDeg = (m + (s / 60)) * 6 + insanityOffsetM;
+      const hDeg = ((h % 12) + (m / 60)) * 30 + insanityOffsetH;
       
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
@@ -551,16 +526,28 @@
         setTimeout(type, 250);
       });
 
-      const dynElements = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
+      const dynElements = viewEl.querySelectorAll('.typewriter-delayed');
       dynElements.forEach(el => {
+        const text = el.getAttribute('data-text');
+        if (!text) return;
+        el.textContent = '';
+        let i = 0;
+        function typeDyn() {
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 30); }
+        }
+        setTimeout(typeDyn, 1500); // تأخير طويل للرعب
+      });
+
+      const dynElements2 = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
+      dynElements2.forEach(el => {
         if (!el.hasAttribute('data-original-text')) el.setAttribute('data-original-text', el.textContent.trim());
         const text = el.getAttribute('data-original-text');
         el.textContent = '';
         let i = 0;
-        function typeDyn() {
-          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 20); }
+        function typeDyn2() {
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn2, 20); }
         }
-        setTimeout(typeDyn, 350);
+        setTimeout(typeDyn2, 350);
       });
     }
 
@@ -736,7 +723,7 @@ ${order.address.country}
     function scheduleMysteriousGreeting() {
       setTimeout(async () => {
         const addr = await StorageService.getSelectedAddress();
-        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNTE ENTITÄT";
+        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNTE ENTITÄT"; // استخدام الاسم إذا وجد في العناوين 
         
         const overlay = document.getElementById('sysMsgOverlay');
         const l1 = document.getElementById('sysLine1');
@@ -763,7 +750,7 @@ ${order.address.country}
           setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); }, 1000);
         }, 6500);
         
-      }, Math.floor(Math.random() * (15000 - 8000 + 1) + 8000)); 
+      }, Math.floor(Math.random() * (20000 - 12000 + 1) + 12000)); 
     }
 
     const App = {
@@ -795,9 +782,12 @@ ${order.address.country}
           triggerTypewriter(document.getElementById('addressModal'));
         };
         document.getElementById('addressForm').onsubmit = App.saveAddress;
+        
+        // ربط زر الإرسال بشكل صحيح
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
         triggerTypewriter(document.getElementById('viewHome'));
+        triggerTypewriter(document.getElementById('horrorOverlay'));
         scheduleMysteriousGreeting();
       },
 
