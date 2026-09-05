@@ -82,6 +82,13 @@
       background-size: 100% 4px; opacity: 0.4;
     }
 
+    .laser-beam {
+      position: absolute; left: 0; width: 100%; height: 1px;
+      background: rgba(244,63,94,0.1); box-shadow: 0 0 5px 1px rgba(244,63,94,0.1);
+      animation: laserSweep 5s infinite linear; opacity: 0; pointer-events: none; z-index: 9997;
+    }
+    @keyframes laserSweep { 0% { top: -10%; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
+
     @keyframes popInCinematic {
       0% { opacity: 0; transform: scale(0.7); filter: blur(25px); }
       60% { filter: blur(5px); transform: scale(1.05); }
@@ -102,7 +109,7 @@
       text-shadow: 3px 0 rgba(225,29,72,0.9), -3px 0 rgba(0,255,255,0.5);
     }
 
-    /* النيران والشهب السفلية */
+    /* النيران العشوائية السفلية */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -146,6 +153,7 @@
     .animate-spin-slow { animation: spinOrbit 25s linear infinite; transform-origin: 100px 100px; }
     .animate-reverse-spin { animation: spinOrbit 18s linear infinite reverse; transform-origin: 100px 100px; }
 
+    /* تأثير الانفجار اللمسي */
     .click-ripple {
       position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
@@ -158,6 +166,7 @@
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+    /* صندوق تشفير الهكر */
     .decode-box {
       position: relative; overflow: hidden;
       border: 2px solid #f43f5e; box-shadow: inset 0 0 30px rgba(244,63,94,0.4), 0 0 30px rgba(244,63,94,0.6);
@@ -169,6 +178,55 @@
       letter-spacing: 0.2em; text-align: center; text-transform: uppercase;
     }
 
+    /* === الثقب الأسود - زر البدء === */
+    .black-hole-btn {
+      position: relative;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      background: #000;
+      box-shadow: 0 0 40px rgba(225,29,72,0.4), inset 0 0 25px rgba(0,0,0,1);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; overflow: hidden; margin-top: 2rem;
+      border: 1px solid rgba(225,29,72,0.2);
+    }
+    /* الهالة الخارجية الدوارة */
+    .black-hole-btn::before {
+      content: ''; position: absolute; inset: -50%;
+      background: conic-gradient(transparent, rgba(225,29,72,0.4), transparent 40%);
+      animation: spinOrbit 3s linear infinite;
+    }
+    /* حافة أفق الحدث */
+    .bh-ring {
+      position: absolute; inset: 2px;
+      border-radius: 50%;
+      border: 1px dashed rgba(244,63,94,0.5);
+      animation: spinOrbit 6s linear infinite reverse;
+    }
+    /* جزيئات تبتلع للداخل */
+    @keyframes swallowIn {
+      0% { transform: scale(1.5) rotate(0deg); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: scale(0) rotate(360deg); opacity: 0; filter: blur(2px); }
+    }
+    .bh-particle {
+      position: absolute;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border-top: 3px solid #f43f5e;
+      border-right: 2px solid transparent;
+      animation: swallowIn 2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    }
+    .bh-particle:nth-child(2) { animation-delay: -0.6s; border-top-color: #9f1239; }
+    .bh-particle:nth-child(3) { animation-delay: -1.2s; border-top-color: #fff; width: 80%; height: 80%; }
+    
+    /* المركز المظلم للثقب */
+    .bh-core {
+      position: absolute; z-index: 2;
+      width: 45px; height: 45px;
+      background: #000; border-radius: 50%;
+      box-shadow: 0 0 20px 10px #000;
+    }
+
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
     .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
@@ -178,15 +236,16 @@
 
   <div class="speed-lines"></div>
   <div class="scanlines"></div> 
+  <div class="laser-beam"></div>
   <div id="tvNoiseOverlay" class="tv-noise"></div>
   <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- شاشة الرعب الافتتاحية -->
+  <!-- شاشة التحذير الافتتاحية -->
   <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
-    <svg class="w-36 h-36 text-rose-600 mb-8 glitch-effect drop-shadow-[0_0_40px_rgba(225,29,72,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-    </svg>
-    <div id="enterBtnHint" class="mt-12 opacity-0 transition-opacity duration-1000">
+    <h1 class="text-6xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8 pointer-events-none drop-shadow-[0_0_20px_#e11d48]">WARNUNG</h1>
+    <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter pointer-events-none" data-text="SYSTEM GEFÄHRDET."></p>
+    <p class="text-rose-900 font-mono text-xs tracking-widest text-center mt-6 typewriter-delayed pointer-events-none" data-text="ES GIBT KEIN ZURÜCK MEHR..."></p>
+    <div id="enterBtnHint" class="mt-16 opacity-0 transition-opacity duration-1000">
       <span class="px-8 py-3 border border-rose-900 bg-rose-950/30 text-rose-500 font-mono text-xs tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(225,29,72,0.3)]">KLICK UM ZU BEGINNEN</span>
     </div>
   </div>
@@ -197,7 +256,7 @@
 
   <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
 
-  <!-- الرسالة الفجائية -->
+  <!-- الرسالة الفجائية (System Override) -->
   <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
     <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
       <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
@@ -206,35 +265,30 @@
     </div>
   </div>
 
-  <!-- التطبيق -->
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
+    <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
         <span onclick="triggerActionShock()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_15px_#f43f5e] animate-pulse"></span>
       </div>
-      <div></div>
+      <div class="flex items-center space-x-4"></div> <!-- تم إزالة أيقونة السلة -->
     </header>
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (The Broken Crazy Clock) -->
+      <!-- VIEW: HOME (Shattered Random Clock & Black Hole Button) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
-        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-4 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
+        <div class="relative w-72 h-72 flex items-center justify-center mb-10 mt-4 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
           <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[50px] pointer-events-none"></div>
           
           <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20">
-            <!-- مسارات وشظايا الدوائر -->
+            <!-- الشظايا والمسارات العشوائية المفتوحة (بدون الدوائر المحددة) -->
             <path d="M100 0 L115 15 L180 30 L195 80 L180 160 L100 195 L20 160 L5 80 L20 30 Z" fill="none" stroke="#1e222d" stroke-width="1.5" stroke-dasharray="5 15" class="animate-spin-slow opacity-60" />
             <path d="M100 15 L125 35 L160 55 L175 100 L155 150 L100 180 L45 150 L25 100 L40 55 Z" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 20" class="opacity-50 animate-reverse-spin" />
             <path d="M100 25 L115 45 L140 60 L150 100 L140 140 L100 160 L60 140 L50 100 L60 60 Z" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 10" class="opacity-30 animate-spin-slow" />
             
-            <circle cx="150" cy="40" r="1.5" fill="#f43f5e" class="glitch-critical" />
-            <circle cx="40" cy="150" r="2" fill="#ffffff" class="glitch-critical" />
-            <line x1="20" y1="80" x2="35" y2="85" stroke="#9ca3af" stroke-width="1" />
-            <line x1="170" y1="120" x2="185" y2="115" stroke="#9ca3af" stroke-width="1" />
-
             <!-- محددات حادة للساعات -->
             <g stroke="#374151" stroke-linecap="butt">
               <line x1="100" y1="10" x2="100" y2="35" stroke-width="2.5" stroke="#f43f5e" /> 
@@ -254,7 +308,7 @@
             <text id="clockDay" x="100" y="140" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.7"></text>
             <text id="clockDate" x="100" y="155" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب التفاعلية -->
+            <!-- العقارب الحقيقية -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="50" stroke="#f43f5e" stroke-width="4" stroke-linecap="butt" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="butt" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
@@ -262,19 +316,18 @@
               <!-- رأس حاد للثواني -->
               <polygon points="98,20 102,20 100,10" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
             </g>
+            <!-- مركز غامض -->
             <circle cx="100" cy="100" r="3" fill="#040406" stroke="#ffffff" stroke-width="1.5" />
           </svg>
         </div>
 
-        <!-- زر البداية المرعب (The Void Rune) -->
-        <button onclick="router.navigate('cart');" class="relative z-10 w-28 h-28 rounded-full bg-[#020203] border border-rose-900/50 flex items-center justify-center text-rose-600 hover:border-rose-500 hover:bg-rose-950/20 transition-all duration-500 active:scale-75 group overflow-hidden mt-8 shadow-[inset_0_0_20px_rgba(225,29,72,0.1),_0_0_40px_rgba(225,29,72,0.2)]">
-          <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(225,29,72,0.2)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-          <div class="absolute inset-0 border border-rose-900/30 rounded-full animate-[ping_3s_infinite] opacity-50"></div>
-          <svg class="w-10 h-10 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.8)] group-hover:scale-110 transition-transform duration-500" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-             <polygon points="50,10 90,90 10,90" stroke-width="2" stroke-dasharray="10 5" class="animate-spin-slow"/>
-             <circle cx="50" cy="60" r="10" fill="#f43f5e" class="animate-pulse"/>
-             <line x1="50" y1="10" x2="50" y2="50" stroke-width="3"/>
-          </svg>
+        <!-- زر الثقب الأسود (Black Hole Portal) -->
+        <button onclick="triggerActionShock(); router.navigate('cart');" class="black-hole-btn active:scale-90 transition-transform duration-300">
+           <div class="bh-ring"></div>
+           <div class="bh-particle"></div>
+           <div class="bh-particle" style="animation-delay: -0.6s"></div>
+           <div class="bh-particle" style="animation-delay: -1.2s"></div>
+           <div class="bh-core"></div>
         </button>
       </section>
 
@@ -394,6 +447,7 @@
           </div>
         </div>
 
+        <!-- رسالة التحويل العبقرية (Hacker Decoder Box) -->
         <div id="succTransferMsg" class="hidden relative mb-8 decode-box rounded-[2rem] p-6">
           <div class="absolute inset-0 bg-rose-500 opacity-10 animate-pulse pointer-events-none"></div>
           <p id="hackerDecodeText" class="decode-text relative z-10"></p>
@@ -404,7 +458,7 @@
 
     </main>
 
-    <!-- FIRE & SPARKS -->
+    <!-- FIRE CONTAINER (Dynamic Random Fire + Sparks) -->
     <div class="fire-container">
       <div class="fire-glow-1"></div>
       <div class="fire-glow-2"></div>
@@ -418,18 +472,18 @@
       <div class="spark" style="left: 95%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (Fixed Buttons Setup) -->
+    <!-- BOTTOM NAVIGATION -->
     <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#020203]/90 backdrop-blur-2xl border-t border-[#12141a] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-      <button onclick="router.navigate('home')" data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
-      <button onclick="router.navigate('cart')" data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
       </button>
-      <button onclick="router.navigate('addresses')" data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
-      <button onclick="router.navigate('orders')" data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       </button>
     </nav>
@@ -465,8 +519,10 @@
   </div>
 
   <script>
+    // --- Haptic Feedback ---
     function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
+    // --- Action Shock ---
     function triggerActionShock() {
       const app = document.getElementById('app');
       app.classList.remove('shake-active');
@@ -490,7 +546,7 @@
       }
     }, 150); 
 
-    // --- Extreme Submission Overload (50+ actions in seconds) ---
+    // --- Extreme Submission Overload (50+ actions) ---
     function triggerExtremeOverload(callback) {
       const app = document.getElementById('app');
       const flash = document.getElementById('explosionFlash');
@@ -620,7 +676,7 @@
       setTimeout(() => {
         clockState = 'DECEL';
         
-        // ومضة (Flash) أثناء التباطؤ
+        // Flash when starting to decelerate
         const flash = document.createElement('div');
         flash.className = 'fixed inset-0 bg-white z-[99999] pointer-events-none';
         flash.style.opacity = '1';
@@ -671,7 +727,6 @@
          visualAngle.h = realH;
       }
 
-      // إخفاء العقارب تدريجياً بسبب السرعة الجنونية
       if(clockState !== 'NORMAL') {
          const handOpacity = Math.max(1 - (spinVelocity / 150), 0.1);
          document.getElementById('handSecond').style.opacity = handOpacity;
@@ -905,7 +960,14 @@ ${order.address.country}
         await StorageService.openDatabase();
         document.getElementById('cartQtyDisplay').textContent = CartService.getQuantity();
 
-        // إرفاق دوال النقر بشكل قاطع وصحيح باستخدام router.navigate
+        // ربط أزرار الـ nav بـ router.navigate
+        document.querySelectorAll('[data-nav]').forEach(b => {
+          b.onclick = (e) => {
+            e.preventDefault();
+            router.navigate(b.dataset.nav);
+          };
+        });
+        
         document.getElementById('btnCartPlus').onclick = () => { triggerActionShock(); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
         document.getElementById('btnCartMinus').onclick = () => { triggerActionShock(); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
         
@@ -1040,7 +1102,6 @@ ${order.address.country}
         const a = await StorageService.getSelectedAddress();
         if(!a) return UIService.showToast('BITTE WÄHLE EINE LIEFERADRESSE');
         
-        // جلب تفاصيل الطلب
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
         const finalTotal = isNachnahme ? c.total + 9.00 : c.total;
@@ -1050,10 +1111,8 @@ ${order.address.country}
           createdAt: new Date().toISOString(), total: finalTotal, address: a, isNachnahme: isNachnahme
         };
 
-        // الإرسال في الخلفية
         const resPromise = TelegramService.dispatch(order);
 
-        // تنفيذ الـ Extreme Overload
         triggerExtremeOverload(async () => {
            const res = await resPromise;
            
