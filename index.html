@@ -217,7 +217,6 @@
 
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
-    .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
 <body class="antialiased font-sans">
@@ -228,7 +227,7 @@
   <div id="tvNoiseOverlay" class="tv-noise"></div>
   <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- شاشة التحذير الافتتاحية بالرمز بدلا من النص -->
+  <!-- شاشة الرعب الافتتاحية بالرمز بدلاً من النص -->
   <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
     <svg class="w-36 h-36 text-rose-600 mb-8 glitch-effect drop-shadow-[0_0_40px_rgba(225,29,72,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -244,15 +243,6 @@
 
   <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
 
-  <!-- الرسالة الفجائية (System Override) -->
-  <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
-    <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
-      <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
-      <div id="sysLine2" class="sys-msg-line text-neutral-400 text-xs tracking-widest uppercase">> VERIFIKATION ABGESCHLOSSEN.</div>
-      <div id="sysLine3" class="sys-msg-line text-rose-500 text-lg font-bold tracking-widest uppercase glitch-effect">> PRÄSENZ BESTÄTIGT:<br><span id="sysMsgName" class="text-white"></span></div>
-    </div>
-  </div>
-
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
@@ -265,7 +255,7 @@
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Shattered Random Clock & Black Hole Button) -->
+      <!-- VIEW: HOME -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
         
         <!-- الساعة التي تقرأ الـ Triple Click -->
@@ -641,7 +631,7 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Crazy Clock Logic with 3 Clicks ---
+    // --- Crazy Clock Logic with Accel/Decel and Real Time Recovery ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
     let clockState = 'NORMAL'; 
     let spinVelocity = 0;
