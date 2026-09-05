@@ -3,306 +3,311 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>VØID — HELL</title>
-  <meta name="theme-color" content="#030305">
+  <title>VØID — SYSTEM</title>
+  <meta name="theme-color" content="#020203">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root {
       --font-brand: 'Cinzel', serif;
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'Space Mono', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    /* تثبيت الشاشة لتتناسب تماماً مع حجم الموبايل */
     html, body {
-      font-family: var(--font-sans);
-      background-color: #030305;
-      color: #f4f4f5;
-      margin: 0;
-      padding: 0;
-      height: 100dvh; /* الارتفاع الدقيق للشاشة */
-      width: 100vw;
-      overflow: hidden; /* قفل التمرير العام */
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      overscroll-behavior-y: none; 
+      font-family: var(--font-sans); background-color: #020203; color: #f4f4f5;
+      margin: 0; padding: 0; height: 100dvh; width: 100vw; overflow: hidden; 
+      user-select: none; -webkit-user-select: none;
+      touch-action: manipulation; overscroll-behavior-y: none; 
     }
 
-    .brand-title { font-family: var(--font-brand); }
+    .brand-title { font-family: var(--font-brand); cursor: pointer; }
+    .font-mono-custom { font-family: var(--font-mono); }
 
-    /* انتقالات سينمائية للصفحات */
+    .speed-lines {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background: repeating-linear-gradient( transparent 0%, rgba(244,63,94, 0.03) 50%, transparent 100% );
+      background-size: 100% 8px; animation: moveLines 0.3s linear infinite;
+    }
+    @keyframes moveLines { 0% { background-position: 0 0; } 100% { background-position: 0 8px; } }
+
+    @keyframes screenShock {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); filter: contrast(100%); }
+      20% { transform: translate(6px, 6px) rotate(1.5deg); filter: contrast(180%) brightness(1.2); }
+      40% { transform: translate(-6px, -6px) rotate(-1.5deg); }
+      60% { transform: translate(4px, -4px) rotate(1deg); }
+      80% { transform: translate(-4px, 4px) rotate(-1deg); }
+    }
+    .shake-active { animation: screenShock 0.25s cubic-bezier(.36,.07,.19,.97) both; }
+
+    .glitch-critical {
+      animation: criticalGlitch 0.1s infinite alternate;
+      filter: invert(0.9) hue-rotate(180deg) contrast(200%);
+    }
+    @keyframes criticalGlitch {
+      0% { transform: translate(15px, -15px) skewX(8deg); }
+      100% { transform: translate(-15px, 15px) skewX(-8deg); }
+    }
+
+    .tv-noise {
+      position: fixed; inset: 0; z-index: 100001; pointer-events: none;
+      background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      opacity: 0; mix-blend-mode: overlay;
+    }
+    .tv-noise.show { animation: staticFlicker 0.1s infinite; opacity: 0.6; }
+    @keyframes staticFlicker {
+      0%, 100% { transform: translate(0,0) scale(1.1); }
+      20% { transform: translate(-10px,10px) scale(1.1); }
+      40% { transform: translate(10px,-10px) scale(1.1); }
+      60% { transform: translate(-10px,-10px) scale(1.1); }
+      80% { transform: translate(10px,10px) scale(1.1); }
+    }
+
+    .vcr-bar {
+      position: fixed; left: 0; width: 100%; height: 12vh;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: hue-rotate(90deg) contrast(150%) blur(2px);
+      -webkit-backdrop-filter: hue-rotate(90deg) contrast(150%) blur(2px);
+      z-index: 100000; pointer-events: none; opacity: 0; border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .vcr-bar.show { animation: vcrJump 0.2s infinite linear; opacity: 1; }
+    @keyframes vcrJump { 0% { top: -20%; } 100% { top: 120%; } }
+
+    .laser-beam {
+      position: absolute; left: 0; width: 100%; height: 1px;
+      background: rgba(244,63,94,0.1); box-shadow: 0 0 5px 1px rgba(244,63,94,0.1);
+      animation: laserSweep 5s infinite linear; opacity: 0; pointer-events: none; z-index: 9997;
+    }
+    @keyframes laserSweep { 0% { top: -10%; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
+
+    .scanlines {
+      position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.4));
+      background-size: 100% 4px; opacity: 0.4;
+    }
+
     @keyframes popInCinematic {
-      0% { opacity: 0; transform: scale(0.92) translateY(20px); filter: blur(8px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+      0% { opacity: 0; transform: scale(0.85); filter: blur(20px); }
+      50% { filter: blur(5px); }
+      100% { opacity: 1; transform: scale(1); filter: blur(0); }
     }
-    .animate-fade-in { animation: popInCinematic 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-fade-in { animation: popInCinematic 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; }
 
-    /* توهج النبض للساعة */
-    @keyframes pulseGlow {
-      0%, 100% { opacity: 0.2; transform: scale(0.9); }
-      50% { opacity: 0.6; transform: scale(1.15); }
-    }
-    .animate-glow { animation: pulseGlow 4s ease-in-out infinite; }
-
-    /* حلقات دوارة حول الساعة */
-    @keyframes spinOrbit { 100% { transform: rotate(360deg); } }
-    .animate-spin-slow { animation: spinOrbit 20s linear infinite; transform-origin: 100px 100px; }
-    .animate-reverse-spin { animation: spinOrbit 12s linear infinite reverse; transform-origin: 100px 100px; }
-
-    /* تأثير التشويش (Glitch) الدائم */
     @keyframes glitch {
       0%, 100% { transform: translate(0); opacity: 1; }
-      10% { transform: translate(-2px, 1px); }
-      20% { transform: translate(2px, -1px); opacity: 0.8; }
-      30% { transform: translate(-1px, 2px); }
-      40% { transform: translate(1px, -2px); opacity: 0.9; }
+      10% { transform: translate(-3px, 1px); }
+      20% { transform: translate(3px, -1px); opacity: 0.8; filter: hue-rotate(90deg); }
+      30% { transform: translate(-1px, 3px); }
+      40% { transform: translate(1px, -3px); opacity: 0.9; }
       50% { transform: translate(0); }
     }
     .glitch-effect {
-      display: inline-block;
-      animation: glitch 4s cubic-bezier(.25, .46, .45, .94) infinite;
-      text-shadow: 2px 0 rgba(225,29,72,0.6), -2px 0 rgba(0,255,255,0.3);
+      display: inline-block; animation: glitch 2.5s cubic-bezier(.25, .46, .45, .94) infinite;
+      text-shadow: 3px 0 rgba(225,29,72,0.8), -3px 0 rgba(0,255,255,0.4);
     }
 
-    /* الجسيمات المتطايرة الخلفية (Particles) */
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
-      20% { opacity: 0.8; }
-      80% { opacity: 0.5; }
-      100% { transform: translateY(-20vh) scale(2) rotate(360deg); opacity: 0; }
-    }
-    .particle {
-      position: absolute;
-      bottom: -10px;
-      pointer-events: none;
-      animation: floatUp infinite linear;
-    }
-    .particle:nth-child(1) { left: 10%; width: 2px; height: 2px; background: #f43f5e; animation-duration: 6s; animation-delay: 0.5s; box-shadow: 0 0 8px #f43f5e; }
-    .particle:nth-child(2) { left: 50%; width: 3px; height: 3px; background: #ffffff; animation-duration: 8s; animation-delay: 2s; box-shadow: 0 0 10px #ffffff; }
-    .particle:nth-child(3) { left: 80%; width: 1.5px; height: 1.5px; background: #9ca3af; animation-duration: 5s; animation-delay: 0s; box-shadow: 0 0 5px #9ca3af; }
-
-    /* === تأثيرات النار والشهب من الأسفل === */
     .fire-container {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 45vh;
-      pointer-events: none;
-      z-index: 20; /* أسفل الشريط السفلي بقليل */
-      overflow: hidden;
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 40vh;
+      pointer-events: none; z-index: 20; overflow: hidden;
       mask-image: linear-gradient(to top, black 20%, transparent 100%);
       -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
     }
     .fire-glow-1 {
-      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 150px;
-      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.7), transparent 70%);
-      filter: blur(20px); animation: pulseGlow 2.5s infinite alternate;
-    }
-    .fire-glow-2 {
-      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 120px;
-      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.5), transparent 70%);
-      filter: blur(15px); animation: pulseGlow 3s infinite alternate-reverse;
-    }
-    .spark {
-      position: absolute;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to top, transparent, #ffffff 20%, #f43f5e 80%, transparent);
-      border-radius: 50%;
-      opacity: 0;
-      animation: shootUp infinite ease-in-out;
-      box-shadow: 0 0 8px 1px rgba(244,63,94,0.8);
-    }
-    @keyframes shootUp {
-      0% { transform: translateY(20px) scale(0.5); opacity: 0; height: 10px; }
-      20% { opacity: 1; height: 35px; }
-      80% { opacity: 0.8; }
-      100% { transform: translateY(-350px) scale(0.1); opacity: 0; height: 50px; }
+      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 160px;
+      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.6), transparent 70%); filter: blur(20px); 
     }
 
-    /* تأثير الانفجار عند النقر */
     .click-ripple {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
+      position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
-      background: radial-gradient(circle, rgba(244,63,94,0.8) 0%, rgba(244,63,94,0) 70%);
-      z-index: 9999;
-      animation: rippleAnim 0.6s ease-out forwards;
+      background: radial-gradient(circle, rgba(244,63,94,1) 0%, rgba(244,63,94,0) 70%);
+      z-index: 9999; animation: rippleAnim 0.4s ease-out forwards;
     }
-    @keyframes rippleAnim {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
-    }
+    @keyframes rippleAnim { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
 
-    input:focus {
-      box-shadow: 0 0 15px rgba(225, 29, 72, 0.4);
-      border-color: #f43f5e !important;
-    }
-
-    .nav-item.active { color: #f43f5e !important; transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(225,29,72,0.5)); }
+    .nav-item.active { color: #f43f5e !important; transform: scale(1.2) translateY(-6px); filter: drop-shadow(0 0 15px rgba(225,29,72,0.8)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
-    .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .nav-item { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-    /* إخفاء شريط التمرير ولكن الحفاظ على عمل التمرير */
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
+    .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
 <body class="antialiased font-sans">
 
-  <!-- #app is now explicitly 100dvh -->
-  <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#07080a] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
+  <div class="speed-lines"></div>
+  <div class="scanlines"></div> 
+  <div class="laser-beam"></div>
+  <div id="tvNoiseOverlay" class="tv-noise"></div>
+  <div id="vcrBarOverlay" class="vcr-bar"></div>
+
+  <!-- شاشة الرعب الافتتاحية (تتطلب النقر لتعمل الأصوات) -->
+  <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
+    <h1 class="text-5xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8 pointer-events-none">WARNUNG</h1>
+    <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter pointer-events-none" data-text="DU HAST DEN HORROR BETRETEN."></p>
+    <p class="text-rose-900 font-mono text-xs tracking-widest text-center mt-6 typewriter-delayed pointer-events-none" data-text="ES GIBT KEIN ZURÜCK MEHR..."></p>
+    <div id="enterBtnHint" class="mt-12 opacity-0 transition-opacity duration-1000">
+      <span class="px-6 py-2 border border-rose-900 text-rose-600 font-mono text-xs tracking-widest uppercase animate-pulse">Klick um zu beginnen</span>
+    </div>
+  </div>
+
+  <div id="fakeErrorOverlay" class="hidden fixed inset-0 z-[99999] bg-rose-600/90 mix-blend-color-burn flex items-center justify-center pointer-events-none">
+    <div id="fakeErrorText" class="text-black text-6xl font-black font-mono tracking-tighter uppercase glitch-critical text-center mix-blend-overlay w-full px-4 break-words leading-none"></div>
+  </div>
+
+  <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
+
+  <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
+    <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
+      <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
+      <div id="sysLine2" class="sys-msg-line text-neutral-400 text-xs tracking-widest uppercase">> VERIFIKATION ABGESCHLOSSEN.</div>
+      <div id="sysLine3" class="sys-msg-line text-rose-500 text-lg font-bold tracking-widest uppercase glitch-effect">> PRÄSENZ BESTÄTIGT:<br><span id="sysMsgName" class="text-white"></span></div>
+    </div>
+  </div>
+
+  <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
-    <!-- TOP BAR -->
-    <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#07080a]/80 backdrop-blur-xl border-b border-[#181a20]">
+    <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
-        <span class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse shadow-[0_0_10px_#f43f5e]"></span>
+        <span onclick="triggerActionShock()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_15px_#f43f5e] animate-pulse"></span>
       </div>
       <div class="flex items-center space-x-4">
-        <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-500 hover:text-rose-400 transition-all duration-300 active:scale-75 hover:rotate-12">
-          <svg class="w-6 h-6 drop-shadow-[0_0_5px_rgba(255,255,255,0.1)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
+        <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-500 hover:text-rose-400 transition-all duration-200 active:scale-75">
+          <svg class="w-6 h-6 drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
         </button>
       </div>
     </header>
 
-    <!-- MAIN SCROLLABLE CONTENT -->
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Mesmerizing Analog Clock + Particles) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
-        
-        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-        </div>
-
-        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-700 hover:scale-105 cursor-pointer" onclick="triggerHaptic()">
-          <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] animate-glow pointer-events-none"></div>
+        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
+          <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] pointer-events-none"></div>
           
-          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.25)]">
-            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.5" stroke-dasharray="2 8" class="animate-reverse-spin opacity-50" />
-            <circle cx="100" cy="100" r="98" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 12" class="animate-spin-slow opacity-40" />
-
-            <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="2" />
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_40px_rgba(225,29,72,0.3)] relative z-20">
+            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 12" class="opacity-40" />
+            <circle cx="100" cy="100" r="96" fill="none" stroke="#ffffff" stroke-width="0.4" stroke-dasharray="1 15" class="opacity-20" />
+            <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="3" />
             
-            <line x1="100" y1="18" x2="100" y2="26" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <line x1="100" y1="182" x2="100" y2="174" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <line x1="18" y1="100" x2="26" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            <line x1="182" y1="100" x2="174" y2="100" stroke="#2a3040" stroke-width="2" stroke-linecap="round"/>
-            
-            <circle cx="100" cy="100" r="80" fill="none" stroke="#1a1d26" stroke-width="1.5" stroke-dasharray="1 7.37" />
-
-            <g id="handHour"><line x1="100" y1="100" x2="100" y2="52" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" /></g>
-            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="32" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(255,255,255,0.4))" /></g>
-            <g id="handSecond">
-              <line x1="100" y1="112" x2="100" y2="22" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" />
-              <circle cx="100" cy="22" r="3.5" fill="#f43f5e" filter="drop-shadow(0 0 6px rgba(244,63,94,1))" />
+            <g stroke="#2a3040" stroke-linecap="round">
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" />
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(90 100 100)"/>
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(180 100 100)"/>
+              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(270 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(30 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(60 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(120 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(150 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(210 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(240 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(300 100 100)"/>
+              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(330 100 100)"/>
             </g>
-            <circle cx="100" cy="100" r="4.5" fill="#040406" stroke="#ffffff" stroke-width="2.5" filter="drop-shadow(0 0 3px rgba(255,255,255,0.5))"/>
+            <circle cx="100" cy="100" r="76" fill="none" stroke="#1a1d26" stroke-width="1" stroke-dasharray="1 6.63" />
+
+            <text id="clockDay" x="100" y="135" fill="#9ca3af" font-size="8" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.9"></text>
+            <text id="clockDate" x="100" y="152" fill="#f43f5e" font-size="11" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
+
+            <g id="handHour"><line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
+            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
+            <g id="handSecond">
+              <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
+              <circle cx="100" cy="20" r="4" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
+            </g>
+            <circle cx="100" cy="100" r="5" fill="#040406" stroke="#ffffff" stroke-width="2.5" filter="drop-shadow(0 0 5px rgba(255,255,255,0.5))"/>
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart')" class="relative z-10 px-14 py-4 rounded-full bg-[#0a0c10] border border-rose-900/60 text-white font-serif tracking-[0.4em] uppercase text-sm hover:bg-rose-600/10 hover:border-rose-500 hover:text-white transition-all duration-300 active:scale-90 active:bg-rose-600 shadow-[0_0_25px_rgba(225,29,72,0.15)] overflow-hidden group">
-          <span class="relative z-10">EINTRETEN</span>
-          <div class="absolute inset-0 bg-rose-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-        </button>
+        <button onclick="router.navigate('cart');" class="relative z-10 px-16 py-5 rounded-full bg-[#0a0c10] border border-[#f43f5e] text-white font-serif tracking-[0.5em] uppercase text-sm hover:bg-rose-900 transition-all duration-200 active:scale-90 shadow-[0_0_30px_rgba(225,29,72,0.3)] typewriter" data-text="START"></button>
       </section>
 
       <!-- VIEW: CART -->
       <section id="viewCart" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-1 glitch-effect">HELL</h2>
-        <p class="text-[10px] text-neutral-500 mb-6 uppercase tracking-widest">Original Edition • 500g</p>
+        <h2 class="text-4xl font-bold tracking-[0.3em] uppercase text-white mb-2 glitch-effect typewriter" data-text="HELL"></h2>
+        <p class="text-xs text-rose-500 font-bold mb-8 uppercase tracking-[0.2em] typewriter" data-text="Original Edition • 500g"></p>
 
-        <div id="cartContentState" class="space-y-4">
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-6 flex flex-col items-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-[1.02]">
-            <span class="text-4xl font-bold text-white mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">35,00 <span class="text-xl text-neutral-500 font-normal">€</span></span>
+        <div id="cartContentState" class="space-y-5">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-[#1e222d] rounded-3xl p-7 flex flex-col items-center shadow-[0_5px_30px_rgba(0,0,0,0.5)]">
+            <span class="text-6xl font-bold text-white mb-8 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">35,00 <span class="text-2xl text-neutral-500 font-normal">€</span></span>
             
-            <div class="w-full bg-[#12141a] p-2 rounded-2xl border border-[#1e222d] flex items-center justify-between shadow-inner">
-              <button id="btnCartMinus" class="w-14 h-14 rounded-xl bg-[#181b24] hover:bg-[#202430] hover:text-rose-400 text-neutral-400 text-3xl active:scale-75 transition-all duration-200">−</button>
-              <span id="cartQtyDisplay" class="text-3xl font-bold text-white tracking-widest drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">1</span>
-              <button id="btnCartPlus" class="w-14 h-14 rounded-xl bg-[#181b24] hover:bg-[#202430] hover:text-rose-400 text-neutral-400 text-3xl active:scale-75 transition-all duration-200">+</button>
+            <div class="w-full bg-[#15171e] p-2.5 rounded-[1.25rem] border border-[#232734] flex items-center justify-between shadow-inner">
+              <button id="btnCartMinus" class="w-16 h-16 rounded-2xl bg-[#1c1f2b] hover:bg-rose-900/30 hover:text-rose-400 text-neutral-400 text-4xl font-light active:scale-75 transition-all duration-100">−</button>
+              <span id="cartQtyDisplay" class="text-4xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">1</span>
+              <button id="btnCartPlus" class="w-16 h-16 rounded-2xl bg-[#1c1f2b] hover:bg-rose-900/30 hover:text-rose-400 text-neutral-400 text-4xl font-light active:scale-75 transition-all duration-100">+</button>
             </div>
           </div>
 
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
-            <div class="flex justify-between text-xs text-neutral-400">
-              <span>Zwischensumme</span>
-              <span id="cartSubtotal" class="text-white font-medium">0,00 €</span>
+          <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-[#1e222d] rounded-3xl p-6 space-y-4">
+            <div class="flex justify-between text-sm text-neutral-400 font-medium">
+              <span>Zwischensumme</span><span id="cartSubtotal" class="text-white">0,00 €</span>
             </div>
-            <div class="flex justify-between text-xs text-neutral-400">
-              <span>Versandkosten <span id="shippingRuleNote" class="text-[10px] text-neutral-600">(1–4 Stk: 5€)</span></span>
-              <span id="cartShipping" class="text-white font-medium">5,00 €</span>
+            <div class="flex justify-between text-sm text-neutral-400 font-medium">
+              <span>Versand <span class="text-[10px] text-rose-500 ml-1">(1–4: 5€)</span></span><span id="cartShipping" class="text-white">5,00 €</span>
             </div>
-            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
-              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamt</span>
-              <span id="cartTotal" class="text-xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.4)]">0,00 €</span>
+            <div class="border-t border-[#232734] pt-4 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-widest text-white">Gesamt</span>
+              <span id="cartTotal" class="text-2xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.3)]">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnGoToCheckout" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right">
-            Zur Kasse
+          <button id="btnGoToCheckout" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200">
+            <span class="typewriter" data-text="ZUR KASSE"></span>
           </button>
         </div>
       </section>
 
       <!-- VIEW: CHECKOUT -->
       <section id="viewCheckout" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-xl font-bold tracking-widest uppercase text-white mb-6">Bestellübersicht</h2>
+        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-6 typewriter" data-text="ÜBERSICHT"></h2>
         
         <div class="space-y-4">
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-transform duration-300 hover:scale-[1.01]">
-            <div class="flex justify-between mb-3 items-center">
-              <h3 class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
-              <button onclick="router.navigate('addresses')" class="text-[10px] text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-5">
+            <div class="flex justify-between mb-4 items-center">
+              <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
+              <button onclick="triggerActionShock(); router.navigate('addresses')" class="text-xs text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
             </div>
-            <div id="chkSelectedAddressCard" class="p-4 bg-[#12141a] rounded-xl border border-[#1e222d] shadow-inner"></div>
+            <div id="chkSelectedAddressCard" class="p-4 bg-[#15171e] rounded-2xl border border-[#232734] shadow-inner text-sm text-white leading-relaxed tracking-wide font-medium"></div>
           </div>
 
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-4 transition-all duration-300 hover:border-rose-900/50 hover:shadow-[0_0_15px_rgba(225,29,72,0.1)]">
-            <label class="flex items-center space-x-4 cursor-pointer select-none">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-5 hover:border-rose-600/50 transition-all">
+            <label class="flex items-center space-x-5 cursor-pointer select-none">
               <div class="relative flex items-center justify-center">
-                <input type="checkbox" id="chkNachnahme" class="appearance-none w-6 h-6 border border-[#2a2f40] rounded-md bg-[#12141a] checked:bg-rose-600 checked:border-rose-600 transition-all duration-300 peer">
-                <svg class="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 peer-checked:scale-110 pointer-events-none transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                <input type="checkbox" id="chkNachnahme" class="appearance-none w-7 h-7 border-2 border-[#2a2f40] rounded-lg bg-[#15171e] checked:bg-rose-600 checked:border-rose-600 transition-all duration-200 peer">
+                <svg class="absolute w-5 h-5 text-white opacity-0 peer-checked:opacity-100 peer-checked:scale-110 pointer-events-none transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
               </div>
               <div class="flex flex-col">
-                <span class="text-xs font-bold text-white tracking-wide">Zahlung bei Lieferung</span>
-                <span class="text-[10px] text-rose-500 mt-1 uppercase tracking-widest font-bold">+ 9,00 € Gebühr</span>
+                <span class="text-sm font-bold text-white tracking-wide">Zahlung bei Lieferung</span>
+                <span class="text-[11px] text-rose-500 mt-1 uppercase tracking-widest font-bold">+ 9,00 € Gebühr</span>
               </div>
             </label>
           </div>
 
-          <div class="bg-[#0b0c10]/80 backdrop-blur-md border border-[#181a23] rounded-2xl p-5 space-y-3">
-            <div class="flex justify-between text-xs text-neutral-400">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-6 space-y-4">
+            <div class="flex justify-between text-sm text-neutral-400">
               <span>Zwischensumme:</span><span id="chkSummarySubtotal" class="text-white font-medium">0,00 €</span>
             </div>
-            <div class="flex justify-between text-xs text-neutral-400">
+            <div class="flex justify-between text-sm text-neutral-400">
               <span>Versand:</span><span id="chkSummaryShipping" class="text-white font-medium">5,00 €</span>
             </div>
-            <div id="rowNachnahmeFee" class="hidden flex justify-between text-xs text-rose-500 font-bold transition-all duration-300">
+            <div id="rowNachnahmeFee" class="hidden flex justify-between text-sm text-rose-500 font-bold transition-all duration-200">
               <span>Nachnahmegebühr:</span><span>9,00 €</span>
             </div>
-            <div class="border-t border-[#1e222d] pt-3 flex justify-between items-baseline">
-              <span class="text-xs font-bold uppercase tracking-widest text-white">Gesamtbetrag:</span>
-              <span id="chkSummaryTotal" class="text-xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.4)]">0,00 €</span>
+            <div class="border-t border-[#232734] pt-4 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-widest text-white">Gesamtbetrag:</span>
+              <span id="chkSummaryTotal" class="text-2xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.3)]">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnSubmitOrder" class="w-full py-4 rounded-2xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-xs shadow-[0_0_25px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300 bg-[length:200%_auto] hover:bg-right">
-            <span id="btnSubmitText">Verbindlich Senden</span>
+          <button id="btnSubmitOrder" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_30px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200">
+            <span id="btnSubmitText" class="typewriter" data-text="VERBINDLICH SENDEN"></span>
           </button>
         </div>
       </section>
@@ -310,209 +315,380 @@
       <!-- VIEW: ADDRESSES -->
       <section id="viewAddresses" class="view-panel hidden animate-fade-in relative z-10">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold uppercase tracking-widest text-white">Adressen</h2>
-          <button id="btnOpenAddressModal" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-500 border border-rose-500/30 text-[10px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all">Neu</button>
+          <h2 class="text-2xl font-bold uppercase tracking-widest text-white typewriter" data-text="ADRESSEN"></h2>
+          <button id="btnOpenAddressModal" class="px-5 py-2.5 rounded-xl bg-rose-600/20 text-rose-500 border border-rose-500/40 text-[11px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all shadow-[0_0_10px_rgba(225,29,72,0.2)]">Neu</button>
         </div>
-        <div id="addressListContainer" class="space-y-4"></div>
+        <div id="addressListContainer" class="space-y-4 pb-4"></div>
       </section>
 
       <!-- VIEW: ORDERS -->
       <section id="viewOrders" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-xl font-bold uppercase tracking-widest text-white mb-6">Historie</h2>
+        <h2 class="text-2xl font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="HISTORIE"></h2>
         <div id="ordersListContainer" class="space-y-4"></div>
       </section>
       
       <!-- VIEW: SUCCESS -->
       <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-8 relative z-10">
-        <h2 class="text-3xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.5)]">Erfolgreich</h2>
-        <div class="bg-[#0b0c10]/90 backdrop-blur-md border border-[#181a23] rounded-3xl p-6 text-left space-y-4 mb-8 shadow-[0_10px_40px_rgba(0,0,0,0.6)] transform transition-transform duration-500 hover:scale-105">
-          <div class="flex justify-between text-xs items-center">
-            <span class="text-neutral-500 uppercase tracking-widest text-[9px] font-bold">Bestellnummer</span>
-            <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider text-sm bg-[#12141a] px-2 py-1 rounded-md">VOD-000</span>
+        <h2 class="text-4xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_20px_rgba(225,29,72,0.6)] typewriter" data-text="ERFOLGREICH"></h2>
+        <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-rose-900/40 rounded-[2rem] p-7 text-left space-y-5 mb-8 shadow-[0_15px_50px_rgba(225,29,72,0.15)]">
+          <div class="flex justify-between text-sm items-center">
+            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">Bestellnummer</span>
+            <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider text-base bg-[#15171e] px-3 py-1.5 rounded-lg border border-[#232734]">VOD-000</span>
           </div>
-          <div class="flex justify-between text-xs items-center mt-2">
-            <span class="text-neutral-500 uppercase tracking-widest text-[9px] font-bold">Gesamtbetrag</span>
-            <span id="succTotal" class="text-rose-500 font-bold text-xl drop-shadow-[0_0_5px_rgba(225,29,72,0.3)]">0,00 €</span>
+          <div class="flex justify-between text-sm items-center mt-3">
+            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">Gesamtbetrag</span>
+            <span id="succTotal" class="text-rose-500 font-bold text-2xl drop-shadow-[0_0_8px_rgba(225,29,72,0.4)]">0,00 €</span>
           </div>
           
-          <div id="succNachnahmeMsg" class="text-xs text-rose-400 mt-4 hidden border-t border-rose-900/30 pt-4 font-bold tracking-wide leading-relaxed text-center">
+          <div id="succNachnahmeMsg" class="text-sm text-rose-400 mt-5 hidden border-t border-rose-900/40 pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte halte den Betrag bei Lieferung passend bereit.
           </div>
 
-          <div id="succTransferMsg" class="text-xs text-neutral-300 mt-4 hidden border-t border-[#1e222d] pt-4 font-medium tracking-wide leading-relaxed text-center">
+          <div id="succTransferMsg" class="text-sm text-white mt-5 hidden border-t border-[#232734] pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte überweise den Gesamtbetrag auf das bekannte Konto.
           </div>
         </div>
-        <button onclick="router.navigate('orders')" class="w-full py-4 rounded-2xl bg-[#12141a] border border-[#1e222d] text-neutral-400 hover:text-white hover:border-rose-900 font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-lg">Zur Historie</button>
+        <button onclick="router.navigate('orders')" class="w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
       </section>
 
     </main>
 
-    <!-- FIRE & SPARKS CONTAINER (يظهر أسفل الشريط السفلي) -->
     <div class="fire-container">
       <div class="fire-glow-1"></div>
-      <div class="fire-glow-2"></div>
-      
-      <!-- الشهب النارية المتصاعدة -->
-      <div class="spark" style="left: 10%; animation-duration: 1.8s; animation-delay: 0.1s;"></div>
-      <div class="spark" style="left: 20%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
-      <div class="spark" style="left: 35%; animation-duration: 1.5s; animation-delay: 0.9s;"></div>
-      <div class="spark" style="left: 50%; animation-duration: 2.5s; animation-delay: 0.2s;"></div>
-      <div class="spark" style="left: 65%; animation-duration: 1.7s; animation-delay: 0.7s;"></div>
-      <div class="spark" style="left: 80%; animation-duration: 2.1s; animation-delay: 0.3s;"></div>
-      <div class="spark" style="left: 90%; animation-duration: 1.9s; animation-delay: 0.8s;"></div>
-      <div class="spark" style="left: 15%; animation-duration: 2.4s; animation-delay: 0.4s;"></div>
-      <div class="spark" style="left: 45%; animation-duration: 1.6s; animation-delay: 0.6s;"></div>
-      <div class="spark" style="left: 75%; animation-duration: 2.0s; animation-delay: 0.1s;"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION (ثابت لا يختفي أبداً) -->
-    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#050608]/70 backdrop-blur-xl border-t border-rose-900/30 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#020203]/90 backdrop-blur-2xl border-t border-[#12141a] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
-      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
       </button>
-      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
-      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-400 transition-all duration-300">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       </button>
     </nav>
 
-    <!-- MODALS -->
-    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f0] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
-      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-6 space-y-6 shadow-[0_0_60px_rgba(225,29,72,0.15)] animate-fade-in">
-        <h3 id="addressModalTitle" class="text-xs font-bold uppercase tracking-widest text-white glitch-effect">Neue Adresse</h3>
+    <!-- MODAL (Adresse) -->
+    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f5] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
+      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-7 space-y-6 shadow-[0_0_40px_rgba(225,29,72,0.1)]">
+        <h3 id="addressModalTitle" class="text-sm font-bold uppercase tracking-widest text-white glitch-effect typewriter" data-text="NEUE ADRESSE"></h3>
         <form id="addressForm" class="space-y-4">
           <input type="hidden" id="addressFormId">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           </div>
-          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           </div>
-          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
-          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-4 py-3.5 rounded-2xl bg-[#12141a] border border-[#232734] text-white text-xs focus:border-rose-500 focus:bg-[#15171e] transition-all">
+          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           
-          <div class="flex space-x-3 pt-4">
-            <button type="button" onclick="App.closeAddressModal()" class="w-1/2 py-4 rounded-2xl bg-[#181a23] text-neutral-400 hover:text-white font-bold text-[10px] uppercase tracking-widest active:scale-90 transition-all duration-200">Abbrechen</button>
-            <button type="submit" class="w-1/2 py-4 rounded-2xl bg-rose-600 text-white font-bold text-[10px] uppercase tracking-widest active:scale-90 transition-all duration-200 shadow-[0_0_15px_rgba(225,29,72,0.4)]">Speichern</button>
+          <div class="flex space-x-4 pt-4">
+            <button type="button" onclick="triggerActionShock(); App.closeAddressModal()" class="w-1/2 py-4 rounded-2xl bg-[#1a1d26] text-neutral-400 hover:text-white font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-200">Abbrechen</button>
+            <button type="submit" class="w-1/2 py-4 rounded-2xl bg-rose-600 text-white font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-200 shadow-[0_0_15px_rgba(225,29,72,0.4)]">Speichern</button>
           </div>
         </form>
       </div>
     </div>
 
-    <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-2 pointer-events-none w-11/12 max-w-sm"></div>
+    <div id="toastContainer" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center space-y-3 pointer-events-none w-11/12 max-w-sm"></div>
   </div>
 
   <script>
-    // --- الاهتزاز اللمسي ---
-    function triggerHaptic(ms = 30) {
-      if (navigator.vibrate) navigator.vibrate(ms);
+    // --- النظام الصوتي الموثوق (Audio Service via Google URLs) ---
+    // بمجرد الضغط على شاشة البداية، سيتم تفعيل السماحيات.
+    const AudioService = (function() {
+      let isUnlocked = false;
+      
+      const sounds = {
+        click: new Audio('https://actions.google.com/sounds/v1/ui/pop_click.ogg'),
+        glitch: new Audio('https://actions.google.com/sounds/v1/science_fiction/static_hit.ogg'),
+        explosion: new Audio('https://actions.google.com/sounds/v1/impacts/crash.ogg'),
+        error: new Audio('https://actions.google.com/sounds/v1/alarms/buzzer_alarm.ogg'),
+        warp: new Audio('https://actions.google.com/sounds/v1/science_fiction/power_up.ogg'),
+        sys: new Audio('https://actions.google.com/sounds/v1/science_fiction/computer_beeps.ogg')
+      };
+
+      sounds.click.volume = 0.15;
+      sounds.glitch.volume = 0.15;
+      sounds.explosion.volume = 0.3;
+      sounds.error.volume = 0.2;
+      sounds.warp.volume = 0.3;
+      sounds.sys.volume = 0.15;
+
+      // يتم استدعاؤه مع أول ضغطة لفك القفل عن الأوديو في المتصفحات
+      function unlockAudio() {
+        if(isUnlocked) return;
+        isUnlocked = true;
+        Object.values(sounds).forEach(s => {
+          s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(() => {});
+        });
+      }
+
+      return {
+        init: unlockAudio,
+        play: (name) => {
+          if (!isUnlocked || !sounds[name]) return;
+          try {
+            const s = sounds[name].cloneNode(); 
+            s.volume = sounds[name].volume;
+            s.play().catch(()=>{});
+          } catch(e) {}
+        }
+      }
+    })();
+
+    function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
+
+    function triggerActionShock() {
+      const app = document.getElementById('app');
+      app.classList.remove('shake-active');
+      void app.offsetWidth; 
+      app.classList.add('shake-active');
+      triggerHaptic([40, 60, 40]);
+      AudioService.play('click');
     }
 
-    // --- تأثير النقر ---
+    // --- الانفجار وتطاير العناصر (Glitch Explosion Element Scatter) ---
+    function triggerExplosion() {
+      triggerHaptic([50, 100, 150, 50, 100]); 
+      AudioService.play('explosion');
+      
+      const app = document.getElementById('app');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      const vcrBar = document.getElementById('vcrBarOverlay');
+      
+      tvNoise.classList.add('show');
+      vcrBar.classList.add('show');
+      app.classList.add('glitch-critical');
+      
+      const flash = document.createElement('div');
+      flash.className = 'fixed inset-0 bg-rose-600 mix-blend-overlay z-[99999] pointer-events-none';
+      document.body.appendChild(flash);
+      
+      const activeElements = document.querySelectorAll('.view-panel.active > *');
+      activeElements.forEach(el => {
+         const rx = (Math.random() - 0.5) * 80; 
+         const ry = (Math.random() - 0.5) * 80;
+         const rr = (Math.random() - 0.5) * 15; 
+         const rs = 1 + (Math.random() * 0.3); 
+         el.style.transition = 'transform 0.1s ease-out';
+         el.style.transform = `translate(${rx}px, ${ry}px) rotate(${rr}deg) scale(${rs})`;
+      });
+
+      setTimeout(() => {
+        app.classList.remove('glitch-critical');
+        tvNoise.classList.remove('show');
+        vcrBar.classList.remove('show');
+        
+        flash.style.transition = 'opacity 0.3s ease-out';
+        flash.style.opacity = '0';
+        
+        activeElements.forEach(el => {
+           el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+           el.style.transform = '';
+        });
+        
+        setTimeout(() => flash.remove(), 300);
+      }, 150); 
+    }
+
+    // --- تشويش التلفزيون العشوائي ---
+    function randomScreenGlitch() {
+      const app = document.getElementById('app');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      const vcrBar = document.getElementById('vcrBarOverlay');
+      const isHeavy = Math.random() > 0.6; 
+      
+      if (isHeavy) {
+        AudioService.play('glitch');
+        tvNoise.classList.add('show'); vcrBar.classList.add('show'); app.classList.add('glitch-critical');
+        triggerHaptic([40, 20, 40]);
+        setTimeout(() => { 
+          tvNoise.classList.remove('show'); vcrBar.classList.remove('show'); app.classList.remove('glitch-critical'); 
+        }, 150 + Math.random() * 200);
+      } else {
+        app.classList.add('glitch-critical');
+        triggerHaptic(20);
+        setTimeout(() => { app.classList.remove('glitch-critical'); }, 50 + Math.random() * 100);
+      }
+      setTimeout(randomScreenGlitch, 3000 + Math.random() * 15000);
+    }
+
+    // --- Fake Action Errors ---
+    function triggerFakeError() {
+      if(Math.random() > 0.25) return; 
+      const err = document.getElementById('fakeErrorOverlay');
+      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "SIGNAL LOST"];
+      document.getElementById('fakeErrorText').textContent = texts[Math.floor(Math.random() * texts.length)];
+      err.classList.remove('hidden');
+      triggerHaptic([100, 50, 100]);
+      AudioService.play('error');
+      setTimeout(() => err.classList.add('hidden'), 150 + Math.random() * 150);
+    }
+
+    // --- إزالة شاشة الرعب وبدء التطبيق (يجب النقر لفك قفل الصوت) ---
+    document.getElementById('horrorOverlay').addEventListener('click', function() {
+       AudioService.init(); // فك قفل الأصوات
+       AudioService.play('click');
+       
+       this.classList.add('opacity-0');
+       setTimeout(() => {
+          this.classList.add('hidden');
+          // بدء التشويش والجنون بعد إزالة الشاشة الافتتاحية
+          setTimeout(randomScreenGlitch, 2000);
+       }, 1000);
+    });
+
+    // إظهار زر طلب المتابعة في شاشة الرعب بعد ثانيتين
+    setTimeout(() => { document.getElementById('enterBtnHint').classList.remove('opacity-0'); }, 2000);
+
     document.addEventListener('pointerdown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
       const burst = document.createElement('div');
       burst.className = 'click-ripple';
       burst.style.left = e.clientX + 'px';
       burst.style.top = e.clientY + 'px';
-      burst.style.width = '40px';
-      burst.style.height = '40px';
+      burst.style.width = '50px'; burst.style.height = '50px';
       document.body.appendChild(burst);
       setTimeout(() => burst.remove(), 600);
-      triggerHaptic(10); 
     });
 
-    // --- الساعة التفاعلية ---
-    function updateClock() {
-      const now = new Date();
-      const h = now.getHours();
-      const m = now.getMinutes();
-      const s = now.getSeconds();
-      const ms = now.getMilliseconds();
+    // --- Crazy Clock Logic ---
+    const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
+    let insanityOffset = { s: 0, m: 0, h: 0 };
+    let clockInsanity = false;
+
+    function triggerTimeWarp() {
+      if(clockInsanity) return;
+      clockInsanity = true;
+      triggerActionShock();
+      AudioService.play('warp');
+      document.getElementById('app').classList.add('glitch-critical');
+      setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 150);
       
-      const sDeg = (s + (ms / 1000)) * 6;
-      const mDeg = (m + (s / 60)) * 6;
-      const hDeg = ((h % 12) + (m / 60)) * 30;
+      setTimeout(() => {
+        clockInsanity = false; 
+        triggerHaptic([50, 100, 50]);
+        AudioService.play('glitch');
+        const app = document.getElementById('app');
+        app.classList.add('shake-active');
+        app.style.filter = "invert(1) hue-rotate(180deg)";
+        setTimeout(() => { app.classList.remove('shake-active'); app.style.filter = "none"; }, 150);
+      }, 1000 + Math.random() * 1500);
+    }
+    
+    setInterval(() => { if(Math.random() > 0.7) triggerTimeWarp(); }, 12000);
+
+    let staticTime = { h: 10, m: 10, s: 30 }; 
+
+    function updateClock() {
+      let h = staticTime.h; let m = staticTime.m; let s = staticTime.s; 
+      if (clockInsanity) {
+         insanityOffset.s += (Math.random() - 0.5) * 150; 
+         insanityOffset.m += (Math.random() - 0.5) * 80;
+         insanityOffset.h += (Math.random() - 0.5) * 50;
+      } else {
+         insanityOffset.s *= 0.85; insanityOffset.m *= 0.85; insanityOffset.h *= 0.85;
+      }
+      const sDeg = (s * 6) + insanityOffset.s;
+      const mDeg = (m * 6) + insanityOffset.m;
+      const hDeg = (h * 30) + (m / 2) + insanityOffset.h;
       
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
-        if(el) {
-          el.style.transform = `rotate(${deg}deg)`;
-          el.style.transformOrigin = '100px 100px';
-        }
+        if(el) { el.style.transform = `rotate(${deg}deg)`; el.style.transformOrigin = '100px 100px'; }
       };
 
-      setTransform('handSecond', sDeg);
-      setTransform('handMinute', mDeg);
-      setTransform('handHour', hDeg);
-      
+      setTransform('handSecond', sDeg); setTransform('handMinute', mDeg); setTransform('handHour', hDeg);
+
+      const now = new Date();
+      const dayEl = document.getElementById('clockDay'); const dateEl = document.getElementById('clockDate');
+      if(dayEl && dateEl) {
+        dayEl.textContent = daysArr[now.getDay()];
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        dateEl.textContent = `${dd}.${mm}.${now.getFullYear()}`;
+      }
       requestAnimationFrame(updateClock);
     }
     updateClock();
 
-    const StorageService = (function () {
-      const DB_NAME = 'VOIDShopDB';
-      let dbInstance = null;
+    function triggerTypewriter(viewEl) {
+      const elements = viewEl.querySelectorAll('.typewriter');
+      elements.forEach(el => {
+        const text = el.getAttribute('data-text');
+        if (!text) return; el.textContent = ''; let i = 0;
+        function type() {
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(type, 15 + Math.random() * 25); }
+        }
+        setTimeout(type, 150);
+      });
 
+      const dynElements = viewEl.querySelectorAll('.typewriter-delayed');
+      dynElements.forEach(el => {
+        const text = el.getAttribute('data-text');
+        if (!text) return; el.textContent = ''; let i = 0;
+        function typeDyn() {
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 20); }
+        }
+        setTimeout(typeDyn, 1000); 
+      });
+
+      const dynElements2 = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
+      dynElements2.forEach(el => {
+        if (!el.hasAttribute('data-original-text')) el.setAttribute('data-original-text', el.textContent.trim());
+        const text = el.getAttribute('data-original-text'); el.textContent = ''; let i = 0;
+        function typeDyn2() {
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn2, 15); }
+        }
+        setTimeout(typeDyn2, 250);
+      });
+    }
+
+    const StorageService = (function () {
+      const DB_NAME = 'VOIDShopDB'; let dbInstance = null;
       function openDatabase() {
         return new Promise((resolve, reject) => {
           if (dbInstance) return resolve(dbInstance);
           const request = indexedDB.open(DB_NAME, 1);
           request.onupgradeneeded = (e) => {
             const db = e.target.result;
-            if (!db.objectStoreNames.contains('addresses')) {
-              db.createObjectStore('addresses', { keyPath: 'id' }).createIndex('isDefault', 'isDefault');
-            }
-            if (!db.objectStoreNames.contains('orders')) {
-              db.createObjectStore('orders', { keyPath: 'orderNumber' }).createIndex('createdAt', 'createdAt');
-            }
+            if (!db.objectStoreNames.contains('addresses')) db.createObjectStore('addresses', { keyPath: 'id' }).createIndex('isDefault', 'isDefault');
+            if (!db.objectStoreNames.contains('orders')) db.createObjectStore('orders', { keyPath: 'orderNumber' }).createIndex('createdAt', 'createdAt');
           };
           request.onsuccess = (e) => resolve(dbInstance = e.target.result);
           request.onerror = (e) => reject(e.target.error);
         });
       }
-
       async function getAll(storeName) {
-        const db = await openDatabase();
-        return new Promise(res => {
-          const tx = db.transaction([storeName], 'readonly');
-          const req = tx.objectStore(storeName).getAll();
-          req.onsuccess = () => res(req.result || []);
-        });
+        const db = await openDatabase(); return new Promise(res => { const tx = db.transaction([storeName], 'readonly'); const req = tx.objectStore(storeName).getAll(); req.onsuccess = () => res(req.result || []); });
       }
-
       async function saveItem(storeName, item) {
-        const db = await openDatabase();
-        return new Promise(res => {
-          const tx = db.transaction([storeName], 'readwrite');
-          const req = tx.objectStore(storeName).put(item);
-          req.onsuccess = () => res(item);
-        });
+        const db = await openDatabase(); return new Promise(res => { const tx = db.transaction([storeName], 'readwrite'); const req = tx.objectStore(storeName).put(item); req.onsuccess = () => res(item); });
       }
-
       return {
-        openDatabase,
-        getAllAddresses: () => getAll('addresses'),
+        openDatabase, getAllAddresses: () => getAll('addresses'),
         saveAddress: async (addr) => {
           if (!addr.id) addr.id = 'addr_' + Date.now();
-          const list = await getAll('addresses');
-          if (list.length === 0) addr.isDefault = true;
+          const list = await getAll('addresses'); if (list.length === 0) addr.isDefault = true;
           return saveItem('addresses', addr);
         },
-        getSelectedAddress: async () => {
-          const addrs = await getAll('addresses');
-          return addrs.find(a => a.isDefault) || addrs[0] || null;
+        deleteAddress: async (id) => { const db = await openDatabase(); return new Promise(res => { const tx = db.transaction(['addresses'], 'readwrite'); tx.objectStore('addresses').delete(id); tx.oncomplete = () => res(true); }); },
+        setDefaultAddress: async (id) => {
+          const db = await openDatabase(); const addrs = await getAll('addresses');
+          return new Promise(res => { const tx = db.transaction(['addresses'], 'readwrite'); const store = tx.objectStore('addresses'); addrs.forEach(a => { a.isDefault = (a.id === id); store.put(a); }); tx.oncomplete = () => res(true); });
         },
+        getSelectedAddress: async () => { const addrs = await getAll('addresses'); return addrs.find(a => a.isDefault) || addrs[0] || null; },
         getAllOrders: async () => (await getAll('orders')).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)),
         saveOrder: (order) => saveItem('orders', order),
         getCartQty: () => parseInt(localStorage.getItem('void_cart') || 1, 10),
@@ -521,19 +697,11 @@
     })();
 
     const CartService = (function () {
-      let qty = 1;
-      const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
-      
+      let qty = 1; const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
       return {
         init: () => qty = StorageService.getCartQty(),
-        getQuantity: () => qty,
-        setQuantity: (q) => { qty = Math.max(1, q); StorageService.setCartQty(qty); return qty; },
-        getCalculations: () => ({
-          quantity: qty,
-          subtotal: qty * 35.00,
-          shipping: calcShipping(qty),
-          total: (qty * 35.00) + calcShipping(qty)
-        }),
+        getQuantity: () => qty, setQuantity: (q) => { qty = Math.max(1, q); StorageService.setCartQty(qty); return qty; },
+        getCalculations: () => ({ quantity: qty, subtotal: qty * 35.00, shipping: calcShipping(qty), total: (qty * 35.00) + calcShipping(qty) }),
         format: (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €'
       };
     })();
@@ -542,11 +710,19 @@
       showToast: (msg) => {
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
-        t.className = 'p-3 px-5 rounded-2xl text-xs font-bold bg-[#0b0c10]/95 backdrop-blur-md border border-[#232734] text-white shadow-[0_10px_30px_rgba(225,29,72,0.2)] transition-all transform duration-300 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide';
-        t.innerHTML = `<span class="text-rose-500 mr-3 text-xl leading-none animate-pulse">&bull;</span>${msg}`;
-        c.appendChild(t);
+        t.className = 'p-4 px-6 rounded-2xl text-sm font-bold bg-[#0b0c10]/95 backdrop-blur-xl border border-[#232734] text-white shadow-[0_15px_40px_rgba(225,29,72,0.3)] transition-all transform duration-200 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide w-full';
+        const icon = document.createElement('span'); icon.className = 'text-rose-500 mr-3 text-2xl leading-none animate-pulse'; icon.innerHTML = '&bull;';
+        const textSpan = document.createElement('span');
+        t.appendChild(icon); t.appendChild(textSpan); c.appendChild(t);
+        
         requestAnimationFrame(() => t.classList.replace('translate-y-[-20px]', 'translate-y-0') || t.classList.replace('scale-95', 'scale-100') || t.classList.replace('opacity-0', 'opacity-100'));
-        setTimeout(() => t.remove(), 3000);
+        AudioService.play('sys');
+
+        let i = 0;
+        function typeToast() { if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 15); } }
+        typeToast();
+
+        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)'; setTimeout(() => t.remove(), 400); }, 3000 + (msg.length * 15));
       },
       renderCart: () => {
         const c = CartService.getCalculations();
@@ -557,12 +733,10 @@
       }
     };
 
-    // --- الربط المباشر مع تيليجرام ---
     const TelegramService = {
       dispatch: async (order) => {
         const botToken = '8394320495:AAGyRY5siD2sQBbjL_JaoY1h6GH016TGBYM';
         const chatId = '1117141728';
-        
         const messageText = `
 🚨 <b>VØID - NEUE BESTELLUNG</b> 🚨
 
@@ -579,56 +753,76 @@ ${order.address.country}
 
 🕒 <b>Datum:</b> ${new Date(order.createdAt).toLocaleString('de-DE')}
         `.trim();
-
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
         try {
-          const res = await fetch(telegramUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              chat_id: chatId, 
-              text: messageText,
-              parse_mode: 'HTML' 
-            })
-          });
-          
-          if(res.ok) {
-            return { success: true };
-          } else {
-            return { success: false };
-          }
-        } catch(e) {
-          return { success: false }; 
-        }
+          const res = await fetch(telegramUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text: messageText, parse_mode: 'HTML' }) });
+          return { success: res.ok };
+        } catch(e) { return { success: false }; }
       }
     };
 
     const router = {
       navigate: (view) => {
-        triggerHaptic(40); 
+        triggerExplosion(); 
         
-        document.querySelectorAll('.view-panel').forEach(v => {
-          v.classList.remove('active', 'animate-fade-in');
-          v.classList.add('hidden');
-        });
-        
-        const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
-        target.classList.remove('hidden');
-        void target.offsetWidth; 
-        target.classList.add('active', 'animate-fade-in');
+        setTimeout(() => {
+          document.querySelectorAll('.view-panel').forEach(v => { v.classList.remove('active', 'animate-fade-in'); v.classList.add('hidden'); });
+          const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
+          target.classList.remove('hidden');
+          void target.offsetWidth; 
+          target.classList.add('active', 'animate-fade-in');
 
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
-        
-        // إعادة تعيين السكرول للأعلى عند تغيير الصفحة
-        document.getElementById('mainContent').scrollTo(0,0);
-        
-        if(view === 'cart') UIService.renderCart();
-        if(view === 'checkout') App.renderCheckout();
-        if(view === 'addresses') App.renderAddresses();
-        if(view === 'orders') App.renderOrders();
+          document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
+          document.getElementById('mainContent').scrollTo(0,0);
+          
+          if(view === 'cart') UIService.renderCart();
+          if(view === 'checkout') App.renderCheckout();
+          if(view === 'addresses') App.renderAddresses();
+          if(view === 'orders') App.renderOrders();
+
+          triggerTypewriter(target);
+        }, 150); 
       }
     };
+
+    function scheduleMysteriousGreeting() {
+      setTimeout(async () => {
+        const addr = await StorageService.getSelectedAddress();
+        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNTE ENTITÄT"; 
+        
+        const overlay = document.getElementById('sysMsgOverlay');
+        const l1 = document.getElementById('sysLine1');
+        const l2 = document.getElementById('sysLine2');
+        const l3 = document.getElementById('sysLine3');
+        const nameEl = document.getElementById('sysMsgName');
+        
+        overlay.classList.remove('hidden');
+        
+        document.getElementById('tvNoiseOverlay').classList.add('show');
+        document.getElementById('app').classList.add('glitch-critical');
+        triggerHaptic([100, 50, 100]); AudioService.play('glitch');
+        
+        setTimeout(() => {
+            document.getElementById('app').classList.remove('glitch-critical');
+            document.getElementById('tvNoiseOverlay').classList.remove('show');
+        }, 300);
+
+        AudioService.play('sys'); l1.style.opacity = '1'; triggerHaptic(20);
+        setTimeout(() => { AudioService.play('sys'); l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
+        setTimeout(() => { 
+          AudioService.play('warp');
+          nameEl.textContent = name;
+          l3.style.opacity = '1'; 
+          triggerHaptic([60, 60]); 
+        }, 3000);
+        
+        setTimeout(() => {
+          overlay.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+          setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); }, 1000);
+        }, 6500);
+        
+      }, Math.floor(Math.random() * (20000 - 10000 + 1) + 10000)); 
+    }
 
     const App = {
       init: async () => {
@@ -638,62 +832,96 @@ ${order.address.country}
 
         document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => router.navigate(b.dataset.nav));
         
-        document.getElementById('btnCartPlus').onclick = () => { triggerHaptic(20); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
-        document.getElementById('btnCartMinus').onclick = () => { triggerHaptic(20); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
+        document.getElementById('btnCartPlus').onclick = () => { triggerActionShock(); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
+        document.getElementById('btnCartMinus').onclick = () => { triggerActionShock(); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
         
         document.getElementById('btnGoToCheckout').onclick = async () => {
-          triggerHaptic(30);
+          triggerActionShock();
           const a = await StorageService.getSelectedAddress();
-          if(!a) {
-             UIService.showToast('Bitte lege zuerst eine Lieferadresse an');
-             router.navigate('addresses');
-          } else {
-             router.navigate('checkout');
-          }
+          if(!a) { UIService.showToast('BITTE LEGE ZUERST EINE LIEFERADRESSE AN'); router.navigate('addresses'); } 
+          else { router.navigate('checkout'); }
         };
         
-        document.getElementById('chkNachnahme').addEventListener('change', () => { triggerHaptic(20); App.renderCheckout(); });
+        document.getElementById('chkNachnahme').addEventListener('change', () => { triggerActionShock(); App.renderCheckout(); });
 
         document.getElementById('btnOpenAddressModal').onclick = () => {
-          triggerHaptic(20);
+          triggerActionShock();
           document.getElementById('addressForm').reset();
+          document.getElementById('addressFormId').value = '';
+          document.getElementById('addressModalTitle').setAttribute('data-text', 'NEUE ADRESSE');
           document.getElementById('addressModal').classList.remove('hidden');
+          triggerTypewriter(document.getElementById('addressModal'));
         };
         document.getElementById('addressForm').onsubmit = App.saveAddress;
-
+        
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
+
+        triggerTypewriter(document.getElementById('viewHome'));
+        triggerTypewriter(document.getElementById('horrorOverlay'));
+        scheduleMysteriousGreeting();
       },
 
-      closeAddressModal: () => {
-        triggerHaptic(20);
-        document.getElementById('addressModal').classList.add('hidden');
-      },
+      closeAddressModal: () => { triggerHaptic(30); AudioService.play('click'); document.getElementById('addressModal').classList.add('hidden'); },
 
       saveAddress: async (e) => {
-        e.preventDefault();
-        triggerHaptic(40);
+        e.preventDefault(); triggerActionShock();
+        const idStr = document.getElementById('addressFormId').value;
+        let isDef = false;
+        if(idStr) {
+          const existingList = await StorageService.getAllAddresses();
+          const existing = existingList.find(a => a.id === idStr);
+          if (existing) isDef = existing.isDefault;
+        }
+
         const addr = {
-          firstName: document.getElementById('addrFirstName').value,
-          lastName: document.getElementById('addrLastName').value,
-          street: document.getElementById('addrStreet').value,
-          number: document.getElementById('addrNumber').value,
-          zip: document.getElementById('addrZip').value,
-          city: document.getElementById('addrCity').value,
-          country: document.getElementById('addrCountry').value,
-          phone: document.getElementById('addrPhone').value
+          id: idStr ? idStr : undefined, isDefault: isDef,
+          firstName: document.getElementById('addrFirstName').value, lastName: document.getElementById('addrLastName').value,
+          street: document.getElementById('addrStreet').value, number: document.getElementById('addrNumber').value,
+          zip: document.getElementById('addrZip').value, city: document.getElementById('addrCity').value,
+          country: document.getElementById('addrCountry').value, phone: document.getElementById('addrPhone').value
         };
         await StorageService.saveAddress(addr);
         App.closeAddressModal();
-        UIService.showToast('Erfolgreich gespeichert');
-        App.renderAddresses();
+        UIService.showToast('ADRESSE ERFOLGREICH GESPEICHERT');
+        
+        if (document.getElementById('viewAddresses').classList.contains('active')) { App.renderAddresses(); }
+        if (document.getElementById('viewCheckout').classList.contains('active')) { App.renderCheckout(); }
+      },
+
+      setDefault: async (id) => { triggerActionShock(); await StorageService.setDefaultAddress(id); App.renderAddresses(); },
+      editAddress: async (id) => {
+        triggerActionShock();
+        const list = await StorageService.getAllAddresses(); const a = list.find(x => x.id === id);
+        if(!a) return;
+        document.getElementById('addressFormId').value = a.id; document.getElementById('addrFirstName').value = a.firstName;
+        document.getElementById('addrLastName').value = a.lastName; document.getElementById('addrStreet').value = a.street;
+        document.getElementById('addrNumber').value = a.number; document.getElementById('addrZip').value = a.zip;
+        document.getElementById('addrCity').value = a.city; document.getElementById('addrCountry').value = a.country;
+        document.getElementById('addrPhone').value = a.phone || '';
+        document.getElementById('addressModalTitle').setAttribute('data-text', 'ADRESSE BEARBEITEN');
+        document.getElementById('addressModal').classList.remove('hidden');
+        triggerTypewriter(document.getElementById('addressModal'));
+      },
+      deleteAddress: async (id) => {
+        triggerActionShock();
+        if(confirm('Adresse wirklich löschen?')) {
+          await StorageService.deleteAddress(id); UIService.showToast('ADRESSE GELÖSCHT'); App.renderAddresses();
+        }
       },
 
       renderAddresses: async () => {
         const list = await StorageService.getAllAddresses();
         document.getElementById('addressListContainer').innerHTML = list.map(a => `
-          <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] transition-transform duration-300 hover:scale-[1.02] cursor-pointer shadow-lg" onclick="triggerHaptic(15)">
+          <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-3xl border border-[#1e222d] transition-transform duration-200 hover:scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
             <div class="font-bold text-white text-sm tracking-wide">${a.firstName} ${a.lastName}</div>
             <div class="text-xs text-neutral-400 mt-2 leading-relaxed font-medium">${a.street} ${a.number}<br>${a.zip} ${a.city}</div>
+            <div class="flex justify-between items-center mt-5 border-t border-[#232734] pt-4">
+              ${a.isDefault ? '<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-600/10 px-3 py-1.5 rounded-lg border border-rose-900/30">Aktiv</span>' : `<button onclick="App.setDefault('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Wählen</button>`}
+              <div class="flex space-x-5">
+                 <button onclick="App.editAddress('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Edit</button>
+                 <button onclick="App.deleteAddress('${a.id}')" class="text-[10px] text-rose-600 hover:text-rose-400 uppercase tracking-widest font-bold transition-colors">Delete</button>
+              </div>
+            </div>
           </div>
         `).join('');
       },
@@ -701,26 +929,18 @@ ${order.address.country}
       renderCheckout: async () => {
         const c = CartService.getCalculations();
         const a = await StorageService.getSelectedAddress();
-        
         const isNachnahme = document.getElementById('chkNachnahme').checked;
         const nachnahmeFee = isNachnahme ? 9.00 : 0.00;
         const finalTotal = c.total + nachnahmeFee;
 
         document.getElementById('chkSummarySubtotal').textContent = CartService.format(c.subtotal);
         document.getElementById('chkSummaryShipping').textContent = CartService.format(c.shipping);
-        
         const rowNachnahme = document.getElementById('rowNachnahmeFee');
-        if(isNachnahme) {
-            rowNachnahme.classList.remove('hidden');
-        } else {
-            rowNachnahme.classList.add('hidden');
-        }
+        if(isNachnahme) { rowNachnahme.classList.remove('hidden'); } else { rowNachnahme.classList.add('hidden'); }
 
         document.getElementById('chkSummaryTotal').textContent = CartService.format(finalTotal);
-        
-        if(a) {
-          document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-white leading-relaxed font-medium tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`;
-        }
+        if(a) { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-sm text-white leading-relaxed font-medium tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`; } 
+        else { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-rose-500 leading-relaxed font-bold tracking-widest uppercase">Keine Adresse gewählt</div>`; }
       },
 
       renderOrders: async () => {
@@ -728,29 +948,32 @@ ${order.address.country}
         document.getElementById('ordersListContainer').innerHTML = list.map(o => {
           const dateStr = new Date(o.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
           return `
-          <div class="p-5 bg-[#0b0c10]/80 backdrop-blur-md rounded-2xl border border-[#181a23] mb-4 text-xs text-neutral-300 transition-transform duration-300 hover:scale-[1.02] shadow-lg">
-            <div class="flex justify-between items-center mb-3">
-              <span class="text-rose-500 font-mono font-bold tracking-wider">${o.orderNumber}</span>
-              <span class="font-bold text-white text-sm drop-shadow-[0_0_3px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
+          <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-3xl border border-[#1e222d] mb-4 text-xs text-neutral-300 transition-transform duration-200 hover:scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-rose-500 font-mono font-bold tracking-wider text-sm">${o.orderNumber}</span>
+              <span class="font-bold text-white text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
             </div>
-            <div class="flex justify-between items-center border-t border-[#1e222d] pt-3">
-              <span class="text-[10px] text-neutral-500 tracking-widest font-medium">${dateStr}</span>
-              ${o.isNachnahme ? `<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold">inkl. Nachnahme</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
+            <div class="flex justify-between items-center border-t border-[#232734] pt-4">
+              <span class="text-[10px] text-neutral-500 tracking-widest font-bold">${dateStr}</span>
+              ${o.isNachnahme ? `<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-900/20 px-2 py-1 rounded">inkl. Nachnahme</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
             </div>
           </div>
         `}).join('') || '<p class="text-[10px] text-neutral-600 text-center py-12 uppercase tracking-widest font-bold">Keine Bestellungen</p>';
       },
 
       submitOrder: async () => {
-        triggerHaptic(50);
+        triggerExplosion(); 
         const a = await StorageService.getSelectedAddress();
-        if(!a) return UIService.showToast('Bitte wähle eine Lieferadresse.');
+        if(!a) return UIService.showToast('BITTE WÄHLE EINE LIEFERADRESSE');
         
         const btn = document.getElementById('btnSubmitOrder');
         const txt = document.getElementById('btnSubmitText');
-        txt.textContent = 'Verbindungsaufbau...';
-        btn.classList.add('animate-pulse');
-        btn.style.pointerEvents = 'none';
+        
+        btn.classList.add('animate-pulse'); btn.style.pointerEvents = 'none';
+        
+        txt.textContent = ''; let waitText = "VERBINDUNG WIRD AUFGEBAUT..."; let w = 0;
+        function typeWait() { if (w < waitText.length) { txt.textContent += waitText.charAt(w); w++; setTimeout(typeWait, 20); } }
+        typeWait();
         
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
@@ -758,38 +981,32 @@ ${order.address.country}
 
         const order = {
           orderNumber: 'VOD-' + Date.now().toString().slice(-6),
-          createdAt: new Date().toISOString(),
-          total: finalTotal,
-          address: a,
-          isNachnahme: isNachnahme
+          createdAt: new Date().toISOString(), total: finalTotal, address: a, isNachnahme: isNachnahme
         };
 
         const res = await TelegramService.dispatch(order);
         if(res.success) {
-          triggerHaptic([30, 50, 30]); 
-          await StorageService.saveOrder(order);
-          CartService.setQuantity(1);
+          triggerHaptic([40, 60, 40]); 
+          await StorageService.saveOrder(order); CartService.setQuantity(1);
           
           document.getElementById('succOrderNumber').textContent = order.orderNumber;
           document.getElementById('succTotal').textContent = CartService.format(order.total);
           
           if(isNachnahme) {
-             document.getElementById('succNachnahmeMsg').classList.remove('hidden');
-             document.getElementById('succTransferMsg').classList.add('hidden');
+             document.getElementById('succNachnahmeMsg').classList.remove('hidden'); document.getElementById('succTransferMsg').classList.add('hidden');
           } else {
-             document.getElementById('succNachnahmeMsg').classList.add('hidden');
-             document.getElementById('succTransferMsg').classList.remove('hidden');
+             document.getElementById('succNachnahmeMsg').classList.add('hidden'); document.getElementById('succTransferMsg').classList.remove('hidden');
           }
 
           document.getElementById('chkNachnahme').checked = false; 
           router.navigate('success');
         } else {
-          UIService.showToast('Fehler bei der Übermittlung. Bitte erneut versuchen.');
+          UIService.showToast('FEHLER BEI DER ÜBERMITTLUNG. BITTE ERNEUT VERSUCHEN.');
+          triggerFakeError();
         }
 
-        txt.textContent = 'Verbindlich Senden';
-        btn.classList.remove('animate-pulse');
-        btn.style.pointerEvents = 'auto';
+        txt.textContent = 'VERBINDLICH SENDEN';
+        btn.classList.remove('animate-pulse'); btn.style.pointerEvents = 'auto';
       }
     };
 
