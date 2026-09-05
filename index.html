@@ -3,224 +3,319 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>UMBRELLA CORP</title>
-  <meta name="theme-color" content="#000000">
+  <title>VØID — SYSTEM</title>
+  <meta name="theme-color" content="#020203">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root {
-      --font-brand: 'Oswald', sans-serif;
+      --font-brand: 'Cinzel', serif;
       --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
       --font-mono: 'Space Mono', monospace;
-      --umbrella-red: #cc0000;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     html, body {
-      font-family: var(--font-sans);
-      background-color: #000000; color: #f4f4f5;
+      font-family: var(--font-sans); background-color: #020203; color: #f4f4f5;
       margin: 0; padding: 0; height: 100dvh; width: 100vw; overflow: hidden; 
       user-select: none; -webkit-user-select: none;
       touch-action: manipulation; overscroll-behavior-y: none; 
     }
 
-    .brand-title { font-family: var(--font-brand); letter-spacing: 0.15em; }
+    .brand-title { font-family: var(--font-brand); cursor: pointer; }
     .font-mono-custom { font-family: var(--font-mono); }
 
-    /* خلفية الخلايا السداسية (Umbrella Lab Style) */
-    .bg-hex {
-      position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.15;
-      background-image: url("data:image/svg+xml,%3Csvg width='40' height='69.28203230275509' viewBox='0 0 40 69.28203230275509' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 17.3205081 L20 28.8675135 L0 17.3205081 L0 -5.77350269 L20 -17.3205081 L40 -5.77350269 Z M20 63.5085189 L0 51.9615242 L-20 63.5085189 L-20 86.6025404 L0 98.1495458 L20 86.6025404 Z M60 63.5085189 L40 51.9615242 L20 63.5085189 L20 86.6025404 L40 98.1495458 L60 86.6025404 Z' fill='none' stroke='%23ffffff' stroke-width='1'/%3E%3C/svg%3E");
+    .speed-lines {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background: repeating-linear-gradient( transparent 0%, rgba(244,63,94, 0.03) 50%, transparent 100% );
+      background-size: 100% 8px; animation: moveLines 0.3s linear infinite;
+    }
+    @keyframes moveLines { 0% { background-position: 0 0; } 100% { background-position: 0 8px; } }
+
+    @keyframes screenShock {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); filter: contrast(100%); }
+      20% { transform: translate(8px, 8px) rotate(2deg); filter: contrast(200%) brightness(1.3); }
+      40% { transform: translate(-8px, -8px) rotate(-2deg); filter: hue-rotate(90deg); }
+      60% { transform: translate(6px, -6px) rotate(1.5deg); }
+      80% { transform: translate(-6px, 6px) rotate(-1.5deg); }
+    }
+    .shake-active { animation: screenShock 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+
+    .glitch-critical {
+      animation: criticalGlitch 0.08s infinite alternate;
+      filter: invert(1) hue-rotate(180deg) contrast(200%);
+    }
+    @keyframes criticalGlitch {
+      0% { transform: translate(20px, -20px) skewX(10deg); }
+      100% { transform: translate(-20px, 20px) skewX(-10deg); }
     }
 
-    /* انتقال سينمائي نظيف */
+    .tv-noise {
+      position: fixed; inset: 0; z-index: 100001; pointer-events: none;
+      background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      opacity: 0; mix-blend-mode: overlay;
+    }
+    .tv-noise.show { animation: staticFlicker 0.05s infinite; opacity: 0.8; }
+    @keyframes staticFlicker {
+      0%, 100% { transform: translate(0,0) scale(1.1); filter: invert(0); }
+      50% { transform: translate(-20px,20px) scale(1.2); filter: invert(1); }
+    }
+
+    .vcr-bar {
+      position: fixed; left: 0; width: 100%; height: 15vh;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: hue-rotate(180deg) contrast(200%) blur(4px);
+      -webkit-backdrop-filter: hue-rotate(180deg) contrast(200%) blur(4px);
+      z-index: 100000; pointer-events: none; opacity: 0; border-top: 2px solid rgba(255,255,255,0.2);
+    }
+    .vcr-bar.show { animation: vcrJump 0.15s infinite linear; opacity: 1; }
+    @keyframes vcrJump { 0% { top: -20%; } 100% { top: 120%; } }
+
+    .scanlines {
+      position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.4));
+      background-size: 100% 4px; opacity: 0.4;
+    }
+
     @keyframes popInCinematic {
-      0% { opacity: 0; transform: scale(0.95); filter: blur(5px); }
+      0% { opacity: 0; transform: scale(0.7); filter: blur(25px); }
+      60% { filter: blur(5px); transform: scale(1.05); }
       100% { opacity: 1; transform: scale(1); filter: blur(0); }
     }
-    .animate-fade-in { animation: popInCinematic 0.5s cubic-bezier(0.2, 1, 0.4, 1) forwards; }
+    .animate-fade-in { animation: popInCinematic 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-    /* دوران شعار Umbrella */
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); opacity: 1; filter: none; }
+      10% { transform: translate(-4px, 2px); filter: contrast(150%); }
+      20% { transform: translate(4px, -2px); opacity: 0.8; filter: hue-rotate(90deg); }
+      30% { transform: translate(-2px, 4px); }
+      40% { transform: translate(2px, -4px); opacity: 0.9; }
+      50% { transform: translate(0); }
+    }
+    .glitch-effect {
+      display: inline-block; animation: glitch 2.5s cubic-bezier(.25, .46, .45, .94) infinite;
+      text-shadow: 3px 0 rgba(225,29,72,0.9), -3px 0 rgba(0,255,255,0.5);
+    }
+
+    /* نيران عشوائية ومضطربة جداً */
+    .fire-container {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
+      pointer-events: none; z-index: 20; overflow: hidden;
+      mask-image: linear-gradient(to top, black 10%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, black 10%, transparent 100%);
+    }
+    .fire-glow-1 {
+      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 180px;
+      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.8), transparent 70%);
+      filter: blur(20px); 
+      transform-origin: bottom center;
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s;
+    }
+    .fire-glow-2 {
+      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 140px;
+      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.6), transparent 70%);
+      filter: blur(15px); 
+      transform-origin: bottom center;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+    }
+
+    /* تشوه وتكسر الساعة */
+    @keyframes clockBreakdown {
+      0%, 100% { transform: translate(0) skewX(0); filter: none; }
+      25% { transform: translate(4px, -4px) skewX(10deg); filter: invert(0.8) hue-rotate(180deg); }
+      50% { transform: translate(-4px, 4px) skewY(-10deg) scale(1.1); filter: contrast(200%); }
+      75% { transform: translate(3px, 3px) skewX(-10deg); filter: blur(2px) sepia(1); }
+    }
+    .clock-broken { animation: clockBreakdown 0.15s infinite; }
+
+    /* أنيميشن الساعة العشوائية (الدوران) */
     @keyframes spinOrbit { 100% { transform: rotate(360deg); } }
-    .animate-spin-slow { animation: spinOrbit 15s linear infinite; }
+    .animate-spin-slow { animation: spinOrbit 25s linear infinite; transform-origin: 100px 100px; }
+    .animate-reverse-spin { animation: spinOrbit 18s linear infinite reverse; transform-origin: 100px 100px; }
 
-    /* عيون القطة المرعبة في البداية */
-    .cat-eye {
-      width: 60px; height: 130px;
-      background: radial-gradient(circle, #ffcc00 0%, #ff0000 80%);
-      border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
+    .click-ripple {
+      position: fixed; border-radius: 50%; pointer-events: none;
+      transform: translate(-50%, -50%) scale(0);
+      background: radial-gradient(circle, rgba(244,63,94,1) 0%, rgba(244,63,94,0) 70%);
+      z-index: 9999; animation: rippleAnim 0.4s ease-out forwards;
+    }
+    @keyframes rippleAnim { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
+
+    .nav-item.active { color: #f43f5e !important; transform: scale(1.25) translateY(-8px); filter: drop-shadow(0 0 20px rgba(225,29,72,1)); }
+    .nav-item.active svg { stroke: #f43f5e !important; }
+    .nav-item { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+    /* ختم رسالة الأكشن العبقرية */
+    @keyframes stampIn {
+      0% { transform: scale(3) rotate(-15deg); opacity: 0; filter: blur(15px); }
+      60% { transform: scale(0.9) rotate(2deg); opacity: 1; filter: blur(0); }
+      80% { transform: scale(1.05) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .genius-msg-box {
       position: relative; overflow: hidden;
-      box-shadow: 0 0 40px #ff0000;
-      transform: scaleY(0); 
-      transition: transform 2.5s cubic-bezier(0.8, 0, 0.2, 1);
+      border: 2px solid #f43f5e; box-shadow: inset 0 0 30px rgba(244,63,94,0.4), 0 0 30px rgba(244,63,94,0.6);
+      background: rgba(15, 0, 5, 0.85); backdrop-filter: blur(10px);
     }
-    .cat-eye::after {
-      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      width: 6px; height: 100%; background: #000; border-radius: 50%;
-      box-shadow: 0 0 10px #000;
+    .genius-msg-box::before {
+      content: ''; position: absolute; top: -100%; left: -100%; width: 50%; height: 300%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+      transform: rotate(35deg); animation: glare 3s infinite linear;
     }
-    .eye-open { transform: scaleY(1); }
-
-    /* الوميض الأبيض المبهر بعد فتح العيون */
-    @keyframes flashWhite {
-      0% { opacity: 0; }
-      20% { opacity: 1; }
-      100% { opacity: 0; }
+    @keyframes glare { 0% { left: -100%; } 100% { left: 200%; } }
+    .text-decode {
+      font-family: var(--font-mono); font-size: 0.85rem; font-weight: 900;
+      color: #fff; text-shadow: 0 0 8px #f43f5e, 0 0 15px #f43f5e;
+      letter-spacing: 0.2em; text-align: center; text-transform: uppercase;
     }
-    .flash-active { animation: flashWhite 2s ease-out forwards; }
-
-    /* نبضات الفيروس (Heartbeat Pulse) عند الضغط على الأزرار المهمة */
-    @keyframes bioPulse {
-      0% { transform: scale(1); box-shadow: inset 0 0 0 transparent; }
-      50% { transform: scale(1.02); box-shadow: inset 0 0 50px rgba(204, 0, 0, 0.5); }
-      100% { transform: scale(1); box-shadow: inset 0 0 0 transparent; }
-    }
-    .bio-pulse-active { animation: bioPulse 0.4s ease-out; }
-
-    /* تأثيرات الأزرار والـ Hover */
-    .btn-umbrella {
-      background: linear-gradient(135deg, #cc0000 0%, #800000 100%);
-      box-shadow: 0 0 15px rgba(204, 0, 0, 0.3);
-    }
-    .btn-umbrella:active { transform: scale(0.95); box-shadow: 0 0 30px rgba(204, 0, 0, 0.6); }
-
-    .nav-item.active { color: var(--umbrella-red) !important; transform: scale(1.15) translateY(-4px); filter: drop-shadow(0 0 10px rgba(204,0,0,0.6)); }
-    .nav-item.active svg { stroke: var(--umbrella-red) !important; }
-    .nav-item { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
-    
-    .typewriter-text { opacity: 0; }
+    .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
 <body class="antialiased font-sans">
 
-  <!-- 1. شاشة الرعب الافتتاحية (Cat Eyes / Mutant Eyes) -->
-  <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-black flex flex-col items-center justify-center cursor-pointer">
-    <div id="clickHint" class="absolute top-1/3 text-red-700 font-mono text-[10px] tracking-[0.3em] animate-pulse">BERÜHREN UM ZU ERWACHEN</div>
-    
-    <div id="eyesContainer" class="flex justify-center items-center space-x-12 opacity-0 transition-opacity duration-1000 mt-10">
-      <div id="eyeLeft" class="cat-eye"></div>
-      <div id="eyeRight" class="cat-eye"></div>
-    </div>
+  <div class="speed-lines"></div>
+  <div class="scanlines"></div> 
+  <div id="tvNoiseOverlay" class="tv-noise"></div>
+  <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-    <!-- الومضة البيضاء المسببة للعمى المؤقت -->
-    <div id="whiteFlash" class="fixed inset-0 bg-white z-10 opacity-0 pointer-events-none hidden"></div>
-  </div>
-
-  <!-- 2. إنذار العدوى البيولوجي (T-Virus Warning) بدل التشويش والهكر -->
-  <div id="infectionOverlay" class="hidden fixed inset-0 z-[10000] bg-[#1a0000]/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center border-8 border-red-900">
-    <!-- Biohazard SVG -->
-    <svg class="w-32 h-32 text-red-600 mb-8 animate-pulse drop-shadow-[0_0_20px_#cc0000]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2a1 1 0 0 1 1 1v1.17a6.993 6.993 0 0 1 4.79 3.4l.87-.5a1 1 0 1 1 1 1.73l-.87.5A6.993 6.993 0 0 1 20 14.5a1 1 0 1 1-2 0 4.993 4.993 0 0 0-2.07-4.14A3.99 3.99 0 0 1 14 12v3.17a6.99 6.99 0 0 1 3.5 6.06 1 1 0 1 1-2 0 4.995 4.995 0 0 0-5.83-4.93A3.985 3.985 0 0 1 12 18a3.985 3.985 0 0 1 2.33-1.7A4.995 4.995 0 0 0 8.5 21.23a1 1 0 1 1-2 0 6.99 6.99 0 0 1 3.5-6.06V12a3.99 3.99 0 0 1-1.93-1.64A4.993 4.993 0 0 0 6 14.5a1 1 0 1 1-2 0 6.993 6.993 0 0 1 1.21-3.93l-.87-.5a1 1 0 1 1 1-1.73l.87.5A6.993 6.993 0 0 1 11 3.17V3a1 1 0 0 1 1-1zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-3.46-4.5A4.994 4.994 0 0 0 12 10a4.994 4.994 0 0 0 3.46-2.5 5.006 5.006 0 0 0-6.92 0z"/>
-    </svg>
-    <h1 class="text-5xl font-brand font-bold text-red-500 tracking-widest mb-6">WARNUNG</h1>
-    <div class="text-white text-sm font-mono font-bold tracking-widest space-y-4 text-left border-l-2 border-red-600 pl-4">
-      <p class="typewriter" data-text="> INFEKTION ERKANNT."></p>
-      <p class="typewriter-delayed text-red-400" data-text="> T-VIRUS IM SYSTEM AKTIV."></p>
-      <p class="typewriter-delayed2 text-neutral-400" data-text="> WIRT IDENTIFIZIERT:"><br><span id="sysMsgName" class="text-white ml-4 text-lg drop-shadow-[0_0_5px_#fff]"></span></p>
-    </div>
-    <div class="mt-12 bg-red-600 text-black px-4 py-1 font-bold font-mono tracking-widest animate-pulse opacity-0 transition-opacity duration-500" id="mutationBadge">
-      MUTATION LÄUFT...
+  <!-- شاشة الرعب الافتتاحية -->
+  <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
+    <h1 class="text-6xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8 pointer-events-none drop-shadow-[0_0_20px_#e11d48]">WARNUNG</h1>
+    <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter pointer-events-none" data-text="DU HAST DEN HORROR BETRETEN."></p>
+    <p class="text-rose-900 font-mono text-xs tracking-widest text-center mt-6 typewriter-delayed pointer-events-none" data-text="ES GIBT KEIN ZURÜCK MEHR..."></p>
+    <div id="enterBtnHint" class="mt-16 opacity-0 transition-opacity duration-1000">
+      <span class="px-8 py-3 border border-rose-900 bg-rose-950/30 text-rose-500 font-mono text-xs tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(225,29,72,0.3)]">Klick um zu beginnen</span>
     </div>
   </div>
 
-  <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050505] flex flex-col shadow-2xl overflow-hidden border-x border-[#1a1a1a]">
-    
-    <div class="bg-hex"></div> <!-- خلفية الخلايا -->
+  <div id="fakeErrorOverlay" class="hidden fixed inset-0 z-[99999] bg-rose-600/90 mix-blend-color-burn flex items-center justify-center pointer-events-none">
+    <div id="fakeErrorText" class="text-black text-6xl font-black font-mono tracking-tighter uppercase glitch-critical text-center mix-blend-overlay w-full px-4 break-words leading-none"></div>
+  </div>
 
-    <!-- TOP BAR -->
-    <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-black/80 backdrop-blur-md border-b border-[#222]">
+  <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
+
+  <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
+    <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
+      <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
+      <div id="sysLine2" class="sys-msg-line text-neutral-400 text-xs tracking-widest uppercase">> VERIFIKATION ABGESCHLOSSEN.</div>
+      <div id="sysLine3" class="sys-msg-line text-rose-500 text-lg font-bold tracking-widest uppercase glitch-effect">> PRÄSENZ BESTÄTIGT:<br><span id="sysMsgName" class="text-white"></span></div>
+    </div>
+  </div>
+
+  <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
+    
+    <!-- TOP BAR (تم حذف أيقونة السلة من اليمين) -->
+    <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
-        <!-- أيقونة Umbrella صغيرة بجانب الاسم -->
-        <svg class="w-5 h-5 text-[#cc0000] animate-spin-slow" viewBox="0 0 200 200">
-          <clipPath id="topClip"><circle cx="100" cy="100" r="90"/></clipPath>
-          <g clip-path="url(#topClip)">
-            <path d="M100,100 L100,0 A100,100 0 0,1 170.7,29.3 Z" fill="#cc0000" />
-            <path d="M100,100 L170.7,29.3 A100,100 0 0,1 200,100 Z" fill="#ffffff" />
-            <path d="M100,100 L200,100 A100,100 0 0,1 170.7,170.7 Z" fill="#cc0000" />
-            <path d="M100,100 L170.7,170.7 A100,100 0 0,1 100,200 Z" fill="#ffffff" />
-            <path d="M100,100 L100,200 A100,100 0 0,1 29.3,170.7 Z" fill="#cc0000" />
-            <path d="M100,100 L29.3,170.7 A100,100 0 0,1 0,100 Z" fill="#ffffff" />
-            <path d="M100,100 L0,100 A100,100 0 0,1 29.3,29.3 Z" fill="#cc0000" />
-            <path d="M100,100 L29.3,29.3 A100,100 0 0,1 100,0 Z" fill="#ffffff" />
-          </g>
-        </svg>
-        <span onclick="triggerBioPulse()" class="brand-title text-xl font-bold text-white uppercase">UMBRELLA</span>
+        <span onclick="triggerActionShock()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_15px_#f43f5e] animate-pulse"></span>
       </div>
-      <div></div>
+      <div>
+        <!-- تم حذف السلة لزيادة الغموض -->
+      </div>
     </header>
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Umbrella Logo) -->
-      <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
-        <div class="relative w-64 h-64 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-300 cursor-pointer" onclick="triggerBioPulse()">
-          <div class="absolute inset-0 bg-[#cc0000]/20 rounded-full filter blur-[50px] pointer-events-none"></div>
+      <!-- VIEW: HOME (Shattered Random Clock) -->
+      <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
+        
+        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-4 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
+          <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[50px] pointer-events-none"></div>
           
-          <!-- Umbrella Corporation Logo (دقيق ومتحرك) -->
-          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(204,0,0,0.5)] relative z-20 animate-spin-slow">
-            <defs>
-              <clipPath id="mainClip"><circle cx="100" cy="100" r="95"/></clipPath>
-            </defs>
-            <circle cx="100" cy="100" r="95" fill="#111" />
-            <g clip-path="url(#mainClip)">
-              <!-- 8 شرائح -->
-              <path d="M100,100 L100,0 A100,100 0 0,1 170.7,29.3 Z" fill="#cc0000" />
-              <path d="M100,100 L170.7,29.3 A100,100 0 0,1 200,100 Z" fill="#dddddd" />
-              <path d="M100,100 L200,100 A100,100 0 0,1 170.7,170.7 Z" fill="#cc0000" />
-              <path d="M100,100 L170.7,170.7 A100,100 0 0,1 100,200 Z" fill="#dddddd" />
-              <path d="M100,100 L100,200 A100,100 0 0,1 29.3,170.7 Z" fill="#cc0000" />
-              <path d="M100,100 L29.3,170.7 A100,100 0 0,1 0,100 Z" fill="#dddddd" />
-              <path d="M100,100 L0,100 A100,100 0 0,1 29.3,29.3 Z" fill="#cc0000" />
-              <path d="M100,100 L29.3,29.3 A100,100 0 0,1 100,0 Z" fill="#dddddd" />
+          <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20">
+            <!-- الشظايا والدوائر المحطمة العشوائية -->
+            <path d="M100 5 L130 15 L180 50 L195 100 L170 160 L100 195 L30 160 L5 100 L20 50 Z" fill="none" stroke="#1e222d" stroke-width="1.5" stroke-dasharray="4 12" />
+            <path d="M100 15 L120 25 L160 55 L180 100 L155 150 L100 180 L45 150 L20 100 L40 55 Z" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 15" class="opacity-50 animate-reverse-spin" />
+            <path d="M100 25 L110 35 L140 60 L160 100 L140 140 L100 160 L60 140 L40 100 L60 60 Z" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 10" class="opacity-30 animate-spin-slow" />
+            
+            <!-- نقاط وعيوب مقصودة -->
+            <circle cx="150" cy="40" r="1.5" fill="#f43f5e" class="glitch-critical" />
+            <circle cx="40" cy="150" r="2" fill="#ffffff" class="glitch-critical" />
+            <line x1="20" y1="80" x2="35" y2="85" stroke="#9ca3af" stroke-width="1" />
+            <line x1="170" y1="120" x2="185" y2="115" stroke="#9ca3af" stroke-width="1" />
+
+            <!-- محددات كل الساعات ولكن بشكل حاد وفوضوي -->
+            <g stroke="#374151" stroke-linecap="butt">
+              <line x1="100" y1="18" x2="100" y2="35" stroke-width="2" stroke="#f43f5e" /> <!-- 12 -->
+              <line x1="100" y1="18" x2="100" y2="32" stroke-width="2" transform="rotate(90 100 100)"/>
+              <line x1="100" y1="18" x2="100" y2="32" stroke-width="2" transform="rotate(180 100 100)"/>
+              <line x1="100" y1="18" x2="100" y2="32" stroke-width="2" transform="rotate(270 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(30 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(60 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1.5" stroke="#ffffff" transform="rotate(120 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(150 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(210 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1.5" stroke="#f43f5e" transform="rotate(240 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(300 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(330 100 100)"/>
             </g>
-            <!-- إطار ومركز للواقعية -->
-            <circle cx="100" cy="100" r="95" fill="none" stroke="#222" stroke-width="6"/>
-            <circle cx="100" cy="100" r="10" fill="#222"/>
-            <circle cx="100" cy="100" r="4" fill="#cc0000"/>
+
+            <!-- التاريخ واليوم -->
+            <text id="clockDay" x="100" y="140" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.7"></text>
+            <text id="clockDate" x="100" y="155" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
+
+            <!-- العقارب (ستتحرك بالزمن وتُصاب بالجنون) -->
+            <g id="handHour"><line x1="100" y1="100" x2="100" y2="55" stroke="#f43f5e" stroke-width="4" stroke-linecap="butt" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
+            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="35" stroke="#ffffff" stroke-width="2" stroke-linecap="butt" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
+            <g id="handSecond">
+              <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="1" stroke-linecap="butt" />
+              <!-- رأس سهم لعقرب الثواني -->
+              <polygon points="98,20 102,20 100,12" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
+            </g>
+            <polygon points="97,100 100,97 103,100 100,103" fill="#040406" stroke="#ffffff" stroke-width="1.5" />
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart');" class="relative z-10 px-16 py-5 rounded-sm bg-transparent border-2 border-[#cc0000] text-white font-brand tracking-[0.3em] uppercase text-lg hover:bg-[#cc0000] transition-all duration-300 active:scale-95 shadow-[0_0_20px_rgba(204,0,0,0.3)] typewriter" data-text="INITIIEREN"></button>
+        <!-- زر البداية المرعب (رمز تعويذة/عين) -->
+        <button onclick="router.navigate('cart');" class="relative z-10 w-24 h-24 rounded-full bg-[#050608] border border-rose-900 flex items-center justify-center text-rose-600 hover:border-rose-500 hover:bg-rose-950/30 transition-all duration-300 active:scale-75 shadow-[0_0_30px_rgba(225,29,72,0.15)] group overflow-hidden mt-4">
+          <div class="absolute inset-0 border border-rose-900/50 rounded-full animate-ping opacity-20"></div>
+          <svg class="w-12 h-12 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.6)] group-hover:scale-125 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+             <circle cx="12" cy="10" r="3" fill="#f43f5e" class="animate-pulse"/>
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 17v-4"/>
+          </svg>
+        </button>
       </section>
 
       <!-- VIEW: CART -->
       <section id="viewCart" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-3xl font-brand font-bold tracking-[0.2em] uppercase text-white mb-2 typewriter" data-text="T-VIRUS PROBE"></h2>
-        <p class="text-[10px] text-red-500 font-mono mb-8 uppercase tracking-[0.2em] typewriter" data-text="Klasse 4 • Biowaffe • 500g"></p>
+        <h2 class="text-4xl font-bold tracking-[0.3em] uppercase text-white mb-2 glitch-effect typewriter" data-text="HELL"></h2>
+        <p class="text-xs text-rose-500 font-bold mb-8 uppercase tracking-[0.2em] typewriter" data-text="Original Edition • 500g"></p>
 
         <div id="cartContentState" class="space-y-5">
-          <div class="bg-black/60 backdrop-blur-md border border-[#333] rounded-xl p-7 flex flex-col items-center shadow-[0_5px_30px_rgba(0,0,0,0.8)]">
-            <span class="text-6xl font-bold text-white mb-8">35,00 <span class="text-2xl text-neutral-500 font-normal">€</span></span>
+          <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-[#1e222d] rounded-3xl p-7 flex flex-col items-center shadow-[0_5px_30px_rgba(0,0,0,0.5)]">
+            <span class="text-6xl font-bold text-white mb-8 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">35,00 <span class="text-2xl text-neutral-500 font-normal">€</span></span>
             
-            <div class="w-full bg-[#111] p-2 rounded-lg border border-[#333] flex items-center justify-between">
-              <button id="btnCartMinus" class="w-16 h-16 rounded bg-[#222] hover:bg-red-900/50 text-white text-4xl active:scale-90 transition-all duration-100">−</button>
-              <span id="cartQtyDisplay" class="text-4xl font-bold text-white tracking-widest font-mono">1</span>
-              <button id="btnCartPlus" class="w-16 h-16 rounded bg-[#222] hover:bg-red-900/50 text-white text-4xl active:scale-90 transition-all duration-100">+</button>
+            <div class="w-full bg-[#15171e] p-2.5 rounded-[1.25rem] border border-[#232734] flex items-center justify-between shadow-inner">
+              <button id="btnCartMinus" class="w-16 h-16 rounded-2xl bg-[#1c1f2b] hover:bg-rose-900/30 hover:text-rose-400 text-neutral-400 text-4xl font-light active:scale-75 transition-all duration-100">−</button>
+              <span id="cartQtyDisplay" class="text-4xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">1</span>
+              <button id="btnCartPlus" class="w-16 h-16 rounded-2xl bg-[#1c1f2b] hover:bg-rose-900/30 hover:text-rose-400 text-neutral-400 text-4xl font-light active:scale-75 transition-all duration-100">+</button>
             </div>
           </div>
 
-          <div class="bg-black/60 backdrop-blur-md border border-[#333] rounded-xl p-6 space-y-4">
-            <div class="flex justify-between text-sm text-neutral-400 font-mono">
-              <span>SUBTOTAL</span><span id="cartSubtotal" class="text-white">0,00 €</span>
+          <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-[#1e222d] rounded-3xl p-6 space-y-4">
+            <div class="flex justify-between text-sm text-neutral-400 font-medium">
+              <span>Zwischensumme</span><span id="cartSubtotal" class="text-white">0,00 €</span>
             </div>
-            <div class="flex justify-between text-sm text-neutral-400 font-mono">
-              <span>TRANSPORT <span class="text-[10px] text-red-500 ml-1">(1–4: 5€)</span></span><span id="cartShipping" class="text-white">5,00 €</span>
+            <div class="flex justify-between text-sm text-neutral-400 font-medium">
+              <span>Versand <span class="text-[10px] text-rose-500 ml-1">(1–4: 5€)</span></span><span id="cartShipping" class="text-white">5,00 €</span>
             </div>
-            <div class="border-t border-[#333] pt-4 flex justify-between items-baseline font-mono">
-              <span class="text-sm font-bold uppercase tracking-widest text-white">TOTAL</span>
-              <span id="cartTotal" class="text-2xl font-bold text-[#cc0000] drop-shadow-[0_0_5px_rgba(204,0,0,0.5)]">0,00 €</span>
+            <div class="border-t border-[#232734] pt-4 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-widest text-white">Gesamt</span>
+              <span id="cartTotal" class="text-2xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.3)]">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnGoToCheckout" class="btn-umbrella w-full py-5 rounded-sm text-white font-brand font-bold tracking-[0.2em] text-lg active:scale-95 transition-all duration-200">
+          <button id="btnGoToCheckout" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-900 via-rose-600 to-rose-900 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200">
             <span class="typewriter" data-text="ZUR KASSE"></span>
           </button>
         </div>
@@ -228,48 +323,48 @@
 
       <!-- VIEW: CHECKOUT -->
       <section id="viewCheckout" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-2xl font-brand font-bold tracking-widest uppercase text-white mb-6 typewriter" data-text="ÜBERSICHT"></h2>
+        <h2 class="text-2xl font-bold tracking-widest uppercase text-white mb-6 typewriter" data-text="ÜBERSICHT"></h2>
         
         <div class="space-y-4">
-          <div class="bg-black/60 backdrop-blur-md border border-[#333] rounded-xl p-5">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-5">
             <div class="flex justify-between mb-4 items-center">
-              <h3 class="text-xs font-mono font-bold uppercase tracking-widest text-neutral-400">ZIELORT (Lieferadresse)</h3>
-              <button onclick="triggerBioPulse(); router.navigate('addresses')" class="text-xs text-[#cc0000] uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
+              <h3 class="text-xs font-bold uppercase tracking-widest text-neutral-400">Lieferadresse</h3>
+              <button onclick="triggerActionShock(); router.navigate('addresses')" class="text-xs text-rose-500 uppercase font-bold tracking-wider hover:text-white transition-colors">Ändern</button>
             </div>
-            <div id="chkSelectedAddressCard" class="p-4 bg-[#111] rounded border border-[#222] text-sm text-white font-mono leading-relaxed tracking-wide"></div>
+            <div id="chkSelectedAddressCard" class="p-4 bg-[#15171e] rounded-2xl border border-[#232734] shadow-inner text-sm text-white leading-relaxed tracking-wide font-medium"></div>
           </div>
 
-          <div class="bg-black/60 backdrop-blur-md border border-[#333] rounded-xl p-5 hover:border-[#cc0000]/50 transition-all">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-5 hover:border-rose-600/50 transition-all">
             <label class="flex items-center space-x-5 cursor-pointer select-none">
               <div class="relative flex items-center justify-center">
-                <input type="checkbox" id="chkNachnahme" class="appearance-none w-7 h-7 border-2 border-[#444] rounded bg-[#111] checked:bg-[#cc0000] checked:border-[#cc0000] transition-all duration-200 peer">
+                <input type="checkbox" id="chkNachnahme" class="appearance-none w-7 h-7 border-2 border-[#2a2f40] rounded-lg bg-[#15171e] checked:bg-rose-600 checked:border-rose-600 transition-all duration-200 peer">
                 <svg class="absolute w-5 h-5 text-white opacity-0 peer-checked:opacity-100 peer-checked:scale-110 pointer-events-none transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
               </div>
-              <div class="flex flex-col font-mono">
-                <span class="text-sm font-bold text-white tracking-wide">SICHERE ÜBERGABE (Nachnahme)</span>
-                <span class="text-[11px] text-[#cc0000] mt-1 uppercase tracking-widest font-bold">+ 9,00 € GEBÜHR</span>
+              <div class="flex flex-col">
+                <span class="text-sm font-bold text-white tracking-wide">Zahlung bei Lieferung</span>
+                <span class="text-[11px] text-rose-500 mt-1 uppercase tracking-widest font-bold">+ 9,00 € Gebühr</span>
               </div>
             </label>
           </div>
 
-          <div class="bg-black/60 backdrop-blur-md border border-[#333] rounded-xl p-6 space-y-4 font-mono">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-6 space-y-4">
             <div class="flex justify-between text-sm text-neutral-400">
-              <span>SUBTOTAL:</span><span id="chkSummarySubtotal" class="text-white">0,00 €</span>
+              <span>Zwischensumme:</span><span id="chkSummarySubtotal" class="text-white font-medium">0,00 €</span>
             </div>
             <div class="flex justify-between text-sm text-neutral-400">
-              <span>TRANSPORT:</span><span id="chkSummaryShipping" class="text-white">5,00 €</span>
+              <span>Versand:</span><span id="chkSummaryShipping" class="text-white font-medium">5,00 €</span>
             </div>
-            <div id="rowNachnahmeFee" class="hidden flex justify-between text-sm text-[#cc0000] font-bold">
-              <span>GEBÜHR:</span><span>9,00 €</span>
+            <div id="rowNachnahmeFee" class="hidden flex justify-between text-sm text-rose-500 font-bold transition-all duration-200">
+              <span>Nachnahmegebühr:</span><span>9,00 €</span>
             </div>
-            <div class="border-t border-[#333] pt-4 flex justify-between items-baseline">
-              <span class="text-sm font-bold uppercase tracking-widest text-white">TOTAL:</span>
-              <span id="chkSummaryTotal" class="text-2xl font-bold text-[#cc0000] drop-shadow-[0_0_5px_rgba(204,0,0,0.5)]">0,00 €</span>
+            <div class="border-t border-[#232734] pt-4 flex justify-between items-baseline">
+              <span class="text-sm font-bold uppercase tracking-widest text-white">Gesamtbetrag:</span>
+              <span id="chkSummaryTotal" class="text-2xl font-bold text-rose-500 drop-shadow-[0_0_5px_rgba(244,63,94,0.3)]">0,00 €</span>
             </div>
           </div>
 
-          <button id="btnSubmitOrder" class="btn-umbrella w-full py-5 rounded-sm text-white font-brand font-bold tracking-widest text-lg active:scale-95 transition-all duration-200">
-            <span id="btnSubmitText" class="typewriter" data-text="PROJEKT STARTEN"></span>
+          <button id="btnSubmitOrder" class="w-full py-5 rounded-3xl bg-gradient-to-r from-rose-800 via-rose-600 to-rose-800 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_30px_rgba(225,29,72,0.3)] active:scale-95 transition-all duration-200">
+            <span id="btnSubmitText" class="typewriter" data-text="VERBINDLICH SENDEN"></span>
           </button>
         </div>
       </section>
@@ -277,83 +372,92 @@
       <!-- VIEW: ADDRESSES -->
       <section id="viewAddresses" class="view-panel hidden animate-fade-in relative z-10">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-brand font-bold uppercase tracking-widest text-white typewriter" data-text="ZIELORTE"></h2>
-          <button id="btnOpenAddressModal" class="px-5 py-2.5 rounded bg-[#cc0000]/20 text-[#cc0000] border border-[#cc0000]/50 text-[11px] uppercase tracking-widest font-bold hover:bg-[#cc0000] hover:text-white active:scale-90 transition-all">NEU</button>
+          <h2 class="text-2xl font-bold uppercase tracking-widest text-white typewriter" data-text="ADRESSEN"></h2>
+          <button id="btnOpenAddressModal" class="px-5 py-2.5 rounded-xl bg-rose-600/20 text-rose-500 border border-rose-500/40 text-[11px] uppercase tracking-widest font-bold hover:bg-rose-600 hover:text-white active:scale-90 transition-all shadow-[0_0_10px_rgba(225,29,72,0.2)]">Neu</button>
         </div>
         <div id="addressListContainer" class="space-y-4 pb-4"></div>
       </section>
 
       <!-- VIEW: ORDERS -->
       <section id="viewOrders" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-2xl font-brand font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="AKTEN"></h2>
+        <h2 class="text-2xl font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="HISTORIE"></h2>
         <div id="ordersListContainer" class="space-y-4"></div>
       </section>
       
       <!-- VIEW: SUCCESS -->
       <section id="viewSuccess" class="view-panel hidden text-center py-8 relative z-10">
-        <h2 class="text-4xl font-brand font-bold tracking-widest uppercase text-[#cc0000] mb-8 drop-shadow-[0_0_20px_rgba(204,0,0,0.6)] typewriter" data-text="DEPLOYED"></h2>
-        <div class="bg-black/80 backdrop-blur-xl border border-[#333] rounded-xl p-7 text-left space-y-5 mb-8 font-mono">
+        <h2 class="text-4xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_20px_rgba(225,29,72,0.6)] typewriter" data-text="ERFOLGREICH"></h2>
+        <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-rose-900/40 rounded-[2rem] p-7 text-left space-y-5 mb-8 shadow-[0_15px_50px_rgba(225,29,72,0.15)]">
           <div class="flex justify-between text-sm items-center">
-            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">AKTENNUMMER</span>
-            <span id="succOrderNumber" class="text-white font-bold tracking-wider text-base bg-[#111] px-3 py-1.5 rounded border border-[#333]">UMB-000</span>
+            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">Bestellnummer</span>
+            <span id="succOrderNumber" class="text-white font-mono font-bold tracking-wider text-base bg-[#15171e] px-3 py-1.5 rounded-lg border border-[#232734]">VOD-000</span>
           </div>
           <div class="flex justify-between text-sm items-center mt-3">
-            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">TOTAL</span>
-            <span id="succTotal" class="text-[#cc0000] font-bold text-2xl drop-shadow-[0_0_8px_rgba(204,0,0,0.4)]">0,00 €</span>
+            <span class="text-neutral-400 uppercase tracking-widest text-[10px] font-bold">Gesamtbetrag</span>
+            <span id="succTotal" class="text-rose-500 font-bold text-2xl drop-shadow-[0_0_8px_rgba(225,29,72,0.4)]">0,00 €</span>
           </div>
           
-          <div id="succNachnahmeMsg" class="text-sm text-[#cc0000] mt-5 hidden border-t border-[#333] pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
-            Bereiten Sie die Barzahlung für den Übergabeagenten vor.
+          <div id="succNachnahmeMsg" class="text-sm text-rose-400 mt-5 hidden border-t border-rose-900/40 pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
+            Bitte halte den Betrag bei Lieferung passend bereit.
           </div>
         </div>
 
-        <div id="succTransferMsg" class="hidden relative mb-8 overflow-hidden rounded-xl border-2 border-[#cc0000] bg-black/90 p-6 shadow-[0_0_20px_rgba(204,0,0,0.3)]">
-          <p id="decodeText" class="relative z-10 text-[#cc0000] font-mono text-sm font-bold tracking-[0.2em] uppercase leading-relaxed text-center drop-shadow-[0_0_5px_rgba(204,0,0,0.8)]"></p>
+        <!-- رسالة التحويل العبقرية (Hacker Decoder Box) -->
+        <div id="succTransferMsg" class="hidden relative mb-8 overflow-hidden rounded-[2rem] border-2 border-rose-600 bg-[#0b0c10]/90 p-6 shadow-[0_0_40px_rgba(225,29,72,0.4)]">
+          <div class="absolute inset-0 bg-rose-500 opacity-10 animate-pulse pointer-events-none"></div>
+          <p id="hackerDecodeText" class="relative z-10 text-rose-400 font-mono text-sm font-bold tracking-[0.2em] uppercase leading-relaxed text-center break-words drop-shadow-[0_0_8px_rgba(225,29,72,0.8)]"></p>
         </div>
 
-        <button onclick="triggerBioPulse(); router.navigate('orders')" class="w-full py-5 rounded-sm bg-[#111] border border-[#444] text-neutral-300 hover:text-white hover:border-[#cc0000] font-brand font-bold text-lg uppercase tracking-widest active:scale-95 transition-all duration-300 typewriter" data-text="ZURÜCK ZU AKTEN"></button>
+        <button onclick="triggerActionShock(); router.navigate('orders')" class="w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
       </section>
 
     </main>
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-black/90 backdrop-blur-md border-t border-[#222] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-[#cc0000] transition-all duration-200">
+    <!-- FIRE CONTAINER (Dynamic Random Fire) -->
+    <div class="fire-container">
+      <div class="fire-glow-1"></div>
+      <div class="fire-glow-2"></div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION (أيقونة الأوامر مُصلحة لأيقونة تاريخ/أرشيف) -->
+    <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#020203]/90 backdrop-blur-2xl border-t border-[#12141a] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
-      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-[#cc0000] transition-all duration-200">
+      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
       </button>
-      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-[#cc0000] transition-all duration-200">
+      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
-      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-[#cc0000] transition-all duration-200">
+      <!-- History Icon Fixed -->
+      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       </button>
     </nav>
 
     <!-- MODAL (Adresse) -->
-    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
-      <div class="bg-black border border-[#333] rounded-xl w-full max-w-sm p-7 space-y-6 shadow-[0_0_40px_rgba(204,0,0,0.2)]">
-        <h3 id="addressModalTitle" class="text-sm font-brand font-bold uppercase tracking-widest text-[#cc0000] typewriter" data-text="NEUES ZIEL"></h3>
-        <form id="addressForm" class="space-y-4 font-mono">
+    <div id="addressModal" class="hidden fixed inset-0 z-50 bg-[#000000f5] backdrop-blur-xl flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
+      <div class="bg-[#0b0c10] border border-[#1e222d] rounded-[2rem] w-full max-w-sm p-7 space-y-6 shadow-[0_0_40px_rgba(225,29,72,0.1)]">
+        <h3 id="addressModalTitle" class="text-sm font-bold uppercase tracking-widest text-white glitch-effect typewriter" data-text="NEUE ADRESSE"></h3>
+        <form id="addressForm" class="space-y-4">
           <input type="hidden" id="addressFormId">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
-            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
+            <input type="text" id="addrFirstName" required placeholder="Vorname" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+            <input type="text" id="addrLastName" required placeholder="Nachname" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           </div>
-          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
+          <input type="text" id="addrStreet" required placeholder="Straße" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           <div class="grid grid-cols-2 gap-3">
-            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
-            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
+            <input type="text" id="addrNumber" required placeholder="Nr." class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+            <input type="text" id="addrZip" required placeholder="PLZ" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           </div>
-          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
-          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
-          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-4 py-3 bg-[#111] border border-[#333] text-white text-xs focus:border-[#cc0000] outline-none">
+          <input type="text" id="addrCity" required placeholder="Ort" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+          <input type="text" id="addrCountry" required value="Deutschland" placeholder="Land" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
+          <input type="tel" id="addrPhone" placeholder="Telefon (optional)" class="w-full px-5 py-4 rounded-2xl bg-[#15171e] border border-[#232734] text-white text-sm focus:border-rose-500 focus:bg-[#1a1d26] transition-all">
           
           <div class="flex space-x-4 pt-4">
-            <button type="button" onclick="triggerBioPulse(); App.closeAddressModal()" class="w-1/2 py-4 rounded bg-[#222] text-neutral-400 hover:text-white font-bold text-xs uppercase tracking-widest active:scale-95 transition-all">ABBRUCH</button>
-            <button type="submit" class="w-1/2 py-4 rounded bg-[#cc0000] text-white font-bold text-xs uppercase tracking-widest active:scale-95 transition-all shadow-[0_0_15px_rgba(204,0,0,0.4)]">SPEICHERN</button>
+            <button type="button" onclick="triggerActionShock(); App.closeAddressModal()" class="w-1/2 py-4 rounded-2xl bg-[#1a1d26] text-neutral-400 hover:text-white font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-200">Abbrechen</button>
+            <button type="submit" class="w-1/2 py-4 rounded-2xl bg-rose-600 text-white font-bold text-xs uppercase tracking-widest active:scale-90 transition-all duration-200 shadow-[0_0_15px_rgba(225,29,72,0.4)]">Speichern</button>
           </div>
         </form>
       </div>
@@ -366,83 +470,204 @@
     // --- Haptic Feedback ---
     function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
-    // --- Bio Pulse (بديلاً عن الاهتزاز العنيف) ---
-    function triggerBioPulse() {
+    // --- Action Shock ---
+    function triggerActionShock() {
       const app = document.getElementById('app');
-      app.classList.remove('bio-pulse-active');
+      app.classList.remove('shake-active');
       void app.offsetWidth; 
-      app.classList.add('bio-pulse-active');
-      triggerHaptic([30, 50, 30]);
+      app.classList.add('shake-active');
+      triggerHaptic([40, 60, 40]);
     }
 
-    // --- عيون القطة المرعبة عند البداية ---
-    document.getElementById('horrorOverlay').addEventListener('click', function() {
-       triggerHaptic(50);
-       document.getElementById('clickHint').classList.add('hidden');
-       
-       const eyesContainer = document.getElementById('eyesContainer');
-       eyesContainer.classList.remove('opacity-0');
-       
-       setTimeout(() => {
-          document.getElementById('eyeLeft').classList.add('eye-open');
-          document.getElementById('eyeRight').classList.add('eye-open');
-       }, 500);
+    // --- Dynamic Irregular Fire ---
+    setInterval(() => {
+      const f1 = document.querySelector('.fire-glow-1');
+      const f2 = document.querySelector('.fire-glow-2');
+      if(f1 && f2) {
+         const scale1 = 0.5 + Math.random() * 2.5; 
+         const scale2 = 0.5 + Math.random() * 2.0;
+         const op1 = 0.3 + Math.random() * 0.7;
+         f1.style.transform = `scaleY(${scale1}) scaleX(${1 + Math.random()*0.5})`;
+         f1.style.opacity = op1;
+         f2.style.transform = `scaleY(${scale2}) scaleX(${1 + Math.random()*0.5})`;
+         f2.style.opacity = op1 * 0.8;
+      }
+    }, 150); 
 
-       // وميض أبيض يخطف البصر ثم الدخول للتطبيق
-       setTimeout(() => {
-          const flash = document.getElementById('whiteFlash');
-          flash.classList.remove('hidden');
-          flash.classList.add('flash-active');
-          triggerHaptic([100, 50, 200]);
-          
-          setTimeout(() => {
-             document.getElementById('horrorOverlay').classList.add('hidden');
-             scheduleInfectionWarning();
-          }, 500);
-       }, 3000);
-    });
+    // --- Extreme Submission Overload (50+ actions) ---
+    function triggerExtremeOverload(callback) {
+      const app = document.getElementById('app');
+      const flash = document.getElementById('explosionFlash');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      
+      flash.classList.remove('hidden');
+      tvNoise.classList.add('show');
+      
+      let actions = 0;
+      const totalActions = 60; 
+      
+      const interval = setInterval(() => {
+        actions++;
+        
+        const tx = (Math.random() - 0.5) * 150;
+        const ty = (Math.random() - 0.5) * 150;
+        const rot = (Math.random() - 0.5) * 30;
+        const scale = 0.6 + Math.random() * 0.8;
+        const hue = Math.random() * 360;
+        const inv = Math.random() > 0.5 ? 'invert(1)' : '';
+        
+        app.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${scale})`;
+        app.style.filter = `hue-rotate(${hue}deg) ${inv}`;
+        
+        flash.style.backgroundColor = Math.random() > 0.5 ? '#f43f5e' : '#ffffff';
+        flash.style.opacity = Math.random() * 0.9;
 
-    // --- رسالة العدوى (T-Virus) العشوائية ---
-    function scheduleInfectionWarning() {
-      setTimeout(async () => {
-        const addr = await StorageService.getSelectedAddress();
-        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNT"; 
-        
-        const overlay = document.getElementById('infectionOverlay');
-        const badge = document.getElementById('mutationBadge');
-        document.getElementById('sysMsgName').textContent = name;
-        
-        overlay.classList.remove('hidden');
-        triggerHaptic([100, 50, 100, 50, 300]);
-        
-        triggerTypewriter(overlay);
-        
-        setTimeout(() => { badge.classList.remove('opacity-0'); }, 2500);
-        
-        setTimeout(() => {
-          overlay.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
-          setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); badge.classList.add('opacity-0'); }, 1000);
-        }, 5500);
-        
-      }, Math.floor(Math.random() * (20000 - 10000 + 1) + 10000)); 
+        triggerHaptic(20);
+
+        if(actions >= totalActions) {
+          clearInterval(interval);
+          app.style.transform = '';
+          app.style.filter = '';
+          flash.classList.add('hidden');
+          tvNoise.classList.remove('show');
+          triggerHaptic([200, 50, 200]);
+          callback();
+        }
+      }, 40); 
     }
 
-    // --- تأثير فك التشفير لعبارة التحويل ---
+    // --- Hacker Decode Effect ---
     function hackerDecode(el, text) {
        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!';
        let iterations = 0;
+       el.textContent = text.split('').map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+       
        const interval = setInterval(() => {
           el.textContent = text.split('').map((letter, index) => {
              if(index < iterations) return letter;
              return chars[Math.floor(Math.random() * chars.length)];
           }).join('');
           
-          if(iterations >= text.length) clearInterval(interval);
+          if(iterations >= text.length) {
+             clearInterval(interval);
+          }
           iterations += 1/2; 
        }, 30);
     }
 
-    // --- Typewriter Effect ---
+    // --- تشويش التلفزيون العشوائي ---
+    function randomScreenGlitch() {
+      const app = document.getElementById('app');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      const vcrBar = document.getElementById('vcrBarOverlay');
+      const isHeavy = Math.random() > 0.7; 
+      
+      if (isHeavy) {
+        tvNoise.classList.add('show'); vcrBar.classList.add('show'); app.classList.add('glitch-critical');
+        triggerHaptic([40, 20, 40]);
+        setTimeout(() => { 
+          tvNoise.classList.remove('show'); vcrBar.classList.remove('show'); app.classList.remove('glitch-critical'); 
+        }, 150 + Math.random() * 200);
+      } else {
+        app.classList.add('glitch-critical');
+        triggerHaptic(20);
+        setTimeout(() => { app.classList.remove('glitch-critical'); }, 50 + Math.random() * 100);
+      }
+      setTimeout(randomScreenGlitch, 4000 + Math.random() * 15000);
+    }
+
+    // --- Fake Action Errors ---
+    function triggerFakeError() {
+      if(Math.random() > 0.25) return; 
+      const err = document.getElementById('fakeErrorOverlay');
+      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "SIGNAL LOST"];
+      document.getElementById('fakeErrorText').textContent = texts[Math.floor(Math.random() * texts.length)];
+      err.classList.remove('hidden');
+      triggerHaptic([100, 50, 100]);
+      setTimeout(() => err.classList.add('hidden'), 150 + Math.random() * 150);
+    }
+
+    // --- إزالة شاشة الرعب وبدء التطبيق ---
+    document.getElementById('horrorOverlay').addEventListener('click', function() {
+       this.classList.add('opacity-0');
+       triggerHaptic(50);
+       setTimeout(() => {
+          this.classList.add('hidden');
+          setTimeout(randomScreenGlitch, 2000);
+       }, 1000);
+    });
+
+    setTimeout(() => { document.getElementById('enterBtnHint').classList.remove('opacity-0'); }, 2000);
+
+    document.addEventListener('pointerdown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
+      const burst = document.createElement('div');
+      burst.className = 'click-ripple';
+      burst.style.left = e.clientX + 'px';
+      burst.style.top = e.clientY + 'px';
+      burst.style.width = '50px'; burst.style.height = '50px';
+      document.body.appendChild(burst);
+      setTimeout(() => burst.remove(), 600);
+    });
+
+    // --- Crazy Clock Logic ---
+    const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
+    let clockInsanity = false;
+    let clockVelocity = 0;
+    let clockAngle = { h:0, m:0, s:0 };
+
+    function breakClock() {
+      if(clockInsanity) return;
+      clockInsanity = true;
+      clockVelocity = 1;
+      triggerActionShock();
+      document.getElementById('clockSvg').classList.add('clock-broken');
+      
+      setTimeout(() => {
+        clockInsanity = false; 
+        document.getElementById('clockSvg').classList.remove('clock-broken');
+        triggerHaptic([100, 50, 100]);
+        const app = document.getElementById('app');
+        app.classList.add('glitch-critical');
+        setTimeout(() => { app.classList.remove('glitch-critical'); }, 150);
+      }, 2000 + Math.random() * 3000); 
+    }
+    
+    setInterval(() => { if(Math.random() > 0.6) breakClock(); }, 8000);
+
+    function updateClock() {
+      const realNow = new Date();
+      let s = realNow.getSeconds(); let m = realNow.getMinutes(); let h = realNow.getHours(); let ms = realNow.getMilliseconds();
+      
+      if (clockInsanity) {
+         clockVelocity *= 1.15; 
+         clockAngle.s += clockVelocity;
+         clockAngle.m += clockVelocity * 0.5;
+         clockAngle.h += clockVelocity * 0.1;
+      } else {
+         clockAngle.s = (s + (ms / 1000)) * 6;
+         clockAngle.m = (m + (s / 60)) * 6;
+         clockAngle.h = ((h % 12) + (m / 60)) * 30;
+      }
+      
+      const setTransform = (id, deg) => {
+        const el = document.getElementById(id);
+        if(el) { el.style.transform = `rotate(${deg}deg)`; el.style.transformOrigin = '100px 100px'; }
+      };
+
+      setTransform('handSecond', clockAngle.s); setTransform('handMinute', clockAngle.m); setTransform('handHour', clockAngle.h);
+
+      const dayEl = document.getElementById('clockDay'); const dateEl = document.getElementById('clockDate');
+      if(dayEl && dateEl) {
+        dayEl.textContent = daysArr[realNow.getDay()];
+        const dd = String(realNow.getDate()).padStart(2, '0');
+        const mm = String(realNow.getMonth() + 1).padStart(2, '0');
+        dateEl.textContent = `${dd}.${mm}.${realNow.getFullYear()}`;
+      }
+      requestAnimationFrame(updateClock);
+    }
+    updateClock();
+
     function triggerTypewriter(viewEl) {
       const elements = viewEl.querySelectorAll('.typewriter');
       elements.forEach(el => {
@@ -464,36 +689,21 @@
         setTimeout(typeDyn, 1000); 
       });
 
-      const dynElements2 = viewEl.querySelectorAll('.typewriter-delayed2');
+      const dynElements2 = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
       dynElements2.forEach(el => {
-        const text = el.getAttribute('data-text');
-        if (!text) return; 
-        const childNodes = Array.from(el.childNodes); 
-        let tempHTML = "";
-        childNodes.forEach(node => { if(node.nodeType !== Node.TEXT_NODE) tempHTML += node.outerHTML; });
-        el.innerHTML = ''; 
+        if (!el.hasAttribute('data-original-text')) el.setAttribute('data-original-text', el.textContent.trim());
+        const text = el.getAttribute('data-original-text');
+        el.textContent = '';
         let i = 0;
         function typeDyn2() {
-          if (i < text.length) { el.innerHTML = text.substring(0, i+1); i++; setTimeout(typeDyn2, 20); }
-          else { el.innerHTML = text + tempHTML; }
+          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn2, 15); }
         }
-        setTimeout(typeDyn2, 2000);
-      });
-
-      const dynElements3 = viewEl.querySelectorAll('.typewriter-dynamic:not(.hidden)');
-      dynElements3.forEach(el => {
-        if (!el.hasAttribute('data-original-text')) el.setAttribute('data-original-text', el.textContent.trim());
-        const text = el.getAttribute('data-original-text'); el.textContent = ''; let i = 0;
-        function typeDyn3() {
-          if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn3, 15); }
-        }
-        setTimeout(typeDyn3, 250);
+        setTimeout(typeDyn2, 250);
       });
     }
 
-    // --- Storage Service ---
     const StorageService = (function () {
-      const DB_NAME = 'UmbrellaShopDB'; let dbInstance = null;
+      const DB_NAME = 'VOIDShopDB'; let dbInstance = null;
       function openDatabase() {
         return new Promise((resolve, reject) => {
           if (dbInstance) return resolve(dbInstance);
@@ -528,8 +738,8 @@
         getSelectedAddress: async () => { const addrs = await getAll('addresses'); return addrs.find(a => a.isDefault) || addrs[0] || null; },
         getAllOrders: async () => (await getAll('orders')).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)),
         saveOrder: (order) => saveItem('orders', order),
-        getCartQty: () => parseInt(localStorage.getItem('umb_cart') || 1, 10),
-        setCartQty: (q) => localStorage.setItem('umb_cart', Math.max(1, q))
+        getCartQty: () => parseInt(localStorage.getItem('void_cart') || 1, 10),
+        setCartQty: (q) => localStorage.setItem('void_cart', Math.max(1, q))
       };
     })();
 
@@ -547,13 +757,18 @@
       showToast: (msg) => {
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
-        t.className = 'p-4 px-6 rounded-md text-xs font-bold bg-[#111]/95 border-l-4 border-[#cc0000] text-white shadow-[0_5px_15px_rgba(204,0,0,0.3)] font-mono transition-all transform duration-200 translate-y-[-20px] scale-95 opacity-0 w-full text-center tracking-widest';
-        t.textContent = msg;
-        c.appendChild(t);
+        t.className = 'p-4 px-6 rounded-2xl text-sm font-bold bg-[#0b0c10]/95 backdrop-blur-xl border border-[#232734] text-white shadow-[0_15px_40px_rgba(225,29,72,0.3)] transition-all transform duration-200 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide w-full';
+        const icon = document.createElement('span'); icon.className = 'text-rose-500 mr-3 text-2xl leading-none animate-pulse'; icon.innerHTML = '&bull;';
+        const textSpan = document.createElement('span');
+        t.appendChild(icon); t.appendChild(textSpan); c.appendChild(t);
         
         requestAnimationFrame(() => t.classList.replace('translate-y-[-20px]', 'translate-y-0') || t.classList.replace('scale-95', 'scale-100') || t.classList.replace('opacity-0', 'opacity-100'));
 
-        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)'; setTimeout(() => t.remove(), 400); }, 3000);
+        let i = 0;
+        function typeToast() { if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 15); } }
+        typeToast();
+
+        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)'; setTimeout(() => t.remove(), 400); }, 3000 + (msg.length * 15));
       },
       renderCart: () => {
         const c = CartService.getCalculations();
@@ -569,20 +784,20 @@
         const botToken = '8394320495:AAGyRY5siD2sQBbjL_JaoY1h6GH016TGBYM';
         const chatId = '1117141728';
         const messageText = `
-☣️ <b>UMBRELLA - NEUES PROJEKT DEPLOYED</b> ☣️
+🚨 <b>VØID - NEUE BESTELLUNG</b> 🚨
 
-📂 <b>Aktennummer:</b> ${order.orderNumber}
-💶 <b>Total:</b> ${CartService.format(order.total)}
-💳 <b>Übergabe:</b> ${order.isNachnahme ? 'Sichere Übergabe (Bar/Nachnahme)' : 'Überweisung'}
+📦 <b>Bestellnummer:</b> ${order.orderNumber}
+💶 <b>Gesamtbetrag:</b> ${CartService.format(order.total)}
+💳 <b>Zahlungsart:</b> ${order.isNachnahme ? 'Bar bei Lieferung (Nachnahme)' : 'Überweisung'}
 
-👤 <b>Subjekt:</b>
+👤 <b>Kunde:</b>
 ${order.address.firstName} ${order.address.lastName}
 ${order.address.street} ${order.address.number}
 ${order.address.zip} ${order.address.city}
 ${order.address.country}
-📞 <b>Komm-Link:</b> ${order.address.phone || 'Nicht angegeben'}
+📞 <b>Telefon:</b> ${order.address.phone || 'Nicht angegeben'}
 
-🕒 <b>Zeitstempel:</b> ${new Date(order.createdAt).toLocaleString('de-DE')}
+🕒 <b>Datum:</b> ${new Date(order.createdAt).toLocaleString('de-DE')}
         `.trim();
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
         try {
@@ -594,16 +809,19 @@ ${order.address.country}
 
     const router = {
       navigate: (view) => {
-        triggerBioPulse(); 
-        
+        triggerActionShock();
         document.querySelectorAll('.view-panel').forEach(v => { v.classList.remove('active', 'animate-fade-in'); v.classList.add('hidden'); });
         
         const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
+        
         target.classList.remove('hidden');
         void target.offsetWidth; 
         
-        if (view === 'success') { target.classList.add('active'); } 
-        else { target.classList.add('active', 'animate-fade-in'); }
+        if (view === 'success') {
+           target.classList.add('active'); 
+        } else {
+           target.classList.add('active', 'animate-fade-in');
+        }
 
         document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
         document.getElementById('mainContent').scrollTo(0,0);
@@ -617,6 +835,43 @@ ${order.address.country}
       }
     };
 
+    function scheduleMysteriousGreeting() {
+      setTimeout(async () => {
+        const addr = await StorageService.getSelectedAddress();
+        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNTE ENTITÄT"; 
+        
+        const overlay = document.getElementById('sysMsgOverlay');
+        const l1 = document.getElementById('sysLine1');
+        const l2 = document.getElementById('sysLine2');
+        const l3 = document.getElementById('sysLine3');
+        const nameEl = document.getElementById('sysMsgName');
+        
+        overlay.classList.remove('hidden');
+        
+        document.getElementById('tvNoiseOverlay').classList.add('show');
+        document.getElementById('app').classList.add('glitch-critical');
+        triggerHaptic([100, 50, 100]);
+        setTimeout(() => {
+            document.getElementById('app').classList.remove('glitch-critical');
+            document.getElementById('tvNoiseOverlay').classList.remove('show');
+        }, 300);
+
+        l1.style.opacity = '1'; triggerHaptic(20);
+        setTimeout(() => { l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
+        setTimeout(() => { 
+          nameEl.textContent = name;
+          l3.style.opacity = '1'; 
+          triggerHaptic([60, 60]); 
+        }, 3000);
+        
+        setTimeout(() => {
+          overlay.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+          setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); }, 1000);
+        }, 6500);
+        
+      }, Math.floor(Math.random() * (20000 - 10000 + 1) + 10000)); 
+    }
+
     const App = {
       init: async () => {
         CartService.init();
@@ -625,23 +880,23 @@ ${order.address.country}
 
         document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => router.navigate(b.dataset.nav));
         
-        document.getElementById('btnCartPlus').onclick = () => { triggerBioPulse(); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
-        document.getElementById('btnCartMinus').onclick = () => { triggerBioPulse(); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
+        document.getElementById('btnCartPlus').onclick = () => { triggerActionShock(); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
+        document.getElementById('btnCartMinus').onclick = () => { triggerActionShock(); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
         
         document.getElementById('btnGoToCheckout').onclick = async () => {
-          triggerBioPulse();
+          triggerActionShock();
           const a = await StorageService.getSelectedAddress();
-          if(!a) { UIService.showToast('ZIELORT FEHLT'); router.navigate('addresses'); } 
+          if(!a) { UIService.showToast('BITTE LEGE ZUERST EINE LIEFERADRESSE AN'); router.navigate('addresses'); } 
           else { router.navigate('checkout'); }
         };
         
-        document.getElementById('chkNachnahme').addEventListener('change', () => { triggerBioPulse(); App.renderCheckout(); });
+        document.getElementById('chkNachnahme').addEventListener('change', () => { triggerActionShock(); App.renderCheckout(); });
 
         document.getElementById('btnOpenAddressModal').onclick = () => {
-          triggerBioPulse();
+          triggerActionShock();
           document.getElementById('addressForm').reset();
           document.getElementById('addressFormId').value = '';
-          document.getElementById('addressModalTitle').setAttribute('data-text', 'NEUES ZIEL');
+          document.getElementById('addressModalTitle').setAttribute('data-text', 'NEUE ADRESSE');
           document.getElementById('addressModal').classList.remove('hidden');
           triggerTypewriter(document.getElementById('addressModal'));
         };
@@ -650,6 +905,7 @@ ${order.address.country}
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
         triggerTypewriter(document.getElementById('viewHome'));
+        scheduleMysteriousGreeting();
       },
 
       closeAddressModal: () => {
@@ -657,7 +913,7 @@ ${order.address.country}
       },
 
       saveAddress: async (e) => {
-        e.preventDefault(); triggerBioPulse();
+        e.preventDefault(); triggerActionShock();
         const idStr = document.getElementById('addressFormId').value;
         let isDef = false;
         if(idStr) {
@@ -675,15 +931,15 @@ ${order.address.country}
         };
         await StorageService.saveAddress(addr);
         App.closeAddressModal();
-        UIService.showToast('ZIELORT GESPEICHERT');
+        UIService.showToast('ADRESSE ERFOLGREICH GESPEICHERT');
         
         if (document.getElementById('viewAddresses').classList.contains('active')) { App.renderAddresses(); }
         if (document.getElementById('viewCheckout').classList.contains('active')) { App.renderCheckout(); }
       },
 
-      setDefault: async (id) => { triggerBioPulse(); await StorageService.setDefaultAddress(id); App.renderAddresses(); },
+      setDefault: async (id) => { triggerActionShock(); await StorageService.setDefaultAddress(id); App.renderAddresses(); },
       editAddress: async (id) => {
-        triggerBioPulse();
+        triggerActionShock();
         const list = await StorageService.getAllAddresses(); const a = list.find(x => x.id === id);
         if(!a) return;
         document.getElementById('addressFormId').value = a.id; document.getElementById('addrFirstName').value = a.firstName;
@@ -691,28 +947,28 @@ ${order.address.country}
         document.getElementById('addrNumber').value = a.number; document.getElementById('addrZip').value = a.zip;
         document.getElementById('addrCity').value = a.city; document.getElementById('addrCountry').value = a.country;
         document.getElementById('addrPhone').value = a.phone || '';
-        document.getElementById('addressModalTitle').setAttribute('data-text', 'ZIEL BEARBEITEN');
+        document.getElementById('addressModalTitle').setAttribute('data-text', 'ADRESSE BEARBEITEN');
         document.getElementById('addressModal').classList.remove('hidden');
         triggerTypewriter(document.getElementById('addressModal'));
       },
       deleteAddress: async (id) => {
-        triggerBioPulse();
-        if(confirm('Zielort wirklich löschen?')) {
-          await StorageService.deleteAddress(id); UIService.showToast('ZIELORT GELÖSCHT'); App.renderAddresses();
+        triggerActionShock();
+        if(confirm('Adresse wirklich löschen?')) {
+          await StorageService.deleteAddress(id); UIService.showToast('ADRESSE GELÖSCHT'); App.renderAddresses();
         }
       },
 
       renderAddresses: async () => {
         const list = await StorageService.getAllAddresses();
         document.getElementById('addressListContainer').innerHTML = list.map(a => `
-          <div class="p-5 bg-black/60 backdrop-blur-md rounded-xl border border-[#333] transition-transform duration-200 hover:border-[#cc0000]/50 font-mono">
+          <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-3xl border border-[#1e222d] transition-transform duration-200 hover:scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
             <div class="font-bold text-white text-sm tracking-wide">${a.firstName} ${a.lastName}</div>
-            <div class="text-xs text-neutral-400 mt-2 leading-relaxed">${a.street} ${a.number}<br>${a.zip} ${a.city}</div>
-            <div class="flex justify-between items-center mt-5 border-t border-[#333] pt-4">
-              ${a.isDefault ? '<span class="text-[9px] text-[#cc0000] uppercase tracking-widest font-bold bg-[#cc0000]/10 px-3 py-1.5 rounded border border-[#cc0000]/30">Aktiv</span>' : `<button onclick="App.setDefault('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Wählen</button>`}
+            <div class="text-xs text-neutral-400 mt-2 leading-relaxed font-medium">${a.street} ${a.number}<br>${a.zip} ${a.city}</div>
+            <div class="flex justify-between items-center mt-5 border-t border-[#232734] pt-4">
+              ${a.isDefault ? '<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-600/10 px-3 py-1.5 rounded-lg border border-rose-900/30">Aktiv</span>' : `<button onclick="App.setDefault('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Wählen</button>`}
               <div class="flex space-x-5">
                  <button onclick="App.editAddress('${a.id}')" class="text-[10px] text-neutral-400 hover:text-white uppercase tracking-widest font-bold transition-colors">Edit</button>
-                 <button onclick="App.deleteAddress('${a.id}')" class="text-[10px] text-[#cc0000] hover:text-red-400 uppercase tracking-widest font-bold transition-colors">Delete</button>
+                 <button onclick="App.deleteAddress('${a.id}')" class="text-[10px] text-rose-600 hover:text-rose-400 uppercase tracking-widest font-bold transition-colors">Delete</button>
               </div>
             </div>
           </div>
@@ -732,8 +988,8 @@ ${order.address.country}
         if(isNachnahme) { rowNachnahme.classList.remove('hidden'); } else { rowNachnahme.classList.add('hidden'); }
 
         document.getElementById('chkSummaryTotal').textContent = CartService.format(finalTotal);
-        if(a) { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-sm text-white leading-relaxed tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`; } 
-        else { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-[#cc0000] leading-relaxed font-bold tracking-widest uppercase">KEIN ZIELORT GEWÄHLT</div>`; }
+        if(a) { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-sm text-white leading-relaxed font-medium tracking-wide">${a.firstName} ${a.lastName}<br>${a.street} ${a.number}<br>${a.zip} ${a.city}</div>`; } 
+        else { document.getElementById('chkSelectedAddressCard').innerHTML = `<div class="text-xs text-rose-500 leading-relaxed font-bold tracking-widest uppercase">Keine Adresse gewählt</div>`; }
       },
 
       renderOrders: async () => {
@@ -741,65 +997,72 @@ ${order.address.country}
         document.getElementById('ordersListContainer').innerHTML = list.map(o => {
           const dateStr = new Date(o.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
           return `
-          <div class="p-5 bg-black/60 backdrop-blur-md rounded-xl border border-[#333] mb-4 font-mono transition-transform duration-200 hover:border-[#cc0000]/50">
+          <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-3xl border border-[#1e222d] mb-4 text-xs text-neutral-300 transition-transform duration-200 hover:scale-[1.02] shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
             <div class="flex justify-between items-center mb-4">
-              <span class="text-[#cc0000] font-bold tracking-wider text-sm">${o.orderNumber}</span>
-              <span class="font-bold text-white text-lg">${CartService.format(o.total)}</span>
+              <span class="text-rose-500 font-mono font-bold tracking-wider text-sm">${o.orderNumber}</span>
+              <span class="font-bold text-white text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
             </div>
-            <div class="flex justify-between items-center border-t border-[#333] pt-4">
+            <div class="flex justify-between items-center border-t border-[#232734] pt-4">
               <span class="text-[10px] text-neutral-500 tracking-widest font-bold">${dateStr}</span>
-              ${o.isNachnahme ? `<span class="text-[9px] text-[#cc0000] uppercase tracking-widest font-bold">Übergabe</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
+              ${o.isNachnahme ? `<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-900/20 px-2 py-1 rounded">inkl. Nachnahme</span>` : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
             </div>
           </div>
-        `}).join('') || '<p class="text-[10px] text-neutral-600 font-mono text-center py-12 uppercase tracking-widest font-bold">KEINE AKTEN VORHANDEN</p>';
+        `}).join('') || '<p class="text-[10px] text-neutral-600 text-center py-12 uppercase tracking-widest font-bold">Keine Bestellungen</p>';
       },
 
       submitOrder: async () => {
-        triggerBioPulse();
         const a = await StorageService.getSelectedAddress();
-        if(!a) return UIService.showToast('ZIELORT FEHLT');
+        if(!a) return UIService.showToast('BITTE WÄHLE EINE LIEFERADRESSE');
         
-        const btn = document.getElementById('btnSubmitOrder');
-        const txt = document.getElementById('btnSubmitText');
-        
-        btn.classList.add('animate-pulse'); btn.style.pointerEvents = 'none';
-        
-        txt.textContent = ''; let waitText = "SEQUENZIERUNG..."; let w = 0;
-        function typeWait() { if (w < waitText.length) { txt.textContent += waitText.charAt(w); w++; setTimeout(typeWait, 30); } }
-        typeWait();
-        
+        // جلب تفاصيل الطلب
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
         const finalTotal = isNachnahme ? c.total + 9.00 : c.total;
 
         const order = {
-          orderNumber: 'UMB-' + Date.now().toString().slice(-6),
+          orderNumber: 'VOD-' + Date.now().toString().slice(-6),
           createdAt: new Date().toISOString(), total: finalTotal, address: a, isNachnahme: isNachnahme
         };
 
-        const res = await TelegramService.dispatch(order);
-        if(res.success) {
-          triggerHaptic([40, 60, 40]); 
-          await StorageService.saveOrder(order); CartService.setQuantity(1);
-          
-          document.getElementById('succOrderNumber').textContent = order.orderNumber;
-          document.getElementById('succTotal').textContent = CartService.format(order.total);
-          
-          if(isNachnahme) {
-             document.getElementById('succNachnahmeMsg').classList.remove('hidden'); document.getElementById('succTransferMsg').classList.add('hidden');
-          } else {
-             document.getElementById('succNachnahmeMsg').classList.add('hidden'); document.getElementById('succTransferMsg').classList.remove('hidden');
-             hackerDecode(document.getElementById('decodeText'), "BITTE ÜBERWEISE DEN GESAMTBETRAG AUF DAS BEKANNTE KONTO.");
-          }
+        // بدء الإرسال الفعلي لتيليجرام في الخلفية
+        const resPromise = TelegramService.dispatch(order);
 
-          document.getElementById('chkNachnahme').checked = false; 
-          router.navigate('success');
-        } else {
-          UIService.showToast('FEHLER BEI VERBINDUNG.');
-        }
+        // تنفيذ الـ Extreme Overload (أكثر من 50 حركة في ثوانٍ)
+        triggerExtremeOverload(async () => {
+           // ننتظر نتيجة تيليجرام
+           const res = await resPromise;
+           
+           if(res.success) {
+             await StorageService.saveOrder(order); 
+             CartService.setQuantity(1);
+             
+             document.getElementById('succOrderNumber').textContent = order.orderNumber;
+             document.getElementById('succTotal').textContent = CartService.format(order.total);
+             
+             const transferBox = document.getElementById('succTransferMsg');
+             const nachnahmeBox = document.getElementById('succNachnahmeMsg');
+             
+             router.navigate('success');
 
-        txt.textContent = 'PROJEKT STARTEN';
-        btn.classList.remove('animate-pulse'); btn.style.pointerEvents = 'auto';
+             // تأثير رسالة التحويل العبقرية (Hacker Decoder Box)
+             if(isNachnahme) {
+                transferBox.classList.add('hidden');
+                nachnahmeBox.classList.remove('hidden');
+             } else {
+                nachnahmeBox.classList.add('hidden');
+                transferBox.classList.remove('hidden');
+                // تفعيل الحركة الهندسية 
+                transferBox.style.animation = 'stampIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+                setTimeout(() => {
+                   hackerDecode(document.getElementById('hackerDecodeText'), "BITTE ÜBERWEISE DEN GESAMTBETRAG AUF DAS BEKANNTE KONTO.");
+                }, 500);
+             }
+             document.getElementById('chkNachnahme').checked = false; 
+           } else {
+             UIService.showToast('FEHLER BEI DER ÜBERMITTLUNG.');
+             triggerFakeError();
+           }
+        });
       }
     };
 
