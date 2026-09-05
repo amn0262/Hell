@@ -21,12 +21,8 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     html, body {
-      font-family: var(--font-sans);
-      background-color: #020203;
-      color: #f4f4f5;
-      margin: 0; padding: 0;
-      height: 100dvh; width: 100vw;
-      overflow: hidden; 
+      font-family: var(--font-sans); background-color: #020203; color: #f4f4f5;
+      margin: 0; padding: 0; height: 100dvh; width: 100vw; overflow: hidden; 
       user-select: none; -webkit-user-select: none;
       touch-action: manipulation; overscroll-behavior-y: none; 
     }
@@ -34,135 +30,184 @@
     .brand-title { font-family: var(--font-brand); cursor: pointer; }
     .font-mono-custom { font-family: var(--font-mono); }
 
-    /* خطوط السرعة والاندفاع (Speed Lines) */
     .speed-lines {
       position: fixed; inset: 0; pointer-events: none; z-index: 1;
       background: repeating-linear-gradient( transparent 0%, rgba(244,63,94, 0.03) 50%, transparent 100% );
-      background-size: 100% 8px;
-      animation: moveLines 0.3s linear infinite;
+      background-size: 100% 8px; animation: moveLines 0.3s linear infinite;
     }
-    @keyframes moveLines {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 8px; }
-    }
+    @keyframes moveLines { 0% { background-position: 0 0; } 100% { background-position: 0 8px; } }
 
-    /* الاهتزاز السريع عند الأكشن */
     @keyframes screenShock {
       0%, 100% { transform: translate(0, 0) rotate(0deg); filter: contrast(100%); }
-      20% { transform: translate(6px, 6px) rotate(1.5deg); filter: contrast(180%) brightness(1.2); }
-      40% { transform: translate(-6px, -6px) rotate(-1.5deg); }
-      60% { transform: translate(4px, -4px) rotate(1deg); }
-      80% { transform: translate(-4px, 4px) rotate(-1deg); }
+      20% { transform: translate(8px, 8px) rotate(2deg); filter: contrast(200%) brightness(1.3); }
+      40% { transform: translate(-8px, -8px) rotate(-2deg); filter: hue-rotate(90deg); }
+      60% { transform: translate(6px, -6px) rotate(1.5deg); }
+      80% { transform: translate(-6px, 6px) rotate(-1.5deg); }
     }
-    .shake-active { animation: screenShock 0.25s cubic-bezier(.36,.07,.19,.97) both; }
+    .shake-active { animation: screenShock 0.3s cubic-bezier(.36,.07,.19,.97) both; }
 
-    /* تشويش الشاشة العنيف (Glitch Critical) */
     .glitch-critical {
-      animation: criticalGlitch 0.1s infinite alternate;
-      filter: invert(0.9) hue-rotate(180deg) contrast(200%);
+      animation: criticalGlitch 0.08s infinite alternate;
+      filter: invert(1) hue-rotate(180deg) contrast(200%);
     }
     @keyframes criticalGlitch {
-      0% { transform: translate(15px, -15px) skewX(8deg); }
-      100% { transform: translate(-15px, 15px) skewX(-8deg); }
+      0% { transform: translate(20px, -20px) skewX(10deg); }
+      100% { transform: translate(-20px, 20px) skewX(-10deg); }
     }
 
-    /* ليزر الماسح الضوئي (مخفف جداً وشفاف) */
-    .laser-beam {
-      position: absolute; left: 0; width: 100%; height: 1px;
-      background: rgba(244,63,94,0.1);
-      box-shadow: 0 0 5px 1px rgba(244,63,94,0.1);
-      animation: laserSweep 5s infinite linear;
-      opacity: 0; pointer-events: none; z-index: 9997;
+    .tv-noise {
+      position: fixed; inset: 0; z-index: 100001; pointer-events: none;
+      background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+      opacity: 0; mix-blend-mode: overlay;
     }
-    @keyframes laserSweep {
-      0% { top: -10%; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { top: 110%; opacity: 0; }
+    .tv-noise.show { animation: staticFlicker 0.05s infinite; opacity: 0.8; }
+    @keyframes staticFlicker {
+      0%, 100% { transform: translate(0,0) scale(1.1); filter: invert(0); }
+      50% { transform: translate(-20px,20px) scale(1.2); filter: invert(1); }
     }
 
-    /* خطوط الشاشة الكلاسيكية */
+    .vcr-bar {
+      position: fixed; left: 0; width: 100%; height: 15vh;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: hue-rotate(180deg) contrast(200%) blur(4px);
+      -webkit-backdrop-filter: hue-rotate(180deg) contrast(200%) blur(4px);
+      z-index: 100000; pointer-events: none; opacity: 0; border-top: 2px solid rgba(255,255,255,0.2);
+    }
+    .vcr-bar.show { animation: vcrJump 0.15s infinite linear; opacity: 1; }
+    @keyframes vcrJump { 0% { top: -20%; } 100% { top: 120%; } }
+
     .scanlines {
       position: fixed; inset: 0; z-index: 9998; pointer-events: none;
       background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.4));
       background-size: 100% 4px; opacity: 0.4;
     }
 
-    /* الانتقال السينمائي القوي بعد الانفجار */
+    .laser-beam {
+      position: absolute; left: 0; width: 100%; height: 1px;
+      background: rgba(244,63,94,0.1); box-shadow: 0 0 5px 1px rgba(244,63,94,0.1);
+      animation: laserSweep 5s infinite linear; opacity: 0; pointer-events: none; z-index: 9997;
+    }
+    @keyframes laserSweep { 0% { top: -10%; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
+
     @keyframes popInCinematic {
-      0% { opacity: 0; transform: scale(0.85); filter: blur(20px); }
-      50% { filter: blur(5px); }
+      0% { opacity: 0; transform: scale(0.7); filter: blur(25px); }
+      60% { filter: blur(5px); transform: scale(1.05); }
       100% { opacity: 1; transform: scale(1); filter: blur(0); }
     }
-    .animate-fade-in { animation: popInCinematic 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; }
+    .animate-fade-in { animation: popInCinematic 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-    /* التشويش النصي الثابت (Glitch Text) */
     @keyframes glitch {
-      0%, 100% { transform: translate(0); opacity: 1; }
-      10% { transform: translate(-3px, 1px); }
-      20% { transform: translate(3px, -1px); opacity: 0.8; filter: hue-rotate(90deg); }
-      30% { transform: translate(-1px, 3px); }
-      40% { transform: translate(1px, -3px); opacity: 0.9; }
+      0%, 100% { transform: translate(0); opacity: 1; filter: none; }
+      10% { transform: translate(-4px, 2px); filter: contrast(150%); }
+      20% { transform: translate(4px, -2px); opacity: 0.8; filter: hue-rotate(90deg); }
+      30% { transform: translate(-2px, 4px); }
+      40% { transform: translate(2px, -4px); opacity: 0.9; }
       50% { transform: translate(0); }
     }
     .glitch-effect {
-      display: inline-block;
-      animation: glitch 2.5s cubic-bezier(.25, .46, .45, .94) infinite;
-      text-shadow: 3px 0 rgba(225,29,72,0.8), -3px 0 rgba(0,255,255,0.4);
+      display: inline-block; animation: glitch 2.5s cubic-bezier(.25, .46, .45, .94) infinite;
+      text-shadow: 3px 0 rgba(225,29,72,0.9), -3px 0 rgba(0,255,255,0.5);
     }
 
-    /* النيران السفلية الغامضة */
+    /* نيران وشهب غير منتظمة */
     .fire-container {
-      position: absolute; bottom: 0; left: 0; width: 100%; height: 40vh;
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
       pointer-events: none; z-index: 20; overflow: hidden;
-      mask-image: linear-gradient(to top, black 20%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
+      mask-image: linear-gradient(to top, black 10%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, black 10%, transparent 100%);
     }
     .fire-glow-1 {
-      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 160px;
-      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.6), transparent 70%);
-      filter: blur(20px); 
+      position: absolute; bottom: -30px; left: -10%; width: 120%; height: 180px;
+      background: radial-gradient(ellipse at bottom, rgba(225,29,72,0.8), transparent 70%);
+      filter: blur(20px); transform-origin: bottom center;
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s;
+    }
+    .fire-glow-2 {
+      position: absolute; bottom: -20px; left: 10%; width: 80%; height: 140px;
+      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.6), transparent 70%);
+      filter: blur(15px); transform-origin: bottom center;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
+    }
+    .spark {
+      position: absolute; bottom: 0; width: 2px;
+      background: linear-gradient(to top, transparent, #ffffff 20%, #f43f5e 80%, transparent);
+      border-radius: 50%; opacity: 0; animation: shootUp infinite ease-in-out;
+      box-shadow: 0 0 10px 2px rgba(244,63,94,0.8);
+    }
+    @keyframes shootUp {
+      0% { transform: translateY(20px) scale(0.5); opacity: 0; height: 10px; }
+      20% { opacity: 1; height: 40px; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(-400px) scale(0.1); opacity: 0; height: 60px; }
     }
 
-    /* تأثير ضغط الإصبع */
+    /* تشوه الساعة */
+    @keyframes clockBreakdown {
+      0%, 100% { transform: translate(0) skewX(0); filter: none; }
+      25% { transform: translate(4px, -4px) skewX(10deg); filter: invert(0.8) hue-rotate(180deg); }
+      50% { transform: translate(-4px, 4px) skewY(-10deg) scale(1.1); filter: contrast(200%); }
+      75% { transform: translate(3px, 3px) skewX(-10deg); filter: blur(2px) sepia(1); }
+    }
+    .clock-broken { animation: clockBreakdown 0.15s infinite; }
+
+    @keyframes spinOrbit { 100% { transform: rotate(360deg); } }
+    .animate-spin-slow { animation: spinOrbit 25s linear infinite; transform-origin: 100px 100px; }
+    .animate-reverse-spin { animation: spinOrbit 18s linear infinite reverse; transform-origin: 100px 100px; }
+
     .click-ripple {
       position: fixed; border-radius: 50%; pointer-events: none;
       transform: translate(-50%, -50%) scale(0);
       background: radial-gradient(circle, rgba(244,63,94,1) 0%, rgba(244,63,94,0) 70%);
       z-index: 9999; animation: rippleAnim 0.4s ease-out forwards;
     }
-    @keyframes rippleAnim {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(6); opacity: 0; }
-    }
+    @keyframes rippleAnim { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
 
-    /* الشريط السفلي المتفاعل */
-    .nav-item.active { color: #f43f5e !important; transform: scale(1.2) translateY(-6px); filter: drop-shadow(0 0 15px rgba(225,29,72,0.8)); }
+    .nav-item.active { color: #f43f5e !important; transform: scale(1.25) translateY(-8px); filter: drop-shadow(0 0 20px rgba(225,29,72,1)); }
     .nav-item.active svg { stroke: #f43f5e !important; }
     .nav-item { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+    /* صندوق فك التشفير */
+    .decode-box {
+      position: relative; overflow: hidden;
+      border: 2px solid #f43f5e; box-shadow: inset 0 0 30px rgba(244,63,94,0.4), 0 0 30px rgba(244,63,94,0.6);
+      background: rgba(15, 0, 5, 0.85); backdrop-filter: blur(10px);
+    }
+    .decode-text {
+      font-family: var(--font-mono); font-size: 0.85rem; font-weight: 900;
+      color: #fff; text-shadow: 0 0 8px #f43f5e, 0 0 15px #f43f5e;
+      letter-spacing: 0.2em; text-align: center; text-transform: uppercase;
+    }
+
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
-    
     .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
 <body class="antialiased font-sans">
 
-  <!-- مؤثرات الشاشة الفوقية المستمرة -->
   <div class="speed-lines"></div>
   <div class="scanlines"></div> 
   <div class="laser-beam"></div>
+  <div id="tvNoiseOverlay" class="tv-noise"></div>
+  <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- الأخطاء الوهمية المجنونة (Fake Action Errors) -->
+  <!-- شاشة الرعب الافتتاحية -->
+  <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
+    <h1 class="text-6xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8 pointer-events-none drop-shadow-[0_0_20px_#e11d48]">WARNUNG</h1>
+    <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter pointer-events-none" data-text="SYSTEM GEFÄHRDET."></p>
+    <p class="text-rose-900 font-mono text-xs tracking-widest text-center mt-6 typewriter-delayed pointer-events-none" data-text="ES GIBT KEIN ZURÜCK MEHR..."></p>
+    <div id="enterBtnHint" class="mt-16 opacity-0 transition-opacity duration-1000">
+      <span class="px-8 py-3 border border-rose-900 bg-rose-950/30 text-rose-500 font-mono text-xs tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(225,29,72,0.3)]">KLICK UM ZU BEGINNEN</span>
+    </div>
+  </div>
+
   <div id="fakeErrorOverlay" class="hidden fixed inset-0 z-[99999] bg-rose-600/90 mix-blend-color-burn flex items-center justify-center pointer-events-none">
     <div id="fakeErrorText" class="text-black text-6xl font-black font-mono tracking-tighter uppercase glitch-critical text-center mix-blend-overlay w-full px-4 break-words leading-none"></div>
   </div>
 
-  <!-- الفلاش الأحمر الحاد (يستخدم وقت الانفجار) -->
   <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
 
-  <!-- الرسالة الفجائية (System Override) -->
+  <!-- الترحيب الفجائي السيبراني -->
   <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
     <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
       <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
@@ -171,68 +216,74 @@
     </div>
   </div>
 
-  <!-- التطبيق الأساسي -->
+  <!-- التطبيق -->
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
-    <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
         <span onclick="triggerActionShock()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_15px_#f43f5e] animate-pulse"></span>
       </div>
       <div class="flex items-center space-x-4">
-        <button id="quickCartBtn" class="relative p-2 rounded-xl text-neutral-500 hover:text-rose-400 transition-all duration-200 active:scale-75">
-          <svg class="w-6 h-6 drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
-        </button>
+        <!-- مساحة فارغة (تم حذف أيقونة السلة) -->
       </div>
     </header>
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Static Abnormally Designed Clock) -->
-      <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
-        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
-          <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] pointer-events-none"></div>
+      <!-- VIEW: HOME (Shattered Broken Clock) -->
+      <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
+        <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-4 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
+          <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[50px] pointer-events-none"></div>
           
-          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_40px_rgba(225,29,72,0.3)] relative z-20">
-            <circle cx="100" cy="100" r="102" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 12" class="opacity-40" />
-            <circle cx="100" cy="100" r="96" fill="none" stroke="#ffffff" stroke-width="0.4" stroke-dasharray="1 15" class="opacity-20" />
-            <circle cx="100" cy="100" r="90" fill="#040406" stroke="#12141a" stroke-width="3" />
+          <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20">
+            <!-- الشظايا والدوائر المحطمة العشوائية -->
+            <path d="M100 5 L130 15 L180 50 L195 100 L170 160 L100 195 L30 160 L5 100 L20 50 Z" fill="none" stroke="#1e222d" stroke-width="1.5" stroke-dasharray="4 12" />
+            <path d="M100 15 L120 25 L160 55 L180 100 L155 150 L100 180 L45 150 L20 100 L40 55 Z" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 15" class="opacity-50 animate-reverse-spin" />
+            <path d="M100 25 L110 35 L140 60 L160 100 L140 140 L100 160 L60 140 L40 100 L60 60 Z" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 10" class="opacity-30 animate-spin-slow" />
             
-            <g stroke="#2a3040" stroke-linecap="round">
-              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" />
-              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(90 100 100)"/>
-              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(180 100 100)"/>
-              <line x1="100" y1="14" x2="100" y2="28" stroke-width="2.5" transform="rotate(270 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(30 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(60 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(120 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(150 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(210 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(240 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(300 100 100)"/>
-              <line x1="100" y1="16" x2="100" y2="24" stroke-width="1.5" transform="rotate(330 100 100)"/>
+            <circle cx="150" cy="40" r="1.5" fill="#f43f5e" class="glitch-critical" />
+            <circle cx="40" cy="150" r="2" fill="#ffffff" class="glitch-critical" />
+            <line x1="20" y1="80" x2="35" y2="85" stroke="#9ca3af" stroke-width="1" />
+            <line x1="170" y1="120" x2="185" y2="115" stroke="#9ca3af" stroke-width="1" />
+
+            <!-- محددات حادة -->
+            <g stroke="#374151" stroke-linecap="butt">
+              <line x1="100" y1="18" x2="100" y2="35" stroke-width="2" stroke="#f43f5e" /> 
+              <line x1="100" y1="18" x2="100" y2="32" stroke-width="2" transform="rotate(90 100 100)"/>
+              <line x1="100" y1="18" x2="100" y2="32" stroke-width="2" transform="rotate(180 100 100)"/>
+              <line x1="100" y1="18" x2="100" y2="32" stroke-width="2" transform="rotate(270 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(30 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(60 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1.5" stroke="#ffffff" transform="rotate(120 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(150 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(210 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1.5" stroke="#f43f5e" transform="rotate(240 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(300 100 100)"/>
+              <line x1="100" y1="22" x2="100" y2="28" stroke-width="1" transform="rotate(330 100 100)"/>
             </g>
-            
-            <circle cx="100" cy="100" r="76" fill="none" stroke="#1a1d26" stroke-width="1" stroke-dasharray="1 6.63" />
 
-            <text id="clockDay" x="100" y="135" fill="#9ca3af" font-size="8" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.9"></text>
-            <text id="clockDate" x="100" y="152" fill="#f43f5e" font-size="11" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
+            <text id="clockDay" x="100" y="140" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.7"></text>
+            <text id="clockDate" x="100" y="155" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
-            <!-- العقارب الثابتة (تتحرك مع الزلزال الزمني فقط) -->
-            <g id="handHour"><line x1="100" y1="100" x2="100" y2="48" stroke="#f43f5e" stroke-width="5" stroke-linecap="round" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
-            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="28" stroke="#ffffff" stroke-width="3" stroke-linecap="round" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
+            <g id="handHour"><line x1="100" y1="100" x2="100" y2="55" stroke="#f43f5e" stroke-width="4" stroke-linecap="butt" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
+            <g id="handMinute"><line x1="100" y1="100" x2="100" y2="35" stroke="#ffffff" stroke-width="2" stroke-linecap="butt" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
-              <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
-              <circle cx="100" cy="20" r="4" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
+              <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="1" stroke-linecap="butt" />
+              <polygon points="98,20 102,20 100,12" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
             </g>
-            <circle cx="100" cy="100" r="5" fill="#040406" stroke="#ffffff" stroke-width="2.5" filter="drop-shadow(0 0 5px rgba(255,255,255,0.5))"/>
+            <polygon points="97,100 100,97 103,100 100,103" fill="#040406" stroke="#ffffff" stroke-width="1.5" />
           </svg>
         </div>
 
-        <button onclick="router.navigate('cart');" class="relative z-10 px-16 py-5 rounded-full bg-[#0a0c10] border border-[#f43f5e] text-white font-serif tracking-[0.5em] uppercase text-sm hover:bg-rose-900 transition-all duration-200 active:scale-90 shadow-[0_0_30px_rgba(225,29,72,0.3)] typewriter" data-text="START"></button>
+        <button onclick="router.navigate('cart');" class="relative z-10 w-24 h-24 rounded-full bg-[#050608] border border-rose-900 flex items-center justify-center text-rose-600 hover:border-rose-500 hover:bg-rose-950/30 transition-all duration-300 active:scale-75 shadow-[0_0_30px_rgba(225,29,72,0.15)] group overflow-hidden mt-4">
+          <div class="absolute inset-0 border border-rose-900/50 rounded-full animate-ping opacity-20"></div>
+          <svg class="w-12 h-12 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.6)] group-hover:scale-125 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+             <circle cx="12" cy="10" r="3" fill="#f43f5e" class="animate-pulse"/>
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 17v-4"/>
+          </svg>
+        </button>
       </section>
 
       <!-- VIEW: CART -->
@@ -334,7 +385,7 @@
       </section>
       
       <!-- VIEW: SUCCESS -->
-      <section id="viewSuccess" class="view-panel hidden animate-fade-in text-center py-8 relative z-10">
+      <section id="viewSuccess" class="view-panel hidden text-center py-8 relative z-10">
         <h2 class="text-4xl font-bold tracking-widest uppercase text-rose-500 mb-8 glitch-effect drop-shadow-[0_0_20px_rgba(225,29,72,0.6)] typewriter" data-text="ERFOLGREICH"></h2>
         <div class="bg-[#0b0c10]/95 backdrop-blur-xl border border-rose-900/40 rounded-[2rem] p-7 text-left space-y-5 mb-8 shadow-[0_15px_50px_rgba(225,29,72,0.15)]">
           <div class="flex justify-between text-sm items-center">
@@ -349,22 +400,33 @@
           <div id="succNachnahmeMsg" class="text-sm text-rose-400 mt-5 hidden border-t border-rose-900/40 pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
             Bitte halte den Betrag bei Lieferung passend bereit.
           </div>
-
-          <div id="succTransferMsg" class="text-sm text-white mt-5 hidden border-t border-[#232734] pt-5 font-bold tracking-wide leading-relaxed text-center typewriter-dynamic">
-            Bitte überweise den Gesamtbetrag auf das bekannte Konto.
-          </div>
         </div>
-        <button onclick="triggerActionShock(); router.navigate('orders')" class="w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-200 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
+
+        <div id="succTransferMsg" class="hidden relative mb-8 decode-box rounded-[2rem] p-6">
+          <div class="absolute inset-0 bg-rose-500 opacity-10 animate-pulse pointer-events-none"></div>
+          <p id="hackerDecodeText" class="decode-text relative z-10"></p>
+        </div>
+
+        <button onclick="triggerActionShock(); router.navigate('orders')" class="w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
       </section>
 
     </main>
 
-    <!-- FIRE CONTAINER -->
+    <!-- FIRE CONTAINER (Dynamic Random Fire + Sparks) -->
     <div class="fire-container">
       <div class="fire-glow-1"></div>
+      <div class="fire-glow-2"></div>
+      <div class="spark" style="left: 10%; animation-duration: 1.6s; animation-delay: 0.1s;"></div>
+      <div class="spark" style="left: 20%; animation-duration: 2.1s; animation-delay: 0.4s;"></div>
+      <div class="spark" style="left: 30%; animation-duration: 1.4s; animation-delay: 0.8s;"></div>
+      <div class="spark" style="left: 45%; animation-duration: 2.5s; animation-delay: 0.2s;"></div>
+      <div class="spark" style="left: 55%; animation-duration: 1.5s; animation-delay: 0.6s;"></div>
+      <div class="spark" style="left: 70%; animation-duration: 2.0s; animation-delay: 0.3s;"></div>
+      <div class="spark" style="left: 85%; animation-duration: 1.8s; animation-delay: 0.7s;"></div>
+      <div class="spark" style="left: 95%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAVIGATION (Fixed Archives Icon) -->
     <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#020203]/90 backdrop-blur-2xl border-t border-[#12141a] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
       <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -376,7 +438,7 @@
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
       <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       </button>
     </nav>
 
@@ -421,145 +483,199 @@
       void app.offsetWidth; 
       app.classList.add('shake-active');
       triggerHaptic([40, 60, 40]);
-      triggerFakeError(); // إظهار أخطاء وهمية أحياناً
     }
 
-    // --- الانفجار وتطاير العناصر (Glitch Explosion Element Scatter) ---
-    function triggerExplosion() {
-      triggerHaptic([50, 100, 150, 50, 100]); 
-      const app = document.getElementById('app');
-      
-      app.classList.add('glitch-critical');
-      
-      const flash = document.createElement('div');
-      flash.className = 'fixed inset-0 bg-rose-600 mix-blend-overlay z-[99999] pointer-events-none';
-      document.body.appendChild(flash);
-      
-      const activeElements = document.querySelectorAll('.view-panel.active > *');
-      activeElements.forEach(el => {
-         const rx = (Math.random() - 0.5) * 80; 
-         const ry = (Math.random() - 0.5) * 80;
-         const rr = (Math.random() - 0.5) * 15; 
-         const rs = 1 + (Math.random() * 0.3); 
-         el.style.transition = 'transform 0.1s ease-out';
-         el.style.transform = `translate(${rx}px, ${ry}px) rotate(${rr}deg) scale(${rs})`;
-      });
+    // --- Dynamic Irregular Fire ---
+    setInterval(() => {
+      const f1 = document.querySelector('.fire-glow-1');
+      const f2 = document.querySelector('.fire-glow-2');
+      if(f1 && f2) {
+         const scale1 = 0.5 + Math.random() * 2.5; 
+         const scale2 = 0.5 + Math.random() * 2.0;
+         const op1 = 0.3 + Math.random() * 0.7;
+         f1.style.transform = `scaleY(${scale1}) scaleX(${1 + Math.random()*0.5})`;
+         f1.style.opacity = op1;
+         f2.style.transform = `scaleY(${scale2}) scaleX(${1 + Math.random()*0.5})`;
+         f2.style.opacity = op1 * 0.8;
+      }
+    }, 150); 
 
-      setTimeout(() => {
-        app.classList.remove('glitch-critical');
-        flash.style.transition = 'opacity 0.3s ease-out';
-        flash.style.opacity = '0';
+    // --- Extreme Submission Overload (50+ actions) ---
+    function triggerExtremeOverload(callback) {
+      const app = document.getElementById('app');
+      const flash = document.getElementById('explosionFlash');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      
+      flash.classList.remove('hidden');
+      tvNoise.classList.add('show');
+      
+      let actions = 0;
+      const totalActions = 60; 
+      
+      const interval = setInterval(() => {
+        actions++;
+        const tx = (Math.random() - 0.5) * 150;
+        const ty = (Math.random() - 0.5) * 150;
+        const rot = (Math.random() - 0.5) * 30;
+        const scale = 0.6 + Math.random() * 0.8;
+        const hue = Math.random() * 360;
+        const inv = Math.random() > 0.5 ? 'invert(1)' : '';
         
-        activeElements.forEach(el => {
-           el.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-           el.style.transform = '';
-        });
+        app.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg) scale(${scale})`;
+        app.style.filter = `hue-rotate(${hue}deg) ${inv}`;
         
-        setTimeout(() => flash.remove(), 300);
-      }, 150);
+        flash.style.backgroundColor = Math.random() > 0.5 ? '#f43f5e' : '#ffffff';
+        flash.style.opacity = Math.random() * 0.9;
+        triggerHaptic(20);
+
+        if(actions >= totalActions) {
+          clearInterval(interval);
+          app.style.transform = '';
+          app.style.filter = '';
+          flash.classList.add('hidden');
+          tvNoise.classList.remove('show');
+          triggerHaptic([200, 50, 200]);
+          callback();
+        }
+      }, 40); 
+    }
+
+    // --- Hacker Decode Effect ---
+    function hackerDecode(el, text) {
+       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!';
+       let iterations = 0;
+       el.textContent = text.split('').map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+       
+       const interval = setInterval(() => {
+          el.textContent = text.split('').map((letter, index) => {
+             if(index < iterations) return letter;
+             return chars[Math.floor(Math.random() * chars.length)];
+          }).join('');
+          
+          if(iterations >= text.length) clearInterval(interval);
+          iterations += 1/2; 
+       }, 30);
+    }
+
+    // --- Random Screen Glitch ---
+    function randomScreenGlitch() {
+      const app = document.getElementById('app');
+      const tvNoise = document.getElementById('tvNoiseOverlay');
+      const vcrBar = document.getElementById('vcrBarOverlay');
+      const isHeavy = Math.random() > 0.7; 
+      
+      if (isHeavy) {
+        tvNoise.classList.add('show'); vcrBar.classList.add('show'); app.classList.add('glitch-critical');
+        triggerHaptic([40, 20, 40]);
+        setTimeout(() => { 
+          tvNoise.classList.remove('show'); vcrBar.classList.remove('show'); app.classList.remove('glitch-critical'); 
+        }, 150 + Math.random() * 200);
+      } else {
+        app.classList.add('glitch-critical');
+        triggerHaptic(20);
+        setTimeout(() => { app.classList.remove('glitch-critical'); }, 50 + Math.random() * 100);
+      }
+      setTimeout(randomScreenGlitch, 4000 + Math.random() * 15000);
     }
 
     // --- Fake Action Errors ---
     function triggerFakeError() {
       if(Math.random() > 0.25) return; 
       const err = document.getElementById('fakeErrorOverlay');
-      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "UNAUTHORIZED ENTITY"];
+      const texts = ["CRITICAL FAILURE", "BREACH DETECTED", "SYSTEM CORRUPTION", "SIGNAL LOST"];
       document.getElementById('fakeErrorText').textContent = texts[Math.floor(Math.random() * texts.length)];
       err.classList.remove('hidden');
       triggerHaptic([100, 50, 100]);
       setTimeout(() => err.classList.add('hidden'), 150 + Math.random() * 150);
     }
 
-    // --- Ripple Click ---
+    // --- Remove Horror Screen ---
+    document.getElementById('horrorOverlay').addEventListener('click', function() {
+       this.classList.add('opacity-0');
+       triggerHaptic(50);
+       setTimeout(() => {
+          this.classList.add('hidden');
+          setTimeout(randomScreenGlitch, 2000);
+       }, 1000);
+    });
+
+    setTimeout(() => { document.getElementById('enterBtnHint').classList.remove('opacity-0'); }, 2000);
+
+    // --- Ripple ---
     document.addEventListener('pointerdown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
       const burst = document.createElement('div');
       burst.className = 'click-ripple';
       burst.style.left = e.clientX + 'px';
       burst.style.top = e.clientY + 'px';
-      burst.style.width = '50px';
-      burst.style.height = '50px';
+      burst.style.width = '50px'; burst.style.height = '50px';
       document.body.appendChild(burst);
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Crazy Static Clock Logic ---
+    // --- Crazy Clock Logic ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
-    let insanityOffset = { s: 0, m: 0, h: 0 };
     let clockInsanity = false;
+    let clockVelocity = 0;
+    let clockAngle = { h:0, m:0, s:0 };
 
-    // تثبيت عقارب الساعة على 10:10 افتراضياً (للتصميم)
-    let staticTime = { h: 10, m: 10, s: 30 }; 
-
-    function triggerTimeWarp() {
+    function breakClock() {
       if(clockInsanity) return;
       clockInsanity = true;
+      clockVelocity = 1;
       triggerActionShock();
-      document.getElementById('app').classList.add('glitch-critical');
-      setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 150);
+      document.getElementById('clockSvg').classList.add('clock-broken');
       
       setTimeout(() => {
         clockInsanity = false; 
-        triggerHaptic([50, 100, 50]);
+        document.getElementById('clockSvg').classList.remove('clock-broken');
+        triggerHaptic([100, 50, 100]);
         const app = document.getElementById('app');
-        app.classList.add('shake-active');
-        app.style.filter = "invert(1) hue-rotate(180deg)";
-        setTimeout(() => { app.classList.remove('shake-active'); app.style.filter = "none"; }, 150);
-      }, 1000 + Math.random() * 1500);
+        app.classList.add('glitch-critical');
+        setTimeout(() => { app.classList.remove('glitch-critical'); }, 150);
+      }, 2000 + Math.random() * 3000); 
     }
     
-    setInterval(() => {
-       if(Math.random() > 0.7) triggerTimeWarp();
-    }, 12000);
+    setInterval(() => { if(Math.random() > 0.6) breakClock(); }, 8000);
 
     function updateClock() {
-      let h = staticTime.h; let m = staticTime.m; let s = staticTime.s; 
+      const realNow = new Date();
+      let s = realNow.getSeconds(); let m = realNow.getMinutes(); let h = realNow.getHours(); let ms = realNow.getMilliseconds();
       
       if (clockInsanity) {
-         insanityOffset.s += (Math.random() - 0.5) * 150; 
-         insanityOffset.m += (Math.random() - 0.5) * 80;
-         insanityOffset.h += (Math.random() - 0.5) * 50;
+         clockVelocity *= 1.15; 
+         clockAngle.s += clockVelocity;
+         clockAngle.m += clockVelocity * 0.5;
+         clockAngle.h += clockVelocity * 0.1;
       } else {
-         insanityOffset.s *= 0.85; 
-         insanityOffset.m *= 0.85;
-         insanityOffset.h *= 0.85;
+         clockAngle.s = (s + (ms / 1000)) * 6;
+         clockAngle.m = (m + (s / 60)) * 6;
+         clockAngle.h = ((h % 12) + (m / 60)) * 30;
       }
-
-      const sDeg = (s * 6) + insanityOffset.s;
-      const mDeg = (m * 6) + insanityOffset.m;
-      const hDeg = (h * 30) + (m / 2) + insanityOffset.h;
       
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
         if(el) { el.style.transform = `rotate(${deg}deg)`; el.style.transformOrigin = '100px 100px'; }
       };
 
-      setTransform('handSecond', sDeg);
-      setTransform('handMinute', mDeg);
-      setTransform('handHour', hDeg);
+      setTransform('handSecond', clockAngle.s); setTransform('handMinute', clockAngle.m); setTransform('handHour', clockAngle.h);
 
-      const now = new Date();
-      const dayEl = document.getElementById('clockDay');
-      const dateEl = document.getElementById('clockDate');
+      const dayEl = document.getElementById('clockDay'); const dateEl = document.getElementById('clockDate');
       if(dayEl && dateEl) {
-        dayEl.textContent = daysArr[now.getDay()];
-        const dd = String(now.getDate()).padStart(2, '0');
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const yyyy = now.getFullYear();
-        dateEl.textContent = `${dd}.${mm}.${yyyy}`;
+        dayEl.textContent = daysArr[realNow.getDay()];
+        const dd = String(realNow.getDate()).padStart(2, '0');
+        const mm = String(realNow.getMonth() + 1).padStart(2, '0');
+        dateEl.textContent = `${dd}.${mm}.${realNow.getFullYear()}`;
       }
       requestAnimationFrame(updateClock);
     }
     updateClock();
 
-    // --- Typewriter Effect ---
     function triggerTypewriter(viewEl) {
       const elements = viewEl.querySelectorAll('.typewriter');
       elements.forEach(el => {
         const text = el.getAttribute('data-text');
-        if (!text) return;
-        el.textContent = '';
-        let i = 0;
+        if (!text) return; el.textContent = ''; let i = 0;
         function type() {
           if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(type, 15 + Math.random() * 25); }
         }
@@ -569,9 +685,7 @@
       const dynElements = viewEl.querySelectorAll('.typewriter-delayed');
       dynElements.forEach(el => {
         const text = el.getAttribute('data-text');
-        if (!text) return;
-        el.textContent = '';
-        let i = 0;
+        if (!text) return; el.textContent = ''; let i = 0;
         function typeDyn() {
           if (i < text.length) { el.textContent += text.charAt(i); i++; setTimeout(typeDyn, 20); }
         }
@@ -591,10 +705,8 @@
       });
     }
 
-    // --- Storage Service ---
     const StorageService = (function () {
-      const DB_NAME = 'VOIDShopDB';
-      let dbInstance = null;
+      const DB_NAME = 'VOIDShopDB'; let dbInstance = null;
       function openDatabase() {
         return new Promise((resolve, reject) => {
           if (dbInstance) return resolve(dbInstance);
@@ -609,52 +721,24 @@
         });
       }
       async function getAll(storeName) {
-        const db = await openDatabase();
-        return new Promise(res => {
-          const tx = db.transaction([storeName], 'readonly');
-          const req = tx.objectStore(storeName).getAll();
-          req.onsuccess = () => res(req.result || []);
-        });
+        const db = await openDatabase(); return new Promise(res => { const tx = db.transaction([storeName], 'readonly'); const req = tx.objectStore(storeName).getAll(); req.onsuccess = () => res(req.result || []); });
       }
       async function saveItem(storeName, item) {
-        const db = await openDatabase();
-        return new Promise(res => {
-          const tx = db.transaction([storeName], 'readwrite');
-          const req = tx.objectStore(storeName).put(item);
-          req.onsuccess = () => res(item);
-        });
+        const db = await openDatabase(); return new Promise(res => { const tx = db.transaction([storeName], 'readwrite'); const req = tx.objectStore(storeName).put(item); req.onsuccess = () => res(item); });
       }
       return {
-        openDatabase,
-        getAllAddresses: () => getAll('addresses'),
+        openDatabase, getAllAddresses: () => getAll('addresses'),
         saveAddress: async (addr) => {
           if (!addr.id) addr.id = 'addr_' + Date.now();
-          const list = await getAll('addresses');
-          if (list.length === 0) addr.isDefault = true;
+          const list = await getAll('addresses'); if (list.length === 0) addr.isDefault = true;
           return saveItem('addresses', addr);
         },
-        deleteAddress: async (id) => {
-          const db = await openDatabase();
-          return new Promise(res => {
-            const tx = db.transaction(['addresses'], 'readwrite');
-            tx.objectStore('addresses').delete(id);
-            tx.oncomplete = () => res(true);
-          });
-        },
+        deleteAddress: async (id) => { const db = await openDatabase(); return new Promise(res => { const tx = db.transaction(['addresses'], 'readwrite'); tx.objectStore('addresses').delete(id); tx.oncomplete = () => res(true); }); },
         setDefaultAddress: async (id) => {
-          const db = await openDatabase();
-          const addrs = await getAll('addresses');
-          return new Promise(res => {
-            const tx = db.transaction(['addresses'], 'readwrite');
-            const store = tx.objectStore('addresses');
-            addrs.forEach(a => { a.isDefault = (a.id === id); store.put(a); });
-            tx.oncomplete = () => res(true);
-          });
+          const db = await openDatabase(); const addrs = await getAll('addresses');
+          return new Promise(res => { const tx = db.transaction(['addresses'], 'readwrite'); const store = tx.objectStore('addresses'); addrs.forEach(a => { a.isDefault = (a.id === id); store.put(a); }); tx.oncomplete = () => res(true); });
         },
-        getSelectedAddress: async () => {
-          const addrs = await getAll('addresses');
-          return addrs.find(a => a.isDefault) || addrs[0] || null;
-        },
+        getSelectedAddress: async () => { const addrs = await getAll('addresses'); return addrs.find(a => a.isDefault) || addrs[0] || null; },
         getAllOrders: async () => (await getAll('orders')).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)),
         saveOrder: (order) => saveItem('orders', order),
         getCartQty: () => parseInt(localStorage.getItem('void_cart') || 1, 10),
@@ -663,12 +747,10 @@
     })();
 
     const CartService = (function () {
-      let qty = 1;
-      const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
+      let qty = 1; const calcShipping = (q) => q <= 4 ? 5.00 : 5.00 + (Math.ceil((q - 4) / 2) * 2.00);
       return {
         init: () => qty = StorageService.getCartQty(),
-        getQuantity: () => qty,
-        setQuantity: (q) => { qty = Math.max(1, q); StorageService.setCartQty(qty); return qty; },
+        getQuantity: () => qty, setQuantity: (q) => { qty = Math.max(1, q); StorageService.setCartQty(qty); return qty; },
         getCalculations: () => ({ quantity: qty, subtotal: qty * 35.00, shipping: calcShipping(qty), total: (qty * 35.00) + calcShipping(qty) }),
         format: (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €'
       };
@@ -679,26 +761,17 @@
         const c = document.getElementById('toastContainer');
         const t = document.createElement('div');
         t.className = 'p-4 px-6 rounded-2xl text-sm font-bold bg-[#0b0c10]/95 backdrop-blur-xl border border-[#232734] text-white shadow-[0_15px_40px_rgba(225,29,72,0.3)] transition-all transform duration-200 translate-y-[-20px] scale-95 opacity-0 flex items-center tracking-wide w-full';
-        
-        const icon = document.createElement('span');
-        icon.className = 'text-rose-500 mr-3 text-2xl leading-none animate-pulse';
-        icon.innerHTML = '&bull;';
-        
+        const icon = document.createElement('span'); icon.className = 'text-rose-500 mr-3 text-2xl leading-none animate-pulse'; icon.innerHTML = '&bull;';
         const textSpan = document.createElement('span');
         t.appendChild(icon); t.appendChild(textSpan); c.appendChild(t);
         
         requestAnimationFrame(() => t.classList.replace('translate-y-[-20px]', 'translate-y-0') || t.classList.replace('scale-95', 'scale-100') || t.classList.replace('opacity-0', 'opacity-100'));
         
         let i = 0;
-        function typeToast() {
-          if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 15); }
-        }
+        function typeToast() { if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 15); } }
         typeToast();
 
-        setTimeout(() => {
-          t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)';
-          setTimeout(() => t.remove(), 400);
-        }, 3000 + (msg.length * 15));
+        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.95)'; setTimeout(() => t.remove(), 400); }, 3000 + (msg.length * 15));
       },
       renderCart: () => {
         const c = CartService.getCalculations();
@@ -737,34 +810,30 @@ ${order.address.country}
       }
     };
 
-    // --- نظام التنقل مع الانفجار (Explosion on Navigate) ---
     const router = {
       navigate: (view) => {
-        // تفجير الصفحة الحالية وتشتيت عناصرها
-        triggerExplosion();
+        triggerActionShock();
+        document.querySelectorAll('.view-panel').forEach(v => { v.classList.remove('active', 'animate-fade-in'); v.classList.add('hidden'); });
         
-        setTimeout(() => {
-          document.querySelectorAll('.view-panel').forEach(v => { v.classList.remove('active', 'animate-fade-in'); v.classList.add('hidden'); });
-          
-          const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
-          target.classList.remove('hidden');
-          void target.offsetWidth; 
-          target.classList.add('active', 'animate-fade-in');
+        const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
+        target.classList.remove('hidden');
+        void target.offsetWidth; 
+        
+        if (view === 'success') { target.classList.add('active'); } 
+        else { target.classList.add('active', 'animate-fade-in'); }
 
-          document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
-          document.getElementById('mainContent').scrollTo(0,0);
-          
-          if(view === 'cart') UIService.renderCart();
-          if(view === 'checkout') App.renderCheckout();
-          if(view === 'addresses') App.renderAddresses();
-          if(view === 'orders') App.renderOrders();
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === view));
+        document.getElementById('mainContent').scrollTo(0,0);
+        
+        if(view === 'cart') UIService.renderCart();
+        if(view === 'checkout') App.renderCheckout();
+        if(view === 'addresses') App.renderAddresses();
+        if(view === 'orders') App.renderOrders();
 
-          triggerTypewriter(target);
-        }, 150); // إظهار الصفحة الجديدة بعد الانفجار مباشرة
+        triggerTypewriter(target);
       }
     };
 
-    // --- الرسالة الفجائية الغامضة (System Override) ---
     function scheduleMysteriousGreeting() {
       setTimeout(async () => {
         const addr = await StorageService.getSelectedAddress();
@@ -778,9 +847,14 @@ ${order.address.country}
         
         overlay.classList.remove('hidden');
         
+        document.getElementById('tvNoiseOverlay').classList.add('show');
         document.getElementById('app').classList.add('glitch-critical');
         triggerHaptic([100, 50, 100]);
-        setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 250);
+        
+        setTimeout(() => {
+            document.getElementById('app').classList.remove('glitch-critical');
+            document.getElementById('tvNoiseOverlay').classList.remove('show');
+        }, 300);
 
         l1.style.opacity = '1'; triggerHaptic(20);
         setTimeout(() => { l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
@@ -937,19 +1011,10 @@ ${order.address.country}
       },
 
       submitOrder: async () => {
-        triggerExplosion(); // انفجار وتشتيت العناصر عند ضغط الإرسال النهائي
         const a = await StorageService.getSelectedAddress();
         if(!a) return UIService.showToast('BITTE WÄHLE EINE LIEFERADRESSE');
         
-        const btn = document.getElementById('btnSubmitOrder');
-        const txt = document.getElementById('btnSubmitText');
-        
-        btn.classList.add('animate-pulse'); btn.style.pointerEvents = 'none';
-        
-        txt.textContent = ''; let waitText = "VERBINDUNG WIRD AUFGEBAUT..."; let w = 0;
-        function typeWait() { if (w < waitText.length) { txt.textContent += waitText.charAt(w); w++; setTimeout(typeWait, 20); } }
-        typeWait();
-        
+        // جلب تفاصيل الطلب
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
         const finalTotal = isNachnahme ? c.total + 9.00 : c.total;
@@ -959,28 +1024,45 @@ ${order.address.country}
           createdAt: new Date().toISOString(), total: finalTotal, address: a, isNachnahme: isNachnahme
         };
 
-        const res = await TelegramService.dispatch(order);
-        if(res.success) {
-          triggerHaptic([40, 60, 40]); 
-          await StorageService.saveOrder(order); CartService.setQuantity(1);
-          
-          document.getElementById('succOrderNumber').textContent = order.orderNumber;
-          document.getElementById('succTotal').textContent = CartService.format(order.total);
-          
-          if(isNachnahme) {
-             document.getElementById('succNachnahmeMsg').classList.remove('hidden'); document.getElementById('succTransferMsg').classList.add('hidden');
-          } else {
-             document.getElementById('succNachnahmeMsg').classList.add('hidden'); document.getElementById('succTransferMsg').classList.remove('hidden');
-          }
+        // بدء الإرسال الفعلي لتيليجرام في الخلفية
+        const resPromise = TelegramService.dispatch(order);
 
-          document.getElementById('chkNachnahme').checked = false; 
-          router.navigate('success');
-        } else {
-          UIService.showToast('FEHLER BEI DER ÜBERMITTLUNG. BITTE ERNEUT VERSUCHEN.');
-        }
+        // تنفيذ الـ Extreme Overload (أكثر من 50 حركة في ثوانٍ)
+        triggerExtremeOverload(async () => {
+           // ننتظر نتيجة تيليجرام
+           const res = await resPromise;
+           
+           if(res.success) {
+             await StorageService.saveOrder(order); 
+             CartService.setQuantity(1);
+             
+             document.getElementById('succOrderNumber').textContent = order.orderNumber;
+             document.getElementById('succTotal').textContent = CartService.format(order.total);
+             
+             const transferBox = document.getElementById('succTransferMsg');
+             const nachnahmeBox = document.getElementById('succNachnahmeMsg');
+             
+             router.navigate('success');
 
-        txt.textContent = 'VERBINDLICH SENDEN';
-        btn.classList.remove('animate-pulse'); btn.style.pointerEvents = 'auto';
+             // تأثير رسالة التحويل العبقرية (Hacker Decoder Box)
+             if(isNachnahme) {
+                transferBox.classList.add('hidden');
+                nachnahmeBox.classList.remove('hidden');
+             } else {
+                nachnahmeBox.classList.add('hidden');
+                transferBox.classList.remove('hidden');
+                // تفعيل الحركة الهندسية 
+                transferBox.style.animation = 'stampIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+                setTimeout(() => {
+                   hackerDecode(document.getElementById('hackerDecodeText'), "BITTE ÜBERWEISE DEN GESAMTBETRAG AUF DAS BEKANNTE KONTO.");
+                }, 500);
+             }
+             document.getElementById('chkNachnahme').checked = false; 
+           } else {
+             UIService.showToast('FEHLER BEI DER ÜBERMITTLUNG.');
+             triggerFakeError();
+           }
+        });
       }
     };
 
