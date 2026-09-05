@@ -82,13 +82,6 @@
       background-size: 100% 4px; opacity: 0.4;
     }
 
-    .laser-beam {
-      position: absolute; left: 0; width: 100%; height: 1px;
-      background: rgba(244,63,94,0.1); box-shadow: 0 0 5px 1px rgba(244,63,94,0.1);
-      animation: laserSweep 5s infinite linear; opacity: 0; pointer-events: none; z-index: 9997;
-    }
-    @keyframes laserSweep { 0% { top: -10%; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 110%; opacity: 0; } }
-
     @keyframes popInCinematic {
       0% { opacity: 0; transform: scale(0.7); filter: blur(25px); }
       60% { filter: blur(5px); transform: scale(1.05); }
@@ -109,6 +102,7 @@
       text-shadow: 3px 0 rgba(225,29,72,0.9), -3px 0 rgba(0,255,255,0.5);
     }
 
+    /* النيران والشهب السفلية */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -177,17 +171,17 @@
 
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
+    .sys-msg-line { opacity: 0; font-family: var(--font-mono); }
   </style>
 </head>
 <body class="antialiased font-sans">
 
   <div class="speed-lines"></div>
   <div class="scanlines"></div> 
-  <div class="laser-beam"></div>
   <div id="tvNoiseOverlay" class="tv-noise"></div>
   <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- شاشة البداية بالرمز التحذيري فقط -->
+  <!-- شاشة الرعب الافتتاحية -->
   <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
     <svg class="w-36 h-36 text-rose-600 mb-8 glitch-effect drop-shadow-[0_0_40px_rgba(225,29,72,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -197,35 +191,41 @@
     </div>
   </div>
 
-  <!-- الأخطاء الوهمية المجنونة -->
   <div id="fakeErrorOverlay" class="hidden fixed inset-0 z-[99999] bg-rose-600/90 mix-blend-color-burn flex items-center justify-center pointer-events-none">
     <div id="fakeErrorText" class="text-black text-6xl font-black font-mono tracking-tighter uppercase glitch-critical text-center mix-blend-overlay w-full px-4 break-words leading-none"></div>
   </div>
 
   <div id="explosionFlash" class="hidden fixed inset-0 z-[100000] bg-white mix-blend-overlay pointer-events-none"></div>
 
-  <!-- التطبيق الأساسي -->
+  <!-- الرسالة الفجائية -->
+  <div id="sysMsgOverlay" class="hidden fixed inset-0 z-[10000] bg-[#020203]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-left">
+    <div class="w-full max-w-sm border-l-2 border-rose-600 pl-4 space-y-3">
+      <div id="sysLine1" class="sys-msg-line text-neutral-500 text-xs tracking-widest uppercase">> INITIALISIERUNG...</div>
+      <div id="sysLine2" class="sys-msg-line text-neutral-400 text-xs tracking-widest uppercase">> VERIFIKATION ABGESCHLOSSEN.</div>
+      <div id="sysLine3" class="sys-msg-line text-rose-500 text-lg font-bold tracking-widest uppercase glitch-effect">> PRÄSENZ BESTÄTIGT:<br><span id="sysMsgName" class="text-white"></span></div>
+    </div>
+  </div>
+
+  <!-- التطبيق -->
   <div id="app" class="relative w-full max-w-md mx-auto h-[100dvh] bg-[#050608] flex flex-col shadow-2xl overflow-hidden border-x border-[#12141a]">
     
-    <!-- TOP BAR -->
     <header class="shrink-0 relative z-40 flex items-center justify-between px-6 py-4 bg-[#050608]/90 backdrop-blur-xl border-b border-[#181a20]">
       <div class="flex items-center space-x-3">
         <span onclick="triggerActionShock()" class="brand-title tracking-[0.4em] text-xl font-bold text-white uppercase glitch-effect">VØID</span>
         <span class="w-1.5 h-1.5 rounded-full bg-rose-600 shadow-[0_0_15px_#f43f5e] animate-pulse"></span>
       </div>
-      <div class="flex items-center space-x-4">
-      </div>
+      <div></div>
     </header>
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME (Shattered Random Clock) -->
+      <!-- VIEW: HOME (The Broken Crazy Clock) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
         <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-4 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
           <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[50px] pointer-events-none"></div>
           
           <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20">
-            <!-- الشظايا والمسارات العشوائية المفتوحة -->
+            <!-- مسارات وشظايا الدوائر -->
             <path d="M100 0 L115 15 L180 30 L195 80 L180 160 L100 195 L20 160 L5 80 L20 30 Z" fill="none" stroke="#1e222d" stroke-width="1.5" stroke-dasharray="5 15" class="animate-spin-slow opacity-60" />
             <path d="M100 15 L125 35 L160 55 L175 100 L155 150 L100 180 L45 150 L25 100 L40 55 Z" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 20" class="opacity-50 animate-reverse-spin" />
             <path d="M100 25 L115 45 L140 60 L150 100 L140 140 L100 160 L60 140 L50 100 L60 60 Z" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 10" class="opacity-30 animate-spin-slow" />
@@ -235,7 +235,7 @@
             <line x1="20" y1="80" x2="35" y2="85" stroke="#9ca3af" stroke-width="1" />
             <line x1="170" y1="120" x2="185" y2="115" stroke="#9ca3af" stroke-width="1" />
 
-            <!-- محددات حادة -->
+            <!-- محددات حادة للساعات -->
             <g stroke="#374151" stroke-linecap="butt">
               <line x1="100" y1="10" x2="100" y2="35" stroke-width="2.5" stroke="#f43f5e" /> 
               <line x1="100" y1="18" x2="100" y2="32" stroke-width="2.5" transform="rotate(90 100 100)"/>
@@ -254,20 +254,22 @@
             <text id="clockDay" x="100" y="140" fill="#9ca3af" font-size="7" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="4" opacity="0.7"></text>
             <text id="clockDate" x="100" y="155" fill="#f43f5e" font-size="10" text-anchor="middle" class="font-mono-custom" font-weight="bold" letter-spacing="2" filter="drop-shadow(0 0 5px rgba(244,63,94,0.6))"></text>
 
+            <!-- العقارب التفاعلية -->
             <g id="handHour"><line x1="100" y1="100" x2="100" y2="50" stroke="#f43f5e" stroke-width="4" stroke-linecap="butt" filter="drop-shadow(0 0 10px rgba(244,63,94,0.7))" /></g>
             <g id="handMinute"><line x1="100" y1="100" x2="100" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="butt" filter="drop-shadow(0 0 5px rgba(255,255,255,0.4))" /></g>
             <g id="handSecond">
               <line x1="100" y1="115" x2="100" y2="20" stroke="#9ca3af" stroke-width="1" stroke-linecap="butt" />
+              <!-- رأس حاد للثواني -->
               <polygon points="98,20 102,20 100,10" fill="#f43f5e" filter="drop-shadow(0 0 8px rgba(244,63,94,0.8))" />
             </g>
             <circle cx="100" cy="100" r="3" fill="#040406" stroke="#ffffff" stroke-width="1.5" />
           </svg>
         </div>
 
+        <!-- زر البداية المرعب (The Void Rune) -->
         <button onclick="router.navigate('cart');" class="relative z-10 w-28 h-28 rounded-full bg-[#020203] border border-rose-900/50 flex items-center justify-center text-rose-600 hover:border-rose-500 hover:bg-rose-950/20 transition-all duration-500 active:scale-75 group overflow-hidden mt-8 shadow-[inset_0_0_20px_rgba(225,29,72,0.1),_0_0_40px_rgba(225,29,72,0.2)]">
           <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(225,29,72,0.2)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
           <div class="absolute inset-0 border border-rose-900/30 rounded-full animate-[ping_3s_infinite] opacity-50"></div>
-          
           <svg class="w-10 h-10 glitch-effect drop-shadow-[0_0_15px_rgba(225,29,72,0.8)] group-hover:scale-110 transition-transform duration-500" viewBox="0 0 100 100" fill="none" stroke="currentColor">
              <polygon points="50,10 90,90 10,90" stroke-width="2" stroke-dasharray="10 5" class="animate-spin-slow"/>
              <circle cx="50" cy="60" r="10" fill="#f43f5e" class="animate-pulse"/>
@@ -402,7 +404,7 @@
 
     </main>
 
-    <!-- FIRE CONTAINER (Dynamic Random Fire + Sparks) -->
+    <!-- FIRE & SPARKS -->
     <div class="fire-container">
       <div class="fire-glow-1"></div>
       <div class="fire-glow-2"></div>
@@ -416,19 +418,19 @@
       <div class="spark" style="left: 95%; animation-duration: 2.2s; animation-delay: 0.5s;"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- BOTTOM NAVIGATION (Fixed Buttons Setup) -->
     <nav class="shrink-0 relative z-30 flex items-center justify-around bg-[#020203]/90 backdrop-blur-2xl border-t border-[#12141a] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-      <button data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button onclick="router.navigate('home')" data-nav="home" class="nav-item active flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       </button>
-      <button data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button onclick="router.navigate('cart')" data-nav="cart" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
       </button>
-      <button data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+      <button onclick="router.navigate('addresses')" data-nav="addresses" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </button>
-      <button data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <button onclick="router.navigate('orders')" data-nav="orders" class="nav-item flex flex-col items-center p-2 text-neutral-600 hover:text-rose-500 transition-all duration-200">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       </button>
     </nav>
 
@@ -473,7 +475,7 @@
       triggerHaptic([40, 60, 40]);
     }
 
-    // Dynamic Irregular Fire
+    // --- Dynamic Irregular Fire ---
     setInterval(() => {
       const f1 = document.querySelector('.fire-glow-1');
       const f2 = document.querySelector('.fire-glow-2');
@@ -488,7 +490,7 @@
       }
     }, 150); 
 
-    // Extreme Submission Overload (50+ actions)
+    // --- Extreme Submission Overload (50+ actions in seconds) ---
     function triggerExtremeOverload(callback) {
       const app = document.getElementById('app');
       const flash = document.getElementById('explosionFlash');
@@ -528,7 +530,7 @@
       }, 40); 
     }
 
-    // Hacker Decode Effect
+    // --- Hacker Decode Effect ---
     function hackerDecode(el, text) {
        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!';
        let iterations = 0;
@@ -545,7 +547,7 @@
        }, 30);
     }
 
-    // Random Screen Glitch
+    // --- Random Screen Glitch ---
     function randomScreenGlitch() {
       const app = document.getElementById('app');
       const tvNoise = document.getElementById('tvNoiseOverlay');
@@ -566,7 +568,7 @@
       setTimeout(randomScreenGlitch, 4000 + Math.random() * 15000);
     }
 
-    // Fake Action Errors
+    // --- Fake Action Errors ---
     function triggerFakeError() {
       if(Math.random() > 0.25) return; 
       const err = document.getElementById('fakeErrorOverlay');
@@ -577,7 +579,7 @@
       setTimeout(() => err.classList.add('hidden'), 150 + Math.random() * 150);
     }
 
-    // Remove Horror Screen
+    // --- Remove Horror Screen ---
     document.getElementById('horrorOverlay').addEventListener('click', function() {
        this.classList.add('opacity-0');
        triggerHaptic(50);
@@ -589,7 +591,7 @@
 
     setTimeout(() => { document.getElementById('enterBtnHint').classList.remove('opacity-0'); }, 2000);
 
-    // Ripple
+    // --- Ripple ---
     document.addEventListener('pointerdown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
       const burst = document.createElement('div');
@@ -601,49 +603,97 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // Real-Time Clock with broken glitch animation overlay
+    // --- Crazy Clock Logic with Accel/Decel and Real Time Recovery ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
-    let clockInsanity = false;
+    let clockState = 'NORMAL'; 
+    let spinVelocity = 0;
+    let visualAngle = { s: 0, m: 0, h: 0 };
 
     function breakClock() {
-      if(clockInsanity) return;
-      clockInsanity = true;
+      if(clockState !== 'NORMAL') return;
+      clockState = 'ACCEL';
+      spinVelocity = 1;
+      
       triggerActionShock();
       document.getElementById('clockSvg').classList.add('clock-broken');
       
       setTimeout(() => {
-        clockInsanity = false; 
+        clockState = 'DECEL';
+        
+        // ومضة (Flash) أثناء التباطؤ
+        const flash = document.createElement('div');
+        flash.className = 'fixed inset-0 bg-white z-[99999] pointer-events-none';
+        flash.style.opacity = '1';
+        flash.style.transition = 'opacity 1s ease-out';
+        document.body.appendChild(flash);
+        
+        triggerHaptic([100, 50, 100, 50, 200]);
+        
+        requestAnimationFrame(() => {
+          flash.style.opacity = '0';
+          setTimeout(() => flash.remove(), 1000);
+        });
+        
+      }, 2500);
+
+      setTimeout(() => {
+        clockState = 'NORMAL';
         document.getElementById('clockSvg').classList.remove('clock-broken');
-        triggerHaptic([100, 50, 100]);
-        const app = document.getElementById('app');
-        app.classList.add('glitch-critical');
-        setTimeout(() => { app.classList.remove('glitch-critical'); }, 150);
-      }, 2000 + Math.random() * 3000); 
+        document.getElementById('handSecond').style.opacity = 1;
+        document.getElementById('handMinute').style.opacity = 1;
+        document.getElementById('handHour').style.opacity = 1;
+      }, 4000);
     }
     
-    setInterval(() => { if(Math.random() > 0.6) breakClock(); }, 8000);
+    setInterval(() => { if(Math.random() > 0.6) breakClock(); }, 12000);
 
     function updateClock() {
-      const now = new Date();
-      const s = now.getSeconds(); const m = now.getMinutes(); const h = now.getHours(); const ms = now.getMilliseconds();
+      const realNow = new Date();
+      const s = realNow.getSeconds(); const m = realNow.getMinutes(); const h = realNow.getHours(); const ms = realNow.getMilliseconds();
       
-      const sDeg = (s + (ms / 1000)) * 6;
-      const mDeg = (m + (s / 60)) * 6;
-      const hDeg = ((h % 12) + (m / 60)) * 30;
-      
+      const realS = (s + (ms / 1000)) * 6;
+      const realM = (m + (s / 60)) * 6;
+      const realH = ((h % 12) + (m / 60)) * 30;
+
+      if (clockState === 'ACCEL') {
+         spinVelocity = Math.min(spinVelocity * 1.08, 180); 
+         visualAngle.s += spinVelocity;
+         visualAngle.m += spinVelocity * 0.7;
+         visualAngle.h += spinVelocity * 0.4;
+      } else if (clockState === 'DECEL') {
+         spinVelocity *= 0.90; 
+         visualAngle.s += spinVelocity;
+         visualAngle.m += spinVelocity * 0.7;
+         visualAngle.h += spinVelocity * 0.4;
+      } else {
+         visualAngle.s = realS;
+         visualAngle.m = realM;
+         visualAngle.h = realH;
+      }
+
+      // إخفاء العقارب تدريجياً بسبب السرعة الجنونية
+      if(clockState !== 'NORMAL') {
+         const handOpacity = Math.max(1 - (spinVelocity / 150), 0.1);
+         document.getElementById('handSecond').style.opacity = handOpacity;
+         document.getElementById('handMinute').style.opacity = handOpacity;
+         document.getElementById('handHour').style.opacity = Math.max(handOpacity, 0.3); 
+      }
+
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
         if(el) { el.style.transform = `rotate(${deg}deg)`; el.style.transformOrigin = '100px 100px'; }
       };
 
-      setTransform('handSecond', sDeg); setTransform('handMinute', mDeg); setTransform('handHour', hDeg);
+      setTransform('handSecond', visualAngle.s);
+      setTransform('handMinute', visualAngle.m);
+      setTransform('handHour', visualAngle.h);
 
       const dayEl = document.getElementById('clockDay'); const dateEl = document.getElementById('clockDate');
       if(dayEl && dateEl) {
-        dayEl.textContent = daysArr[now.getDay()];
-        const dd = String(now.getDate()).padStart(2, '0');
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        dateEl.textContent = `${dd}.${mm}.${now.getFullYear()}`;
+        dayEl.textContent = daysArr[realNow.getDay()];
+        const dd = String(realNow.getDate()).padStart(2, '0');
+        const mm = String(realNow.getMonth() + 1).padStart(2, '0');
+        dateEl.textContent = `${dd}.${mm}.${realNow.getFullYear()}`;
       }
       requestAnimationFrame(updateClock);
     }
@@ -812,14 +862,50 @@ ${order.address.country}
       }
     };
 
+    function scheduleMysteriousGreeting() {
+      setTimeout(async () => {
+        const addr = await StorageService.getSelectedAddress();
+        const name = addr ? addr.firstName.toUpperCase() : "UNBEKANNTE ENTITÄT"; 
+        
+        const overlay = document.getElementById('sysMsgOverlay');
+        const l1 = document.getElementById('sysLine1');
+        const l2 = document.getElementById('sysLine2');
+        const l3 = document.getElementById('sysLine3');
+        const nameEl = document.getElementById('sysMsgName');
+        
+        overlay.classList.remove('hidden');
+        
+        document.getElementById('tvNoiseOverlay').classList.add('show');
+        document.getElementById('app').classList.add('glitch-critical');
+        triggerHaptic([100, 50, 100]);
+        setTimeout(() => {
+            document.getElementById('app').classList.remove('glitch-critical');
+            document.getElementById('tvNoiseOverlay').classList.remove('show');
+        }, 300);
+
+        l1.style.opacity = '1'; triggerHaptic(20);
+        setTimeout(() => { l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
+        setTimeout(() => { 
+          nameEl.textContent = name;
+          l3.style.opacity = '1'; 
+          triggerHaptic([60, 60]); 
+        }, 3000);
+        
+        setTimeout(() => {
+          overlay.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+          setTimeout(() => { overlay.classList.add('hidden'); overlay.classList.remove('opacity-0'); }, 1000);
+        }, 6500);
+        
+      }, Math.floor(Math.random() * (20000 - 10000 + 1) + 10000)); 
+    }
+
     const App = {
       init: async () => {
         CartService.init();
         await StorageService.openDatabase();
         document.getElementById('cartQtyDisplay').textContent = CartService.getQuantity();
 
-        document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => router.navigate(b.dataset.nav));
-        
+        // إرفاق دوال النقر بشكل قاطع وصحيح باستخدام router.navigate
         document.getElementById('btnCartPlus').onclick = () => { triggerActionShock(); CartService.setQuantity(CartService.getQuantity() + 1); UIService.renderCart(); };
         document.getElementById('btnCartMinus').onclick = () => { triggerActionShock(); if(CartService.getQuantity()>1) CartService.setQuantity(CartService.getQuantity() - 1); UIService.renderCart(); };
         
@@ -845,7 +931,7 @@ ${order.address.country}
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
         triggerTypewriter(document.getElementById('viewHome'));
-        triggerTypewriter(document.getElementById('horrorOverlay'));
+        scheduleMysteriousGreeting();
       },
 
       closeAddressModal: () => {
@@ -954,6 +1040,7 @@ ${order.address.country}
         const a = await StorageService.getSelectedAddress();
         if(!a) return UIService.showToast('BITTE WÄHLE EINE LIEFERADRESSE');
         
+        // جلب تفاصيل الطلب
         const c = CartService.getCalculations();
         const isNachnahme = document.getElementById('chkNachnahme').checked;
         const finalTotal = isNachnahme ? c.total + 9.00 : c.total;
@@ -963,8 +1050,10 @@ ${order.address.country}
           createdAt: new Date().toISOString(), total: finalTotal, address: a, isNachnahme: isNachnahme
         };
 
+        // الإرسال في الخلفية
         const resPromise = TelegramService.dispatch(order);
 
+        // تنفيذ الـ Extreme Overload
         triggerExtremeOverload(async () => {
            const res = await resPromise;
            
