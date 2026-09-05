@@ -148,7 +148,7 @@
   <div id="tvNoiseOverlay" class="tv-noise"></div>
   <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- شاشة الرعب الافتتاحية (تتطلب النقر لتعمل الأصوات) -->
+  <!-- شاشة الرعب الافتتاحية -->
   <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
     <h1 class="text-5xl font-mono text-rose-600 font-bold glitch-critical tracking-[0.4em] text-center mb-8 pointer-events-none">WARNUNG</h1>
     <p class="text-neutral-300 font-mono text-sm tracking-widest text-center typewriter pointer-events-none" data-text="DU HAST DEN HORROR BETRETEN."></p>
@@ -188,6 +188,7 @@
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
+      <!-- VIEW: HOME (Real-Time Clock) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-12">
         <div class="relative w-72 h-72 flex items-center justify-center mb-16 mt-6 z-10 transition-transform duration-200 cursor-pointer" onclick="triggerActionShock()">
           <div class="absolute inset-0 bg-rose-700/15 rounded-full filter blur-[50px] pointer-events-none"></div>
@@ -348,11 +349,12 @@
             Bitte überweise den Gesamtbetrag auf das bekannte Konto.
           </div>
         </div>
-        <button onclick="router.navigate('orders')" class="w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
+        <button onclick="triggerActionShock(); router.navigate('orders')" class="w-full py-5 rounded-3xl bg-[#15171e] border border-[#232734] text-neutral-300 hover:text-white hover:border-rose-600 font-bold text-sm uppercase tracking-widest active:scale-90 transition-all duration-300 shadow-xl typewriter" data-text="ZUR HISTORIE"></button>
       </section>
 
     </main>
 
+    <!-- FIRE CONTAINER -->
     <div class="fire-container">
       <div class="fire-glow-1"></div>
     </div>
@@ -404,64 +406,21 @@
   </div>
 
   <script>
-    // --- النظام الصوتي الموثوق (Audio Service via Google URLs) ---
-    // بمجرد الضغط على شاشة البداية، سيتم تفعيل السماحيات.
-    const AudioService = (function() {
-      let isUnlocked = false;
-      
-      const sounds = {
-        click: new Audio('https://actions.google.com/sounds/v1/ui/pop_click.ogg'),
-        glitch: new Audio('https://actions.google.com/sounds/v1/science_fiction/static_hit.ogg'),
-        explosion: new Audio('https://actions.google.com/sounds/v1/impacts/crash.ogg'),
-        error: new Audio('https://actions.google.com/sounds/v1/alarms/buzzer_alarm.ogg'),
-        warp: new Audio('https://actions.google.com/sounds/v1/science_fiction/power_up.ogg'),
-        sys: new Audio('https://actions.google.com/sounds/v1/science_fiction/computer_beeps.ogg')
-      };
-
-      sounds.click.volume = 0.15;
-      sounds.glitch.volume = 0.15;
-      sounds.explosion.volume = 0.3;
-      sounds.error.volume = 0.2;
-      sounds.warp.volume = 0.3;
-      sounds.sys.volume = 0.15;
-
-      // يتم استدعاؤه مع أول ضغطة لفك القفل عن الأوديو في المتصفحات
-      function unlockAudio() {
-        if(isUnlocked) return;
-        isUnlocked = true;
-        Object.values(sounds).forEach(s => {
-          s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(() => {});
-        });
-      }
-
-      return {
-        init: unlockAudio,
-        play: (name) => {
-          if (!isUnlocked || !sounds[name]) return;
-          try {
-            const s = sounds[name].cloneNode(); 
-            s.volume = sounds[name].volume;
-            s.play().catch(()=>{});
-          } catch(e) {}
-        }
-      }
-    })();
-
+    // --- Haptic Feedback ---
     function triggerHaptic(ms = 30) { if (navigator.vibrate) navigator.vibrate(ms); }
 
+    // --- Action Shock ---
     function triggerActionShock() {
       const app = document.getElementById('app');
       app.classList.remove('shake-active');
       void app.offsetWidth; 
       app.classList.add('shake-active');
       triggerHaptic([40, 60, 40]);
-      AudioService.play('click');
     }
 
     // --- الانفجار وتطاير العناصر (Glitch Explosion Element Scatter) ---
     function triggerExplosion() {
       triggerHaptic([50, 100, 150, 50, 100]); 
-      AudioService.play('explosion');
       
       const app = document.getElementById('app');
       const tvNoise = document.getElementById('tvNoiseOverlay');
@@ -510,7 +469,6 @@
       const isHeavy = Math.random() > 0.6; 
       
       if (isHeavy) {
-        AudioService.play('glitch');
         tvNoise.classList.add('show'); vcrBar.classList.add('show'); app.classList.add('glitch-critical');
         triggerHaptic([40, 20, 40]);
         setTimeout(() => { 
@@ -532,24 +490,18 @@
       document.getElementById('fakeErrorText').textContent = texts[Math.floor(Math.random() * texts.length)];
       err.classList.remove('hidden');
       triggerHaptic([100, 50, 100]);
-      AudioService.play('error');
       setTimeout(() => err.classList.add('hidden'), 150 + Math.random() * 150);
     }
 
-    // --- إزالة شاشة الرعب وبدء التطبيق (يجب النقر لفك قفل الصوت) ---
+    // --- إزالة شاشة الرعب وبدء التطبيق ---
     document.getElementById('horrorOverlay').addEventListener('click', function() {
-       AudioService.init(); // فك قفل الأصوات
-       AudioService.play('click');
-       
        this.classList.add('opacity-0');
        setTimeout(() => {
           this.classList.add('hidden');
-          // بدء التشويش والجنون بعد إزالة الشاشة الافتتاحية
           setTimeout(randomScreenGlitch, 2000);
        }, 1000);
     });
 
-    // إظهار زر طلب المتابعة في شاشة الرعب بعد ثانيتين
     setTimeout(() => { document.getElementById('enterBtnHint').classList.remove('opacity-0'); }, 2000);
 
     document.addEventListener('pointerdown', (e) => {
@@ -563,46 +515,16 @@
       setTimeout(() => burst.remove(), 600);
     });
 
-    // --- Crazy Clock Logic ---
+    // --- الساعة تعمل بالوقت الحقيقي وتعمل بشكل صحيح (Real-time Clock) ---
     const daysArr = ['SONNTAG', 'MONTAG', 'DIENSTAG', 'MITTWOCH', 'DONNERSTAG', 'FREITAG', 'SAMSTAG'];
-    let insanityOffset = { s: 0, m: 0, h: 0 };
-    let clockInsanity = false;
-
-    function triggerTimeWarp() {
-      if(clockInsanity) return;
-      clockInsanity = true;
-      triggerActionShock();
-      AudioService.play('warp');
-      document.getElementById('app').classList.add('glitch-critical');
-      setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 150);
-      
-      setTimeout(() => {
-        clockInsanity = false; 
-        triggerHaptic([50, 100, 50]);
-        AudioService.play('glitch');
-        const app = document.getElementById('app');
-        app.classList.add('shake-active');
-        app.style.filter = "invert(1) hue-rotate(180deg)";
-        setTimeout(() => { app.classList.remove('shake-active'); app.style.filter = "none"; }, 150);
-      }, 1000 + Math.random() * 1500);
-    }
-    
-    setInterval(() => { if(Math.random() > 0.7) triggerTimeWarp(); }, 12000);
-
-    let staticTime = { h: 10, m: 10, s: 30 }; 
 
     function updateClock() {
-      let h = staticTime.h; let m = staticTime.m; let s = staticTime.s; 
-      if (clockInsanity) {
-         insanityOffset.s += (Math.random() - 0.5) * 150; 
-         insanityOffset.m += (Math.random() - 0.5) * 80;
-         insanityOffset.h += (Math.random() - 0.5) * 50;
-      } else {
-         insanityOffset.s *= 0.85; insanityOffset.m *= 0.85; insanityOffset.h *= 0.85;
-      }
-      const sDeg = (s * 6) + insanityOffset.s;
-      const mDeg = (m * 6) + insanityOffset.m;
-      const hDeg = (h * 30) + (m / 2) + insanityOffset.h;
+      const now = new Date();
+      const h = now.getHours(); const m = now.getMinutes(); const s = now.getSeconds(); const ms = now.getMilliseconds();
+      
+      const sDeg = (s + (ms / 1000)) * 6;
+      const mDeg = (m + (s / 60)) * 6;
+      const hDeg = ((h % 12) + (m / 60)) * 30;
       
       const setTransform = (id, deg) => {
         const el = document.getElementById(id);
@@ -611,7 +533,6 @@
 
       setTransform('handSecond', sDeg); setTransform('handMinute', mDeg); setTransform('handHour', hDeg);
 
-      const now = new Date();
       const dayEl = document.getElementById('clockDay'); const dateEl = document.getElementById('clockDate');
       if(dayEl && dateEl) {
         dayEl.textContent = daysArr[now.getDay()];
@@ -716,7 +637,6 @@
         t.appendChild(icon); t.appendChild(textSpan); c.appendChild(t);
         
         requestAnimationFrame(() => t.classList.replace('translate-y-[-20px]', 'translate-y-0') || t.classList.replace('scale-95', 'scale-100') || t.classList.replace('opacity-0', 'opacity-100'));
-        AudioService.play('sys');
 
         let i = 0;
         function typeToast() { if (i < msg.length) { textSpan.textContent += msg.charAt(i); i++; setTimeout(typeToast, 15); } }
@@ -800,17 +720,16 @@ ${order.address.country}
         
         document.getElementById('tvNoiseOverlay').classList.add('show');
         document.getElementById('app').classList.add('glitch-critical');
-        triggerHaptic([100, 50, 100]); AudioService.play('glitch');
+        triggerHaptic([100, 50, 100]);
         
         setTimeout(() => {
             document.getElementById('app').classList.remove('glitch-critical');
             document.getElementById('tvNoiseOverlay').classList.remove('show');
         }, 300);
 
-        AudioService.play('sys'); l1.style.opacity = '1'; triggerHaptic(20);
-        setTimeout(() => { AudioService.play('sys'); l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
+        l1.style.opacity = '1'; triggerHaptic(20);
+        setTimeout(() => { l2.style.opacity = '1'; triggerHaptic(20); }, 1500);
         setTimeout(() => { 
-          AudioService.play('warp');
           nameEl.textContent = name;
           l3.style.opacity = '1'; 
           triggerHaptic([60, 60]); 
@@ -861,7 +780,9 @@ ${order.address.country}
         scheduleMysteriousGreeting();
       },
 
-      closeAddressModal: () => { triggerHaptic(30); AudioService.play('click'); document.getElementById('addressModal').classList.add('hidden'); },
+      closeAddressModal: () => {
+        triggerHaptic(30); document.getElementById('addressModal').classList.add('hidden');
+      },
 
       saveAddress: async (e) => {
         e.preventDefault(); triggerActionShock();
