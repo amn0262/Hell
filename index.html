@@ -109,7 +109,6 @@
       text-shadow: 3px 0 rgba(225,29,72,0.9), -3px 0 rgba(0,255,255,0.5);
     }
 
-    /* النيران العشوائية السفلية */
     .fire-container {
       position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh;
       pointer-events: none; z-index: 20; overflow: hidden;
@@ -176,16 +175,11 @@
       letter-spacing: 0.2em; text-align: center; text-transform: uppercase;
     }
 
-    /* === الثقب الأسود - زر البدء === */
     .black-hole-btn {
-      position: relative;
-      width: 110px; height: 110px;
-      border-radius: 50%;
-      background: #000;
+      position: relative; width: 110px; height: 110px; border-radius: 50%; background: #000;
       box-shadow: 0 0 40px rgba(225,29,72,0.4), inset 0 0 25px rgba(0,0,0,1);
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; overflow: hidden; margin-top: 2rem;
-      border: 1px solid rgba(225,29,72,0.2);
+      cursor: pointer; overflow: hidden; margin-top: 2rem; border: 1px solid rgba(225,29,72,0.2);
     }
     .black-hole-btn::before {
       content: ''; position: absolute; inset: -50%;
@@ -193,9 +187,7 @@
       animation: spinOrbit 3s linear infinite;
     }
     .bh-ring {
-      position: absolute; inset: 2px;
-      border-radius: 50%;
-      border: 1px dashed rgba(244,63,94,0.5);
+      position: absolute; inset: 2px; border-radius: 50%; border: 1px dashed rgba(244,63,94,0.5);
       animation: spinOrbit 6s linear infinite reverse;
     }
     @keyframes swallowIn {
@@ -215,6 +207,34 @@
       background: #000; border-radius: 50%; box-shadow: 0 0 20px 10px #000;
     }
 
+    /* === ستايلات الرزنامة (Calendar Styles) === */
+    .cal-day {
+      position: relative; height: 38px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; cursor: pointer; z-index: 1; font-family: var(--font-mono); font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+    .cal-day.empty { pointer-events: none; }
+    .cal-day.has-order { color: #fff; font-weight: 700; text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    
+    @keyframes drawCircleAnim {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 20px #f43f5e; }
+      100% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px rgba(244,63,94,0.6); }
+    }
+    .cal-day.has-order::before {
+      content: ''; position: absolute; inset: 0; background: #e11d48; border-radius: 50%;
+      z-index: -1; animation: drawCircleAnim 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    
+    @keyframes clickCircleAnim {
+      0% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(0.85); filter: brightness(1.5); box-shadow: 0 0 30px #f43f5e; }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+    .cal-day.has-order.clicked::before {
+      animation: clickCircleAnim 0.3s ease-out forwards;
+    }
+
     ::-webkit-scrollbar { display: none; } 
     .scrollable-content { -webkit-overflow-scrolling: touch; }
   </style>
@@ -227,10 +247,11 @@
   <div id="tvNoiseOverlay" class="tv-noise"></div>
   <div id="vcrBarOverlay" class="vcr-bar"></div>
 
-  <!-- شاشة الرعب الافتتاحية بالرمز بدلاً من النص -->
+  <!-- شاشة التحذير الافتتاحية -->
   <div id="horrorOverlay" class="fixed inset-0 z-[100000] bg-[#020203] flex items-center justify-center flex-col transition-opacity duration-1000 cursor-pointer">
     <svg class="w-36 h-36 text-rose-600 mb-8 glitch-effect drop-shadow-[0_0_40px_rgba(225,29,72,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 17.25h.01M12 14v-4"></path>
     </svg>
     <div id="enterBtnHint" class="mt-12 opacity-0 transition-opacity duration-1000">
       <span class="px-8 py-3 border border-rose-900 bg-rose-950/30 text-rose-500 font-mono text-xs tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(225,29,72,0.3)]">KLICK UM ZU BEGINNEN</span>
@@ -255,15 +276,13 @@
 
     <main id="mainContent" class="flex-1 overflow-y-auto scrollable-content px-5 pt-4 pb-32 relative z-10">
 
-      <!-- VIEW: HOME -->
+      <!-- VIEW: HOME (Shattered Random Clock & Black Hole Button) -->
       <section id="viewHome" class="view-panel active animate-fade-in flex flex-col items-center justify-center text-center mt-6">
         
-        <!-- الساعة التي تقرأ الـ Triple Click -->
         <div class="relative w-72 h-72 flex items-center justify-center mb-10 mt-4 z-10 cursor-pointer" onclick="handleClockClick()">
           <div class="absolute inset-0 bg-rose-700/10 rounded-full filter blur-[50px] pointer-events-none"></div>
           
           <svg id="clockSvg" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_0_30px_rgba(225,29,72,0.4)] relative z-20 transition-all duration-300">
-            <!-- الشظايا والمسارات العشوائية المفتوحة -->
             <path d="M100 0 L115 15 L180 30 L195 80 L180 160 L100 195 L20 160 L5 80 L20 30 Z" fill="none" stroke="#1e222d" stroke-width="1.5" stroke-dasharray="5 15" class="animate-spin-slow opacity-60" />
             <path d="M100 15 L125 35 L160 55 L175 100 L155 150 L100 180 L45 150 L25 100 L40 55 Z" fill="none" stroke="#f43f5e" stroke-width="0.8" stroke-dasharray="2 20" class="opacity-50 animate-reverse-spin" />
             <path d="M100 25 L115 45 L140 60 L150 100 L140 140 L100 160 L60 140 L50 100 L60 60 Z" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-dasharray="1 10" class="opacity-30 animate-spin-slow" />
@@ -296,7 +315,7 @@
           </svg>
         </div>
 
-        <!-- زر الثقب الأسود -->
+        <!-- Black Hole Button -->
         <button onclick="triggerActionShock(); router.navigate('cart');" class="black-hole-btn active:scale-90 transition-transform duration-300">
            <div class="bh-ring"></div>
            <div class="bh-particle"></div>
@@ -398,10 +417,43 @@
         <div id="addressListContainer" class="space-y-4 pb-4"></div>
       </section>
 
-      <!-- VIEW: ORDERS -->
+      <!-- VIEW: ORDERS (With Tabs: List & Calendar) -->
       <section id="viewOrders" class="view-panel hidden animate-fade-in relative z-10">
-        <h2 class="text-2xl font-bold uppercase tracking-widest text-white mb-6 typewriter" data-text="HISTORIE"></h2>
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold uppercase tracking-widest text-white typewriter" data-text="HISTORIE"></h2>
+          
+          <!-- التبويبات (Tabs) -->
+          <div class="flex space-x-1 bg-[#12141a] p-1 rounded-xl border border-[#1e222d] shadow-inner">
+            <button id="tabListBtn" onclick="App.switchOrderView('list')" class="px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase rounded-lg text-white bg-rose-600 shadow-[0_0_10px_rgba(225,29,72,0.4)] transition-all">Liste</button>
+            <button id="tabCalBtn" onclick="App.switchOrderView('calendar')" class="px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase rounded-lg text-neutral-500 hover:text-white transition-all">Kalender</button>
+          </div>
+        </div>
+
+        <!-- حاوية القائمة -->
         <div id="ordersListContainer" class="space-y-4"></div>
+
+        <!-- حاوية الرزنامة (مخفية افتراضياً) -->
+        <div id="ordersCalendarContainer" class="hidden flex-col space-y-4">
+          <div class="bg-[#0b0c10]/95 backdrop-blur-md border border-[#1e222d] rounded-3xl p-6 shadow-[0_5px_20px_rgba(0,0,0,0.5)]">
+            <div class="flex justify-between items-center mb-6">
+              <button onclick="App.changeMonth(-1)" class="text-neutral-500 hover:text-rose-500 text-lg px-2 active:scale-75 transition-all">&lt;</button>
+              <h3 id="calMonthYear" class="text-rose-500 font-mono font-bold tracking-widest uppercase text-sm drop-shadow-[0_0_5px_rgba(225,29,72,0.5)]">SEPTEMBER 2026</h3>
+              <button onclick="App.changeMonth(1)" class="text-neutral-500 hover:text-rose-500 text-lg px-2 active:scale-75 transition-all">&gt;</button>
+            </div>
+            
+            <div class="grid grid-cols-7 gap-2 text-center text-[10px] font-mono font-bold text-neutral-400 mb-3 uppercase tracking-widest">
+              <span>M</span><span>D</span><span>M</span><span>D</span><span>F</span><span>S</span><span>S</span>
+            </div>
+            <div id="calGrid" class="grid grid-cols-7 gap-2 text-center font-mono text-sm text-white">
+              <!-- سيتم توليد الأيام هنا عبر JS -->
+            </div>
+          </div>
+          
+          <!-- تفاصيل الطلبيات لليوم المحدد -->
+          <div id="calSelectedOrders" class="space-y-4 mt-2 min-h-[100px]">
+            <p class="text-[10px] text-neutral-600 text-center py-6 uppercase tracking-widest font-bold">Wähle einen markierten Tag</p>
+          </div>
+        </div>
       </section>
       
       <!-- VIEW: SUCCESS -->
@@ -621,7 +673,7 @@
 
     // Ripple
     document.addEventListener('pointerdown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title')) return;
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button') || e.target.closest('.brand-title') || e.target.closest('.cal-day')) return;
       const burst = document.createElement('div');
       burst.className = 'click-ripple';
       burst.style.left = e.clientX + 'px';
@@ -643,13 +695,10 @@
 
     function handleClockClick() {
       triggerActionShock();
-      
       clockClickCount++;
       clearTimeout(clockClickTimer);
       if (clockClickCount === 3) {
-        if(clockState === 'NORMAL') {
-          startTimeWarp();
-        }
+        if(clockState === 'NORMAL') startTimeWarp();
         clockClickCount = 0;
       } else {
         clockClickTimer = setTimeout(() => { clockClickCount = 0; }, 800);
@@ -663,7 +712,6 @@
       
       setTimeout(() => {
         clockState = 'PEAK';
-        
         const flash = document.createElement('div');
         flash.className = 'fixed inset-0 bg-white z-[99999] pointer-events-none';
         flash.style.opacity = '1';
@@ -682,7 +730,6 @@
           document.getElementById('app').classList.remove('glitch-critical');
           clockState = 'DECEL';
         }, 200);
-
       }, 3500);
 
       setTimeout(() => {
@@ -710,10 +757,8 @@
          visualAngle.s += spinVelocity;
          visualAngle.m += spinVelocity * 0.7;
          visualAngle.h += spinVelocity * 0.4;
-         
          colorShift += 5;
          clockSvg.style.filter = `hue-rotate(${colorShift}deg) brightness(${1 + spinVelocity/150}) drop-shadow(0 0 ${spinVelocity/10}px #f43f5e)`;
-
       } else if (clockState === 'PEAK') {
          visualAngle.s += spinVelocity;
          visualAngle.m += spinVelocity * 0.7;
@@ -723,7 +768,6 @@
          visualAngle.s += spinVelocity;
          visualAngle.m += spinVelocity * 0.7;
          visualAngle.h += spinVelocity * 0.4;
-         
          colorShift -= 5;
          clockSvg.style.filter = `hue-rotate(${colorShift}deg) brightness(${1 + spinVelocity/150})`;
       } else {
@@ -917,13 +961,19 @@ ${order.address.country}
         if(view === 'cart') UIService.renderCart();
         if(view === 'checkout') App.renderCheckout();
         if(view === 'addresses') App.renderAddresses();
-        if(view === 'orders') App.renderOrders();
+        if(view === 'orders') {
+          App.currentOrderView = 'list'; // Reset view to list
+          App.switchOrderView('list');
+        }
 
         triggerTypewriter(target);
       }
     };
 
     const App = {
+      currentOrderView: 'list',
+      currentCalDate: new Date(),
+
       init: async () => {
         CartService.init();
         await StorageService.openDatabase();
@@ -961,6 +1011,123 @@ ${order.address.country}
         document.getElementById('btnSubmitOrder').onclick = App.submitOrder;
 
         triggerTypewriter(document.getElementById('viewHome'));
+      },
+
+      switchOrderView: (view) => {
+        triggerActionShock();
+        App.currentOrderView = view;
+        const tabList = document.getElementById('tabListBtn');
+        const tabCalendar = document.getElementById('tabCalBtn');
+        const listCont = document.getElementById('ordersListContainer');
+        const calCont = document.getElementById('ordersCalendarContainer');
+
+        if(view === 'list') {
+            tabList.classList.add('bg-rose-600', 'text-white', 'shadow-[0_0_10px_rgba(225,29,72,0.4)]');
+            tabList.classList.remove('text-neutral-500');
+            tabCalendar.classList.add('text-neutral-500');
+            tabCalendar.classList.remove('bg-rose-600', 'text-white', 'shadow-[0_0_10px_rgba(225,29,72,0.4)]');
+            listCont.classList.remove('hidden');
+            calCont.classList.add('hidden');
+            calCont.classList.remove('flex');
+            App.renderOrders();
+        } else {
+            tabCalendar.classList.add('bg-rose-600', 'text-white', 'shadow-[0_0_10px_rgba(225,29,72,0.4)]');
+            tabCalendar.classList.remove('text-neutral-500');
+            tabList.classList.add('text-neutral-500');
+            tabList.classList.remove('bg-rose-600', 'text-white', 'shadow-[0_0_10px_rgba(225,29,72,0.4)]');
+            listCont.classList.add('hidden');
+            calCont.classList.remove('hidden');
+            calCont.classList.add('flex');
+            App.renderCalendar();
+        }
+      },
+
+      changeMonth: (dir) => {
+        triggerHaptic(20);
+        App.currentCalDate.setMonth(App.currentCalDate.getMonth() + dir);
+        App.renderCalendar();
+      },
+
+      renderCalendar: async () => {
+        const list = await StorageService.getAllOrders();
+        const orderMap = {};
+        list.forEach(o => {
+            const d = new Date(o.createdAt);
+            const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            if(!orderMap[key]) orderMap[key] = [];
+            orderMap[key].push(o);
+        });
+
+        const month = App.currentCalDate.getMonth();
+        const year = App.currentCalDate.getFullYear();
+        const monthNames = ["JANUAR", "FEBRUAR", "MÄRZ", "APRIL", "MAI", "JUNI", "JULI", "AUGUST", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DEZEMBER"];
+        document.getElementById('calMonthYear').textContent = `${monthNames[month]} ${year}`;
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let startDay = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+
+        let gridHtml = '';
+        for(let i=0; i<startDay; i++) {
+            gridHtml += `<div class="cal-day empty"></div>`;
+        }
+
+        for(let i=1; i<=daysInMonth; i++) {
+            const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            const hasOrders = orderMap[dateKey] && orderMap[dateKey].length > 0;
+            
+            let classStr = "cal-day text-neutral-300 hover:text-white transition-colors duration-200";
+            let onClickStr = "";
+
+            if(hasOrders) {
+                classStr = "cal-day has-order drop-shadow-[0_0_5px_rgba(225,29,72,0.8)]";
+                onClickStr = `onclick="App.showDayOrders('${dateKey}', this)"`;
+                gridHtml += `<div class="${classStr}" ${onClickStr}>${i}</div>`;
+            } else {
+                gridHtml += `<div class="${classStr}">${i}</div>`;
+            }
+        }
+        
+        document.getElementById('calGrid').innerHTML = gridHtml;
+        document.getElementById('calSelectedOrders').innerHTML = '<p class="text-[10px] text-neutral-600 text-center py-6 uppercase tracking-widest font-bold">Wähle einen markierten Tag</p>';
+      },
+
+      showDayOrders: async (dateKey, el) => {
+        triggerHaptic([30, 50, 30]);
+        
+        // Remove 'clicked' class from all other days to reset animation
+        document.querySelectorAll('.cal-day').forEach(day => day.classList.remove('clicked'));
+        
+        void el.offsetWidth;
+        el.classList.add('clicked');
+        
+        document.getElementById('app').classList.add('glitch-critical');
+        setTimeout(() => document.getElementById('app').classList.remove('glitch-critical'), 100);
+
+        const list = await StorageService.getAllOrders();
+        const dayOrders = list.filter(o => {
+            const d = new Date(o.createdAt);
+            const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            return key === dateKey;
+        });
+
+        let html = '';
+        dayOrders.forEach(o => {
+            const dateStr = new Date(o.createdAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            html += `
+            <div class="p-5 bg-[#0b0c10]/90 backdrop-blur-md rounded-2xl border border-rose-900/50 mb-3 text-xs text-neutral-300 shadow-[0_5px_20px_rgba(225,29,72,0.15)] animate-fade-in">
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-rose-500 font-mono font-bold tracking-wider text-sm">${o.orderNumber}</span>
+                <span class="font-bold text-white text-lg drop-shadow-[0_0_5px_rgba(255,255,255,0.4)]">${CartService.format(o.total)}</span>
+              </div>
+              <div class="flex justify-between items-center border-t border-rose-900/30 pt-3">
+                <span class="text-[10px] text-neutral-400 tracking-widest font-bold">${dateStr} UHR</span>
+                ${o.isNachnahme ? '<span class="text-[9px] text-rose-500 uppercase tracking-widest font-bold bg-rose-900/20 px-2 py-1 rounded">inkl. Nachnahme</span>' : '<span class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold">Überweisung</span>'}
+              </div>
+            </div>`;
+        });
+        
+        document.getElementById('calSelectedOrders').innerHTML = html;
       },
 
       closeAddressModal: () => {
@@ -1048,6 +1215,9 @@ ${order.address.country}
       },
 
       renderOrders: async () => {
+        if (App.currentOrderView === 'calendar') {
+           return; // Already rendering in calendar view
+        }
         const list = await StorageService.getAllOrders();
         document.getElementById('ordersListContainer').innerHTML = list.map(o => {
           const dateStr = new Date(o.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
